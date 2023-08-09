@@ -1,6 +1,4 @@
 import csv
-import os
-import glob
 
 FILE = "app/data/ReadLimt.csv"
 

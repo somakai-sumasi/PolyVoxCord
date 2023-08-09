@@ -3,27 +3,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from service import read_limit
+from common import ui
 
 GUILD = int(os.getenv("GUILD"))
-
-
-class HogeList(discord.ui.View):
-    def __init__(self, items, callback_func):
-        super().__init__()
-        self.add_item(HugaList(items, callback_func))
-
-
-class HugaList(discord.ui.Select):
-    def __init__(self, items, callback_func):
-        self.callback_func = callback_func
-        options = []
-        for item in items:
-            options.append(discord.SelectOption(label=item, description=""))
-
-        super().__init__(placeholder="", min_values=1, max_values=1, options=options)
-
-    async def callback(self, interaction: discord.Interaction):
-        await self.callback_func(self, interaction)
 
 
 class setting(commands.Cog):
@@ -41,15 +23,20 @@ class setting(commands.Cog):
     async def change_voice(self, interaction: discord.Interaction):
         """声を変える"""
         user_id = interaction.user.id
-        items = ["a", "b", "c"]
+        items = [
+            {"label": "aaa", "value": "1", "description": ""},
+            {"label": "bbb", "value": "2", "description": ""},
+        ]
 
         async def callback_func(self, interaction: discord.Interaction):
+            print(self.options)
+
             await interaction.response.send_message(
                 f"{interaction.user.name}は{self.values[0]}を選択しました", ephemeral=True
             )
 
         await interaction.response.send_message(
-            "Press", view=HogeList(items, callback_func), ephemeral=True
+            "Press", view=ui.SelectView(items, callback_func), ephemeral=True
         )
 
     @app_commands.command(name="tune_voice", description="調声を行う")
