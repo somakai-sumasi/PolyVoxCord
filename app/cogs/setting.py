@@ -49,7 +49,7 @@ class setting(commands.Cog):
     @app_commands.guilds(GUILD)
     async def set_limit(self, interaction: discord.Interaction, limit: int):
         """読み上げ上限を設定"""
-        read_limit.set_limt(interaction.guild_id, limit)
+        read_limit.set_limit(interaction.guild_id, limit)
         await interaction.response.send_message("上限を変更しました", ephemeral=True)
 
     @app_commands.command(name="add_dict", description="辞書を追加")

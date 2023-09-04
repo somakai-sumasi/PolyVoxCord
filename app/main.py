@@ -1,4 +1,3 @@
-# main.py
 from dotenv import load_dotenv
 import os
 import asyncio
@@ -36,7 +35,7 @@ async def on_ready():
 
 # メッセージ受信時のイベント
 @bot.event
-async def on_message(message):
+async def on_message(message: discord.Message):
     # メッセージの送信者がbotだった場合は無視
     if message.author.bot:
         return
@@ -46,6 +45,8 @@ async def on_message(message):
 
     # 読み上げ処理
     print(message.content)
+
+    print(message.attachments)
 
 
 load_dotenv()

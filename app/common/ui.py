@@ -1,6 +1,7 @@
 import discord
 from typing import List
 
+
 class SelectView(discord.ui.View):
     def __init__(self, items: List[dict], callback_func):
         """抽象化したdiscord.ui.Select作成を呼び出し
