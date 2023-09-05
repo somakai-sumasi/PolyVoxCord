@@ -1,11 +1,7 @@
-from model.read_limit import ReadLimit
+from data_model.read_limit import ReadLimit
+from data_model.voice_model import VoiceModel
 from common.csv import CSVHandler
+from decimal import Decimal
 
-# FILE = "app/data/ReadLimit.csv"
-# INDEX_COLUMNS = {"guild_id": int}
-# NON_INDEX_COLUMNS = {"limit": int}
-# csv = CSVHandler(FILE, INDEX_COLUMNS, NON_INDEX_COLUMNS)
-# print(csv.read({"guild_id": 1}))
-# print(csv.write({"guild_id": 1, "limit":4}))
-limit = ReadLimit({"guild_id": 100})
-limit.limit = 100
+voice_model = VoiceModel({"user_id": 100})
+voice_model.speed = Decimal("1")

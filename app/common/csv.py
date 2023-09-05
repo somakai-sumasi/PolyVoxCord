@@ -1,5 +1,6 @@
 import csv
-from typing import Dict, Union, Type
+from typing import List, Dict, Union, Type
+from decimal import Decimal
 
 
 class CSVHandler:
@@ -8,29 +9,45 @@ class CSVHandler:
         filename: str,
         index_columns: Dict[str, Type],
         non_index_columns: Dict[str, Type],
-    ):
-        # コンストラクタ：ファイル名とカラム情報を保存
+    ) -> None:
+        """
+        コンストラクタ：ファイル名とカラム情報を保存
+
+        Parameters:
+            filename (str): CSVファイル名
+            index_columns (Dict[str, Type]): インデックスとなるカラム名とその型の辞書
+            non_index_columns (Dict[str, Type]): インデックスでないカラム名とその型の辞書
+        """
         self.filename = filename
         self.index_columns = index_columns
         self.non_index_columns = non_index_columns
 
     def read(
-        self, index_dict: Dict[str, Union[str, int, bool]]
-    ) -> Dict[str, Union[str, int, bool]]:
-        # CSVファイルを読む
-        with open(self.filename, "r") as csv_file:
-            reader = csv.DictReader(csv_file)
+        self, index_dict: Dict[str, Union[str, int, bool, Decimal]]
+    ) -> Dict[str, Union[str, int, bool, Decimal]]:
+        """
+        CSVファイルを読む
+
+        Parameters:
+            index_dict (Dict[str, Union[str, int, bool, Decimal]]): インデックス名と値の辞書型
+
+        Returns:
+            Dict[str, Union[str, int, bool, Decimal]]: 該当する行のデータ（辞書型）
+        """
+        # CSVファイルを読み込む
+        with open(self.filename, mode="r", newline="", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
             for row in reader:
-                if all(row[k] == str(v) for k, v in index_dict.items()):
-                    # 型変換を行い、該当する行を返す
+                if all(row[key] == str(value) for key, value in index_dict.items()):
+                    # 型変換を行いつつ、該当する行のデータを返す
                     return {
-                        k: self.index_columns[k](v)
-                        if k in self.index_columns
-                        else self.non_index_columns[k](v)
-                        for k, v in row.items()
+                        col: self.index_columns[col](row[col])
+                        if col in self.index_columns
+                        else self.non_index_columns[col](row[col])
+                        for col in row.keys()
                     }
 
-        # 存在しない場合辞書型で返す
+            # 存在しない場合辞書型で返す
         new_row = {}
         for k in self.index_columns.keys():
             new_row[k] = index_dict.get(k, None)
@@ -39,38 +56,43 @@ class CSVHandler:
         return new_row
 
     def write(
-        self, row_dict: Dict[str, Union[str, int, bool]]
-    ) -> Dict[str, Union[str, int, bool]]:
-        # CSVファイルに書く
-        rows = []
-        updated_row = None
+        self, index_dict: Dict[str, Union[str, int, bool, Decimal]]
+    ) -> Dict[str, Union[str, int, bool, Decimal]]:
+        """
+        CSVファイルに書く（更新または追加）
 
-        with open(self.filename, "r") as csv_file:
-            reader = csv.DictReader(csv_file)
-            headers = reader.fieldnames  # ヘッダーを取得
+        Parameters:
+            index_dict (Dict[str, Union[str, int, bool, Decimal]]): 書き込む行のデータ（辞書型）
+
+        Returns:
+            Dict[str, Union[str, int, bool, Decimal]]: 更新後の行のデータ（辞書型）
+        """
+        rows = []
+        updated = False  # 行が更新されたかどうかのフラグ
+        with open(self.filename, mode="r", newline="", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
             for row in reader:
-                if all(row[k] == str(row_dict.get(k, "")) for k in self.index_columns):
-                    # 更新する行が見つかった場合
-                    row.update(row_dict)
-                    updated_row = row
+                if all(
+                    row[key] == str(index_dict.get(key, ""))
+                    for key in self.index_columns.keys()
+                ):
+                    # 該当する行を更新
+                    row.update(index_dict)
+                    updated = True
                 rows.append(row)
 
-        # 新しい行を追加する場合
-        if updated_row is None:
-            updated_row = row_dict
-            rows.append(row_dict)
+        # 行が更新されなかった場合は、新しい行を追加
+        if not updated:
+            rows.append(index_dict)
 
-        # CSVファイルに書き込む
-        with open(self.filename, "w", newline="") as csv_file:
-            writer = csv.DictWriter(csv_file, fieldnames=headers)
+        # CSVファイルを更新
+        with open(self.filename, mode="w", newline="", encoding="utf-8") as file:
+            writer = csv.DictWriter(
+                file,
+                fieldnames=list(self.index_columns.keys())
+                + list(self.non_index_columns.keys()),
+            )
             writer.writeheader()
-            for row in rows:
-                writer.writerow(row)
+            writer.writerows(rows)
 
-        # 更新後の行を型変換して返す
-        return {
-            k: self.index_columns[k](v)
-            if k in self.index_columns
-            else self.non_index_columns[k](v)
-            for k, v in updated_row.items()
-        }
+        return self.read(index_dict)

@@ -1,4 +1,4 @@
-from model.base_model import BaseModel
+from data_model.base_model import BaseModel
 
 
 class ReadLimit(BaseModel):

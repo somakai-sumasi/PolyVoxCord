@@ -6,7 +6,7 @@ class BaseModel(CSVHandler):
     def __init__(
         self,
         filename: str,
-        index_values: Dict[str, Union[str, int, bool]],
+        index_values: Dict[str, Union[str, int, float, bool]],
         index_columns: Dict[str, Type],
         non_index_columns: Dict[str, Type],
     ):
