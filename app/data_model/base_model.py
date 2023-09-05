@@ -2,7 +2,7 @@ from typing import Dict, Union, Type
 from common.csv import CSVHandler
 
 
-class BaseModel(CSVHandler):
+class BaseDataModel(CSVHandler):
     def __init__(
         self,
         filename: str,
