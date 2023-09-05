@@ -1,7 +1,8 @@
 import discord
-from data_model.voice_model import VoiceModel
+from data_model.voice_setting_model import VoiceSettingModel
 from data_model.read_limit import ReadLimit
 from decimal import Decimal
+
 
 class ReadService:
     # 音声データ作成
@@ -20,7 +21,7 @@ class ReadService:
         ...
 
     def make_voice(user_id: int, txt: str):
-        voice_model = VoiceModel({"user_id": user_id})
+        voice_model = VoiceSettingModel({"user_id": user_id})
         voice_type = voice_model.voice_type
 
         # 登録されていない場合は~で読み上げ

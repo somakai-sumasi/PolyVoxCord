@@ -1,7 +1,6 @@
 from __future__ import annotations
 from abc import ABCMeta, abstractmethod
-from data_model.voice_model import VoiceModel
-
+from data_model.voice_setting_model import VoiceSettingModel
 
 class MetaVoiceModel(metaclass=ABCMeta):
     """ボイスモデル用のメタクラス

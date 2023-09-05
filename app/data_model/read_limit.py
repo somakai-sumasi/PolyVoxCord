@@ -1,7 +1,7 @@
-from data_model.base_model import BaseModel
+from data_model.base_model import BaseDataModel
 
 
-class ReadLimit(BaseModel):
+class ReadLimit(BaseDataModel):
     def __init__(self, index_value):
         FILE = "app/data/ReadLimit.csv"
         INDEX_COLUMNS = {"guild_id": int}

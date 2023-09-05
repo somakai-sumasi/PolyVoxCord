@@ -1,8 +1,8 @@
-from data_model.base_model import BaseModel
+from data_model.base_model import BaseDataModel
 from decimal import Decimal
 
 
-class VoiceModel(BaseModel):
+class VoiceSettingModel(BaseDataModel):
     def __init__(self, index_value):
         FILE = "app/data/VoiceModel.csv"
         INDEX_COLUMNS = {"user_id": int}
