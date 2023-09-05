@@ -1,25 +1,8 @@
-from __future__ import annotations
-from abc import ABCMeta, abstractmethod
+from voice_model.meta_voice_model import MetaVoiceModel
 from data_model.voice_setting_model import VoiceSettingModel
 
 
-class MetaVoiceModel(metaclass=ABCMeta):
-    """ボイスモデル用のメタクラス
-
-    Parameters
-    ----------
-    metaclass : _type_, optional
-        _description_, by default ABCMeta
-    """
-
-    def __init__(self) -> None:
-        """init
-
-        Parameters
-        ----------
-        """
-
-    @abstractmethod
+class Voicevox(MetaVoiceModel):
     def create_voice(self, voice_setting: VoiceSettingModel, text: str) -> str:
         """読み上げ音声を作成する
 
@@ -35,7 +18,6 @@ class MetaVoiceModel(metaclass=ABCMeta):
         """
         pass
 
-    @abstractmethod
     def voice_list(self) -> list[str]:
         """自身が持っているボイス名を返す
 
