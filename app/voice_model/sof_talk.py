@@ -1,8 +1,8 @@
 from voice_model.meta_voice_model import MetaVoiceModel
-
+from data_model.voice_setting_model import VoiceSettingModel
 
 class SofTalk(MetaVoiceModel):
-    def create_voice(self, voice_setting: VoiceSettingModel, text: str) -> str:
+    def create_voice(self, voice_setting:VoiceSettingModel, text: str) -> str:
         """読み上げ音声を作成する
 
         Parameters
