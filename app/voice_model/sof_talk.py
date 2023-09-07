@@ -1,6 +1,6 @@
 from voice_model.meta_voice_model import MetaVoiceModel
 from data_model.voice_setting_model import VoiceSettingModel
-
+from dotenv import load_dotenv
 
 class SofTalk(MetaVoiceModel):
     def create_voice(self, voice_setting: VoiceSettingModel, text: str) -> str:

@@ -32,7 +32,7 @@ class ReadService:
         if voice_type == None:
             voice_setting.voice_type = "SofTalk"
             voice_setting.voice_name_key = ""
-            voice_setting.speed = Decimal("100")
+            voice_setting.speed = Decimal("120")
             voice_setting.pitch = Decimal("100")
 
         voice_model: MetaVoiceModel = None
