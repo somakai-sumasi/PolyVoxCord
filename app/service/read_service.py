@@ -37,12 +37,12 @@ class ReadService:
 
         voice_model: MetaVoiceModel = None
         if voice_type == "VOICEROID":
-            voice_model = Voiceroid
+            voice_model = Voiceroid()
 
         if voice_type == "VOICEVOX":
-            voice_model = Voicevox
+            voice_model = Voicevox()
 
         if voice_type == "SofTalk":
-            voice_model = SofTalk
+            voice_model = SofTalk()
 
         voice_model.create_voice(voice_setting, text)
