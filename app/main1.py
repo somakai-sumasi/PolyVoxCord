@@ -1,7 +1,11 @@
-from data_model.read_limit import ReadLimit
-from data_model.voice_setting_model import VoiceSettingModel
-from common.csv import CSVHandler
-from decimal import Decimal
-from service.read_service import ReadService
+from dotenv import load_dotenv
+import sqlite3
 
-a = ReadService.make_voice(1, "aaaa")
+load_dotenv()
+# TEST.dbを作成する
+# すでに存在していれば、それにアスセスする。
+dbname = "DB/TEST.db"
+conn = sqlite3.connect(dbname)
+
+# データベースへのコネクションを閉じる。(必須)
+conn.close()
