@@ -10,6 +10,7 @@ python = "^3.11"
 discord-py = {extras = ["voice"], version = "^2.3.1"}
 python-dotenv = "^1.0.0"
 pandas = "^2.0.3"
+sqlalchemy = "^2.0.20"
 
 
 [tool.poetry.group.dev.dependencies]
