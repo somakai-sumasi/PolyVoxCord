@@ -1,5 +1,5 @@
 from voice_model.meta_voice_model import MetaVoiceModel
-from data_model.voice_setting_model import VoiceSettingModel
+from model.voice_setting_model import VoiceSettingModel
 
 
 class Voicevox(MetaVoiceModel):

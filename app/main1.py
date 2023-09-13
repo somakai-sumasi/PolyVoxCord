@@ -1,13 +1,10 @@
-# main.py
+from model.voice_setting_model import VoiceSettingModel
+from common.setting import session
 
-from data_model.database import engine, Session, Base  # database.pyからengineとSessionをインポート
-from data_model.test import User  # models.pyからUserをインポート
+from voice_model.sof_talk import SofTalk
 
-# セッションを作成
-session = Session()
+voice_setting_model: VoiceSettingModel = (
+    session.query(VoiceSettingModel).filter_by(id=1).first()
+)
 
-users = session.query(User).all()
-
-print(users)
-for user in users:
-    print(user.id)
+SofTalk.create_voice(voice_setting_model, "aaaa")

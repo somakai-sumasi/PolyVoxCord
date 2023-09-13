@@ -1,7 +1,7 @@
 import discord
 from decimal import Decimal
-from data_model.voice_setting_model import VoiceSettingModel
-from data_model.read_limit import ReadLimit
+from model.voice_setting_model import VoiceSettingModel
+from model.read_limit import ReadLimit
 from voice_model.meta_voice_model import MetaVoiceModel
 from voice_model.sof_talk import SofTalk
 from voice_model.voiceroid import Voiceroid

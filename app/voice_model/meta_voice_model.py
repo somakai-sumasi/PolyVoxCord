@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABCMeta, abstractmethod
-from data_model.voice_setting_model import VoiceSettingModel
+from model.voice_setting_model import VoiceSettingModel
 
 
 class MetaVoiceModel(metaclass=ABCMeta):
@@ -20,7 +20,7 @@ class MetaVoiceModel(metaclass=ABCMeta):
         """
 
     @abstractmethod
-    def create_voice(self, voice_setting: VoiceSettingModel, text: str) -> str:
+    def create_voice(voice_setting: VoiceSettingModel, text: str) -> str:
         """読み上げ音声を作成する
 
         Parameters
@@ -36,7 +36,7 @@ class MetaVoiceModel(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def voice_list(self) -> list[str]:
+    def voice_list() -> list[str]:
         """自身が持っているボイス名を返す
 
         Returns
