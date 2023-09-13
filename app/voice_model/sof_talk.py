@@ -1,7 +1,6 @@
 from voice_model.meta_voice_model import MetaVoiceModel
 from model.voice_setting_model import VoiceSettingModel
 import os
-import datetime
 from dotenv import load_dotenv
 import subprocess
 
@@ -9,7 +8,8 @@ load_dotenv()
 
 
 class SofTalk(MetaVoiceModel):
-    def create_voice(voice_setting: VoiceSettingModel, text: str) -> str:
+    @classmethod
+    def create_voice(cls, voice_setting: VoiceSettingModel, text: str) -> str:
         """読み上げ音声を作成する
 
         Parameters
@@ -23,8 +23,7 @@ class SofTalk(MetaVoiceModel):
             音声ファイルのパス
         """
 
-        now = datetime.datetime.now()
-        fileTitle = now.strftime("%Y%m%d-%H%M%S%f") + __class__.__name__ + ".wav"
+        fileTitle = cls.create_filename (__class__.__name__)
         SAVE_PASE = os.getcwd() + "\\wav\\" + fileTitle
         SOF_TALK = os.getenv("SOF_TALK")
 
@@ -38,7 +37,6 @@ class SofTalk(MetaVoiceModel):
         _command = [_start, _speed, _pitch, _model, _save, _word]
 
         subprocess.run(" ".join(_command), shell=True)
-
         return SAVE_PASE
 
     def voice_list(self) -> list[str]:
