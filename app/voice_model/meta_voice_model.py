@@ -1,7 +1,8 @@
 from __future__ import annotations
 from abc import ABCMeta, abstractmethod
-from model.voice_setting_model import VoiceSettingModel
+from entity.voice_setting_entity import VoiceSettingEntity
 import datetime
+
 
 class MetaVoiceModel(metaclass=ABCMeta):
     """ボイスモデル用のメタクラス
@@ -12,16 +13,9 @@ class MetaVoiceModel(metaclass=ABCMeta):
         _description_, by default ABCMeta
     """
 
-    def __init__(self) -> None:
-        """init
-
-        Parameters
-        ----------
-        """
-
     @classmethod
     @abstractmethod
-    def create_voice(cls, voice_setting: VoiceSettingModel, text: str) -> str:
+    def create_voice(cls, voice_setting: VoiceSettingEntity, text: str) -> str:
         """読み上げ音声を作成する
 
         Parameters
@@ -47,7 +41,7 @@ class MetaVoiceModel(metaclass=ABCMeta):
         """
         pass
 
-    def create_filename(class_name = None):
+    def create_filename(class_name=None):
         now = datetime.datetime.now()
         fileTitle = now.strftime("%Y%m%d-%H%M%S%f") + class_name + ".wav"
         return fileTitle

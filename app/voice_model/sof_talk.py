@@ -1,5 +1,5 @@
 from voice_model.meta_voice_model import MetaVoiceModel
-from model.voice_setting_model import VoiceSettingModel
+from entity.voice_setting_entity import VoiceSettingEntity
 import os
 from dotenv import load_dotenv
 import subprocess
@@ -9,7 +9,7 @@ load_dotenv()
 
 class SofTalk(MetaVoiceModel):
     @classmethod
-    def create_voice(cls, voice_setting: VoiceSettingModel, text: str) -> str:
+    def create_voice(cls, voice_setting: VoiceSettingEntity, text: str) -> str:
         """読み上げ音声を作成する
 
         Parameters
@@ -23,7 +23,7 @@ class SofTalk(MetaVoiceModel):
             音声ファイルのパス
         """
 
-        fileTitle = cls.create_filename (__class__.__name__)
+        fileTitle = cls.create_filename(__class__.__name__)
         SAVE_PASE = os.getcwd() + "\\wav\\" + fileTitle
         SOF_TALK = os.getenv("SOF_TALK")
 
