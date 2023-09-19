@@ -7,7 +7,7 @@ from entity.voice_setting_entity import VoiceSettingEntity
 
 class VoiceSettingRepository:
     @classmethod
-    def get_by_user_id(cls, user_id: int) -> VoiceSettingEntity:
+    def get_by_user_id(cls, user_id: int) -> VoiceSettingEntity | None:
         voice_setting_model: VoiceSetting = (
             session.query(VoiceSetting).filter_by(user_id=user_id).first()
         )
@@ -21,9 +21,8 @@ class VoiceSettingRepository:
     def create(cls, voice_setting_entity: VoiceSettingEntity) -> VoiceSettingEntity:
         voice_setting = entity_to_model(voice_setting_entity, VoiceSetting)
 
-        with session.begin():
-            session.add(voice_setting)
-
+        session.add(voice_setting)
+        session.commit()
         return cls.get_by_user_id(voice_setting_entity.user_id)
 
     @classmethod

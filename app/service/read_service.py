@@ -1,9 +1,6 @@
 import discord
-from decimal import Decimal
-from model.voice_setting import VoiceSetting
-from model.read_limit import ReadLimit
 from voice_model.meta_voice_model import MetaVoiceModel
-from voice_model.sof_talk import SofTalk
+from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
 
@@ -12,29 +9,34 @@ from entity.voice_setting_entity import VoiceSettingEntity
 
 
 class ReadService:
-    # 音声データ作成
-    def read(message: discord.Message):
+    @classmethod
+    def read(cls, message: discord.Message):
         # メッセージの送信者がbotだった場合は無視
         if message.author.bot:
             return
         # メッセージの送信したサーバーのボイスチャンネルに切断していない場合は無視
         if message.guild.voice_client is None:
             return
+        
+        cls.read_text(message)
 
-    def read_text():
+    @classmethod
+    def read_text(cls, message: discord.Message):
         ...
 
-    def read_file():
+    @classmethod
+    def read_file(cls):
         ...
 
-    def make_voice(user_id: int, text: str):
+    @classmethod
+    def make_voice(cls, user_id: int, text: str):
         voice_setting = VoiceSettingRepository.get_by_user_id(user_id)
 
         # 登録されていない場合は~で読み上げ
         if voice_setting == None:
             voice_setting = VoiceSettingEntity(
                 user_id=user_id,
-                voice_type="SofTalk",
+                voice_type="Softalk",
                 voice_name_key="",
                 speed=120,
                 pitch=100,
@@ -49,7 +51,7 @@ class ReadService:
         if voice_type == "VOICEVOX":
             voice_model = Voicevox()
 
-        if voice_type == "SofTalk":
-            voice_model = SofTalk()
+        if voice_type == "Softalk":
+            voice_model = Softalk()
 
         voice_model.create_voice(voice_setting, text)

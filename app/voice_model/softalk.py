@@ -7,7 +7,7 @@ import subprocess
 load_dotenv()
 
 
-class SofTalk(MetaVoiceModel):
+class Softalk(MetaVoiceModel):
     @classmethod
     def create_voice(cls, voice_setting: VoiceSettingEntity, text: str) -> str:
         """読み上げ音声を作成する
@@ -25,9 +25,9 @@ class SofTalk(MetaVoiceModel):
 
         fileTitle = cls.create_filename(__class__.__name__)
         SAVE_PASE = os.getcwd() + "\\wav\\" + fileTitle
-        SOF_TALK = os.getenv("SOF_TALK")
+        SOFTALK = os.getenv("SOFTALK")
 
-        _start = "start " + SOF_TALK
+        _start = "start " + SOFTALK
         _speed = "/S:120"
         _pitch = "/O:100"
         _model = "/T:7/U:1"

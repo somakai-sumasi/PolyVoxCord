@@ -2,8 +2,9 @@ import os
 import discord
 from discord import app_commands
 from discord.ext import commands
-from service import read_limit
-from common import ui
+from service.read_limit_service import ReadLimitService
+from service.reading_dict_service import ReadingDictService
+from service.voice_setting_service import VoiceSettingService
 
 GUILD = int(os.getenv("GUILD"))
 
@@ -18,30 +19,9 @@ class setting(commands.Cog):
         await self.bot.tree.sync(guild=discord.Object(GUILD))
         print("sync:" + self.__class__.__name__)
 
-    @app_commands.command(name="change_voice", description="声を変える")
-    @app_commands.guilds(GUILD)
-    async def change_voice(self, interaction: discord.Interaction):
-        """声を変える"""
-        user_id = interaction.user.id
-        items = [
-            {"label": "aaa", "value": "1", "description": ""},
-            {"label": "bbb", "value": "2", "description": ""},
-        ]
-
-        async def callback_func(self, interaction: discord.Interaction):
-            print(self.options)
-
-            await interaction.response.send_message(
-                f"{interaction.user.name}は{self.values[0]}を選択しました", ephemeral=True
-            )
-
-        await interaction.response.send_message(
-            "Press", view=ui.SelectView(items, callback_func), ephemeral=True
-        )
-
     @app_commands.command(name="set_softalk", description="SofTalkの声を設定する")
     @app_commands.guilds(GUILD)
-    async def set_sof_talk(self, interaction: discord.Interaction):
+    async def set_softalk(self, interaction: discord.Interaction):
         """SofTalkの声を設定する"""
         user_id = interaction.user.id
 
@@ -52,29 +32,43 @@ class setting(commands.Cog):
         user_id = interaction.user.id
 
     @app_commands.command(name="set_voicevox", description="VOICEVOXの声を設定する")
+    @app_commands.describe(voice_name_key="ボイスキー", speed="スピート", pitch="ピッチ")
     @app_commands.guilds(GUILD)
-    async def set_voicevox(self, interaction: discord.Interaction):
+    async def set_voicevox(
+        self,
+        interaction: discord.Interaction,
+        voice_name_key: str,
+        speed: float,
+        pitch: float,
+    ):
         """VOICEVOXの声を設定する"""
-        user_id = interaction.user.id
 
-
-    @app_commands.command(name="tune_voice", description="調声を行う")
-    @app_commands.guilds(GUILD)
-    async def tune_voice(self, interaction: discord.Interaction):
-        """調声を行う"""
-        user_id = interaction.user.id
+        VoiceSettingService.set_voicevox(
+            interaction.user.id, voice_name_key, speed, pitch
+        )
+        await interaction.response.send_message(f"設定しました", ephemeral=False)
 
     @app_commands.command(name="set_limit", description="読み上げ上限を設定")
+    @app_commands.describe(upper_limit="読み上げ上限数")
     @app_commands.guilds(GUILD)
-    async def set_limit(self, interaction: discord.Interaction, limit: int):
+    async def set_limit(self, interaction: discord.Interaction, upper_limit: int):
         """読み上げ上限を設定"""
-        read_limit.set_limit(interaction.guild_id, limit)
-        await interaction.response.send_message("上限を変更しました", ephemeral=True)
+        ReadLimitService.set_limit(interaction.guild_id, upper_limit)
+        await interaction.response.send_message(
+            f"読み上げ上限を{upper_limit}に変更しました", ephemeral=False
+        )
 
     @app_commands.command(name="add_dict", description="辞書を追加")
+    @app_commands.describe(character="書き", reading="読み方")
     @app_commands.guilds(GUILD)
-    async def add_dict(self, interaction: discord.Interaction):
+    async def add_dict(
+        self, interaction: discord.Interaction, character: str, reading: str
+    ):
         """辞書を追加"""
+        ReadingDictService.add_dict(interaction.guild_id, character, reading)
+        await interaction.response.send_message(
+            f"辞書に{character}を追加しました", ephemeral=False
+        )
 
 
 async def setup(bot: commands.Bot):
