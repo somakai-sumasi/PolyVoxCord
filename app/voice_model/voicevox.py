@@ -34,11 +34,17 @@ class Voicevox(MetaVoiceModel):
         )
 
         audio_query = requests.post(cls.PATH + "audio_query", params=params)
+
+        audio_query_json = audio_query.json()
+
+        audio_query_json["speedScale"] = voice_setting.speed
+        audio_query_json["pitchScale"] = voice_setting.pitch
+
         synthesis = requests.post(
-            cls.PATH + "synthesis", params=params, data=json.dumps(audio_query.json())
+            cls.PATH + "synthesis", params=params, data=json.dumps(audio_query_json)
         )
 
-        wf = wave.open( './wav/' + cls.create_filename(__class__.__name__), 'wb')
+        wf = wave.open("./wav/" + cls.create_filename(__class__.__name__), "wb")
         wf.setnchannels(1)
         wf.setsampwidth(2)
         wf.setframerate(24000)

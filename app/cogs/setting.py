@@ -39,6 +39,25 @@ class setting(commands.Cog):
             "Press", view=ui.SelectView(items, callback_func), ephemeral=True
         )
 
+    @app_commands.command(name="set_softalk", description="SofTalkの声を設定する")
+    @app_commands.guilds(GUILD)
+    async def set_sof_talk(self, interaction: discord.Interaction):
+        """SofTalkの声を設定する"""
+        user_id = interaction.user.id
+
+    @app_commands.command(name="set_voiceroid", description="VOICEROIDの声を設定する")
+    @app_commands.guilds(GUILD)
+    async def set_voiceroid(self, interaction: discord.Interaction):
+        """VOICEROIDの声を設定する"""
+        user_id = interaction.user.id
+
+    @app_commands.command(name="set_voicevox", description="VOICEVOXの声を設定する")
+    @app_commands.guilds(GUILD)
+    async def set_voicevox(self, interaction: discord.Interaction):
+        """VOICEVOXの声を設定する"""
+        user_id = interaction.user.id
+
+
     @app_commands.command(name="tune_voice", description="調声を行う")
     @app_commands.guilds(GUILD)
     async def tune_voice(self, interaction: discord.Interaction):
