@@ -9,3 +9,6 @@
 
 ## 実行方法
 `python app/main.py`を実行し、dbフォルダにdbファイルが作成される事を確認する
+
+## 動かない時試す事
+- VOICEROIDを64bitに上げる
