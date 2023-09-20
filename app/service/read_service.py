@@ -1,31 +1,61 @@
+import asyncio
 import discord
 from voice_model.meta_voice_model import MetaVoiceModel
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
-
 from repository.voice_setting_repository import VoiceSettingRepository
 from entity.voice_setting_entity import VoiceSettingEntity
 
 
 class ReadService:
+    # 読み上げ管理キュー
+    queue_map = {}
+
     @classmethod
-    def read(cls, message: discord.Message):
+    async def read(cls, message: discord.Message):
         # メッセージの送信者がbotだった場合は無視
         if message.author.bot:
             return
         # メッセージの送信したサーバーのボイスチャンネルに切断していない場合は無視
         if message.guild.voice_client is None:
             return
-        
-        cls.read_text(message)
+
+        guild_id = message.guild.id
+        message_id = message.id
+        # ギルドごとのキューが存在しない場合は作成
+        if guild_id not in cls.queue_map:
+            cls.queue_map[guild_id] = asyncio.Queue()
+        # メッセージとメッセージIDをキューに追加
+        await cls.queue_map[guild_id].put((message_id, message))
+
+        while True:
+            next_message_id, next_message = await cls.queue_map[guild_id].get()
+            if next_message_id == message_id:
+                # メッセージ,添付ファイルの順番に読み上げ
+                await asyncio.gather(
+                    cls.read_text(next_message),
+                    cls.read_file(next_message),
+                )
+
+                break
+            else:
+                # 自分の番でない場合、キューを戻す
+                await cls.queue_map[guild_id].put((next_message_id, next_message))
 
     @classmethod
-    def read_text(cls, message: discord.Message):
-        ...
+    async def read_text(cls, message: discord.Message):
+        path = cls.make_voice(message.author.id, message.content)
+        voice_client = message.guild.voice_client
+        # 他の音声が再生されていないか確認
+        while voice_client.is_playing():
+            await asyncio.sleep(0.5)
+
+        # 音声を再生
+        voice_client.play(discord.FFmpegPCMAudio(path))
 
     @classmethod
-    def read_file(cls):
+    async def read_file(cls, message: discord.Message):
         ...
 
     @classmethod
@@ -54,4 +84,4 @@ class ReadService:
         if voice_type == "Softalk":
             voice_model = Softalk()
 
-        voice_model.create_voice(voice_setting, text)
+        return voice_model.create_voice(voice_setting, text)

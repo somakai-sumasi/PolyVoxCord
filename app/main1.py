@@ -1,4 +1,8 @@
-from service.read_service import ReadService
+from voice_model.voicevox import Voicevox
 
-print()
-a = ReadService.make_voice(365830847653478400, "テスト")
+list = Voicevox.voice_list()
+text = ""
+for key, val in list.items():
+    text += f"`{key}`   {val}\n"
+
+print(text)

@@ -3,15 +3,19 @@ import os
 import asyncio
 import discord
 from discord.ext import commands
+from service.read_service import ReadService
 
 INITIAL_EXTENSIONS = [
+    "cogs.guide",
     "cogs.connection",
-    "cogs.setting",
+    "cogs.user_setting",
+    "cogs.guild_setting",
 ]
 
 intents = discord.Intents.all()
 activity = discord.Activity(name="MyBot", type=discord.ActivityType.custom)
 bot = commands.Bot(command_prefix="!", intents=intents, activity=activity)
+queue = asyncio.Queue()
 
 
 # cogの呼び出し
@@ -36,17 +40,7 @@ async def on_ready():
 # メッセージ受信時のイベント
 @bot.event
 async def on_message(message: discord.Message):
-    # メッセージの送信者がbotだった場合は無視
-    if message.author.bot:
-        return
-    # メッセージの送信したサーバーのボイスチャンネルに切断していない場合は無視
-    if message.guild.voice_client is None:
-        return
-
-    # 読み上げ処理
-    print(message.content)
-
-    print(message.attachments)
+    await ReadService.read(message)
 
 
 load_dotenv()

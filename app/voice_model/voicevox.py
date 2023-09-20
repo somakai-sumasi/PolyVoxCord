@@ -4,7 +4,6 @@ import os
 from dotenv import load_dotenv
 import requests
 import json
-import wave
 
 load_dotenv()
 
@@ -33,7 +32,9 @@ class Voicevox(MetaVoiceModel):
             ("speaker", voice_setting.voice_name_key),
         )
 
-        audio_query = requests.post(cls.PATH + "audio_query", params=params)
+        audio_query = requests.post(
+            cls.PATH + "audio_query", params=params, timeout=(1.0, 10.0)
+        )
 
         audio_query_json = audio_query.json()
 
@@ -41,17 +42,17 @@ class Voicevox(MetaVoiceModel):
         audio_query_json["pitchScale"] = voice_setting.pitch
 
         synthesis = requests.post(
-            cls.PATH + "synthesis", params=params, data=json.dumps(audio_query_json)
+            cls.PATH + "synthesis",
+            params=params,
+            data=json.dumps(audio_query_json),
+            timeout=(1.0, 10.0),
         )
 
-        wf = wave.open("./wav/" + cls.create_filename(__class__.__name__), "wb")
-        wf.setnchannels(1)
-        wf.setsampwidth(2)
-        wf.setframerate(24000)
-        wf.writeframes(synthesis.content)
-        wf.close()
+        path = "./wav/" + cls.create_filename(__class__.__name__)
+        with open(path, mode="wb") as f:
+            f.write(synthesis.content)
 
-        pass
+        return path
 
     @classmethod
     def voice_list(cls) -> dict[str, str]:
@@ -72,6 +73,6 @@ class Voicevox(MetaVoiceModel):
             speaker_name = speaker["name"]
             styles = speaker["styles"]
             for style in styles:
-                voice_list[style["id"]] = " ".join([speaker_name, style["name"]])
+                voice_list[str(style["id"])] = " ".join([speaker_name, style["name"]])
 
         return voice_list
