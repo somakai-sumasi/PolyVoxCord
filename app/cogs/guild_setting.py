@@ -25,7 +25,7 @@ class GuildSetting(commands.Cog):
         """読み上げ上限を設定"""
         ReadLimitService.set_limit(interaction.guild_id, upper_limit)
         await interaction.response.send_message(
-            f"読み上げ上限を{upper_limit}に変更しました", ephemeral=False
+            f"読み上げ上限を{upper_limit}文字に変更しました", ephemeral=False
         )
 
     @app_commands.command(name="add_dict", description="辞書を追加")

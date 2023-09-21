@@ -1,11 +1,15 @@
+import re
 import asyncio
 import discord
 from voice_model.meta_voice_model import MetaVoiceModel
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
-from repository.voice_setting_repository import VoiceSettingRepository
 from entity.voice_setting_entity import VoiceSettingEntity
+from entity.read_limit_entity import ReadLimitEntity
+from repository.voice_setting_repository import VoiceSettingRepository
+from repository.read_limit_repository import ReadLimitRepository
+from repository.reading_dict_repository import ReadingDictRepository
 
 
 class ReadService:
@@ -45,7 +49,13 @@ class ReadService:
 
     @classmethod
     async def read_text(cls, message: discord.Message):
-        path = cls.make_voice(message.author.id, message.content)
+        content = message.content
+        guild_id = message.guild.id
+        content = cls.omit_url(content)
+        content = cls.match_with_dictionary(content, guild_id)
+        content = cls.limit_length(content, guild_id)
+
+        path = cls.make_voice(message.author.id, content)
         voice_client = message.guild.voice_client
         # 他の音声が再生されていないか確認
         while voice_client.is_playing():
@@ -56,10 +66,14 @@ class ReadService:
 
     @classmethod
     async def read_file(cls, message: discord.Message):
+        content = message.content
+        guild_id = message.guild.id
+        content = cls.omit_url(content)
+        content = cls.match_with_dictionary(content, guild_id)
         ...
 
     @classmethod
-    def make_voice(cls, user_id: int, text: str):
+    def make_voice(cls, user_id: int, text: str) -> str:
         voice_setting = VoiceSettingRepository.get_by_user_id(user_id)
 
         # 登録されていない場合は~で読み上げ
@@ -85,3 +99,36 @@ class ReadService:
             voice_model = Softalk()
 
         return voice_model.create_voice(voice_setting, text)
+
+    @classmethod
+    def omit_url(text: str) -> str:
+        pattern = "https?://[\w/:%#\$&\?\(\)~\.=\+\-]+"
+        replace_text = "\nユーアールエル省略\n"
+        return re.sub(pattern, replace_text, text)
+
+    @classmethod
+    def limit_length(text: str, guild_id: int) -> str:
+        read_limit = ReadLimitRepository.get_by_guild_id(guild_id)
+        if read_limit == None:
+            read_limit = ReadLimitEntity(guild_id=guild_id, upper_limit=250)
+        upper_limit = read_limit.upper_limit
+
+        if len(text) > upper_limit:
+            text = text[:upper_limit] + "\n以下略\n"
+        return text
+
+    @classmethod
+    def match_with_dictionary(text: str, guild_id: int) -> str:
+        reading_dicts = ReadingDictRepository.get_by_guild_id(guild_id)
+        result_text = text
+
+        read_list = []  # あとでまとめて変換するときの読み仮名リスト
+        for i, reading_dict in enumerate(reading_dicts):
+            result_text = result_text.replace(
+                reading_dict.character, "{" + str(i) + "}"
+            )
+            read_list.append(reading_dict.reading)  # 変換が発生した順に読みがなリストに追加
+
+        result_text = result_text.format(*read_list)  # 読み仮名リストを引数にとる
+
+        return result_text

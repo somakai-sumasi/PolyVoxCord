@@ -37,7 +37,7 @@ class ReadingDictRepository:
         return model_to_entity(voice_setting_model, ReadingDictEntity)
 
     @classmethod
-    def get_by_guild_id(cls, guild_id: int) -> List[ReadingDictEntity] | None:
+    def get_by_guild_id(cls, guild_id: int) -> List[ReadingDictEntity]:
         voice_setting_models: List[ReadingDictEntity] = session.query(
             ReadingDict
         ).filter_by(guild_id=guild_id)
