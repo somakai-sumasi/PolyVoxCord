@@ -29,5 +29,6 @@ class Guide(commands.Cog):
         embed = discord.Embed(title="VOICEVOXの声の一覧", description=text)
         await interaction.response.send_message(embed=embed, ephemeral=False)
 
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(Guide(bot))

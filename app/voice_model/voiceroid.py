@@ -47,6 +47,10 @@ class Voiceroid(MetaVoiceModel):
         wf.writeframes(speech)
         wf.close()
 
+        path = "./wav/" + cls.create_filename(__class__.__name__)
+        with open(path, mode="wb") as f:
+            f.write(speech)
+
     @classmethod
     def voice_list() -> list[str]:
         """自身が持っているボイス名を返す

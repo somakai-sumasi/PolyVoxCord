@@ -19,22 +19,46 @@ class UserSetting(commands.Cog):
         print("sync:" + self.__class__.__name__)
 
     @app_commands.command(name="set_softalk", description="SofTalkの声を設定する")
+    @app_commands.describe(
+        voice_name_key="ボイスキー",
+        speed="デフォルトは120、下限0,上限300",
+        pitch="デフォルトは100、下限0,上限300",
+    )
+    @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
     @app_commands.guilds(GUILD)
-    async def set_softalk(self, interaction: discord.Interaction):
+    async def set_softalk(
+        self,
+        interaction: discord.Interaction,
+        voice_name_key: str,
+        speed: app_commands.Range[int, 0, 300] = 120,
+        pitch: app_commands.Range[int, 0, 300] = 100,
+    ):
         """SofTalkの声を設定する"""
         user_id = interaction.user.id
 
     @app_commands.command(name="set_voiceroid", description="VOICEROIDの声を設定する")
+    @app_commands.describe(
+        voice_name_key="ボイスキー",
+        speed="デフォルトは1.00、下限0.50,上限4.00",
+        pitch="デフォルトは1.00、下限0.50,上限2.00",
+    )
+    @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
     @app_commands.guilds(GUILD)
-    async def set_voiceroid(self, interaction: discord.Interaction):
+    async def set_voiceroid(
+        self,
+        interaction: discord.Interaction,
+        voice_name_key: str,
+        speed: app_commands.Range[float, 0.50, 4.00] = 1,
+        pitch: app_commands.Range[float, 0.50, 2.00] = 1,
+    ):
         """VOICEROIDの声を設定する"""
         user_id = interaction.user.id
 
     @app_commands.command(name="set_voicevox", description="VOICEVOXの声を設定する")
     @app_commands.describe(
         voice_name_key="ボイスキー",
-        speed="デフォルトは1、下限0.50,上限2.00",
-        pitch="デフォルトは0、下限-0.15,上限0.15",
+        speed="デフォルトは1.00、下限0.50,上限2.00",
+        pitch="デフォルトは0.00、下限-0.15,上限0.15",
     )
     @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
     @app_commands.guilds(GUILD)
