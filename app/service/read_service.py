@@ -101,13 +101,13 @@ class ReadService:
         return voice_model.create_voice(voice_setting, text)
 
     @classmethod
-    def omit_url(text: str) -> str:
+    def omit_url(cls, text: str) -> str:
         pattern = "https?://[\w/:%#\$&\?\(\)~\.=\+\-]+"
         replace_text = "\nユーアールエル省略\n"
         return re.sub(pattern, replace_text, text)
 
     @classmethod
-    def limit_length(text: str, guild_id: int) -> str:
+    def limit_length(cls, text: str, guild_id: int) -> str:
         read_limit = ReadLimitRepository.get_by_guild_id(guild_id)
         if read_limit == None:
             read_limit = ReadLimitEntity(guild_id=guild_id, upper_limit=250)
@@ -118,7 +118,7 @@ class ReadService:
         return text
 
     @classmethod
-    def match_with_dictionary(text: str, guild_id: int) -> str:
+    def match_with_dictionary(cls, text: str, guild_id: int) -> str:
         reading_dicts = ReadingDictRepository.get_by_guild_id(guild_id)
         result_text = text
 

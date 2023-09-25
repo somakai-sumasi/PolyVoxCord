@@ -1,9 +1,10 @@
 from dotenv import load_dotenv
+import datetime
 import os
 import asyncio
 import discord
 from discord import app_commands
-from discord.ext import commands
+from discord.ext import commands, tasks
 from service.read_service import ReadService
 
 
@@ -39,6 +40,7 @@ async def main(token):
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
+    time_loop.start()
 
 
 # ボイスチャンネル更新時
@@ -74,10 +76,31 @@ async def help(interaction: discord.Interaction):
             print(cmd.description)
 
 
+utc = datetime.timezone.utc
+time = datetime.time(hour=4, minute=00, tzinfo=utc)
+
+
+@tasks.loop(time=time)
+async def time_loop():
+    path = "./wav/"
+    files = os.listdir(path)
+    now = datetime.datetime.now()
+
+    for file in files:
+        name, ext = os.path.splitext(file)
+        if ext != ".wav":
+            continue
+
+        mtime = datetime.datetime.fromtimestamp(os.path.getmtime(path + file))
+        if (now - mtime).days > 2:
+            os.remove(path +file)
+
+
 # メッセージ受信時のイベント
 @bot.event
 async def on_message(message: discord.Message):
     await ReadService.read(message)
+
 
 # TODO WAVを消す処理を書く
 
