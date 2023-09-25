@@ -93,7 +93,7 @@ async def time_loop():
 
         mtime = datetime.datetime.fromtimestamp(os.path.getmtime(path + file))
         if (now - mtime).days > 2:
-            os.remove(path +file)
+            os.remove(path + file)
 
 
 # メッセージ受信時のイベント
@@ -101,8 +101,6 @@ async def time_loop():
 async def on_message(message: discord.Message):
     await ReadService.read(message)
 
-
-# TODO WAVを消す処理を書く
 
 TOKEN = os.getenv("TOKEN")
 asyncio.run(main(TOKEN))

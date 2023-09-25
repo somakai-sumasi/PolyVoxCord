@@ -1,3 +1,4 @@
+import os
 import re
 import asyncio
 import discord
@@ -49,20 +50,28 @@ class ReadService:
 
     @classmethod
     async def read_text(cls, message: discord.Message):
-        content = message.content
-        guild_id = message.guild.id
-        content = cls.omit_url(content)
-        content = cls.match_with_dictionary(content, guild_id)
-        content = cls.limit_length(content, guild_id)
+        try:
+            content = message.content
+            guild_id = message.guild.id
+            content = cls.omit_url(content)
+            content = cls.match_with_dictionary(content, guild_id)
+            content = cls.limit_length(content, guild_id)
 
-        path = cls.make_voice(message.author.id, content)
-        voice_client = message.guild.voice_client
-        # 他の音声が再生されていないか確認
-        while voice_client.is_playing():
-            await asyncio.sleep(0.5)
+            path = cls.make_voice(message.author.id, content)
+            voice_client = message.guild.voice_client
+            # 他の音声が再生されていないか確認
+            while voice_client.is_playing():
+                await asyncio.sleep(0.5)
 
-        # 音声を再生
-        voice_client.play(discord.FFmpegPCMAudio(path))
+            # 音声を再生
+            voice_client.play(discord.FFmpegPCMAudio(path))
+
+        except Exception as e:
+            print("=== エラー内容 ===")
+            print("type:" + str(type(e)))
+            print("args:" + str(e.args))
+            print("message:" + e.message)
+            print("e自身:" + str(e))
 
     @classmethod
     async def read_file(cls, message: discord.Message):

@@ -35,6 +35,9 @@ class UserSetting(commands.Cog):
     ):
         """SofTalkの声を設定する"""
         user_id = interaction.user.id
+        await VoiceSettingService.set_softalk(
+            interaction, interaction.user.id, voice_name_key, speed, pitch
+        )
 
     @app_commands.command(name="set_voiceroid", description="VOICEROIDの声を設定する")
     @app_commands.describe(
@@ -52,7 +55,10 @@ class UserSetting(commands.Cog):
         pitch: app_commands.Range[float, 0.50, 2.00] = 1,
     ):
         """VOICEROIDの声を設定する"""
-        user_id = interaction.user.id
+
+        await VoiceSettingService.set_voiceroid(
+            interaction, interaction.user.id, voice_name_key, speed, pitch
+        )
 
     @app_commands.command(name="set_voicevox", description="VOICEVOXの声を設定する")
     @app_commands.describe(

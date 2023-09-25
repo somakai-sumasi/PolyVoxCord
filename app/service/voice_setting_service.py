@@ -3,6 +3,7 @@ from repository.voice_setting_repository import VoiceSettingRepository
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
+from voice_model.softalk import Softalk
 
 
 class VoiceSettingService:
@@ -83,4 +84,27 @@ class VoiceSettingService:
         speed: float,
         pitch: float,
     ):
-        ...
+        voice_list = Softalk.voice_list()
+        if not (voice_name_key in voice_list):
+            await interaction.response.send_message(f"該当の声がありません", ephemeral=False)
+            return False
+
+        # 設定を登録
+        voice_setting = VoiceSettingRepository.get_by_user_id(user_id=user_id)
+        entity = VoiceSettingEntity(
+            user_id=user_id,
+            voice_type="Softalk",
+            voice_name_key=voice_name_key,
+            speed=speed,
+            pitch=pitch,
+        )
+        if voice_setting == None:
+            VoiceSettingRepository.create(entity)
+        else:
+            VoiceSettingRepository.update(entity)
+
+        await interaction.response.send_message(
+            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            ephemeral=False,
+        )
+        return True

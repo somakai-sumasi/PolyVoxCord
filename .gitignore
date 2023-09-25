@@ -4,3 +4,4 @@ __pycache__/
 *.db
 *.wav
 .DS_Store
+softalk.xml

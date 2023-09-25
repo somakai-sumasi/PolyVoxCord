@@ -1,8 +1,29 @@
 from voice_model.meta_voice_model import MetaVoiceModel
 from entity.voice_setting_entity import VoiceSettingEntity
 import pyvcroid2
-import winsound
 import wave
+
+voice_dict = {
+    "yukari_emo_44": "結月ゆかり",
+    "akane_west_emo_44": "琴葉 茜",
+    "aoi_emo_44": "琴葉 葵",
+    "akari_44": "紲星あかり",
+    "sora_44": "桜乃そら",
+    "itako_44": "東北イタコ",
+    "tsuina_44": "ついなちゃん(標準)",
+    "tsuina_west_44": "ついなちゃん(関西)",
+    "yukari_44": "結月ゆかり(v1)",
+    "tamiyasu_44": "民安ともえ(v1)",
+    "zunko_44": "東北ずん子(v1)",
+    "akane_west_44": "琴葉 茜(v1)",
+    "aoi_44": "琴葉 葵(v1)",
+    "kiritan_44": "東北きりたん(v1)",
+    "kou_44": "水奈瀬コウ(v1)",
+    "seika_44": "京町セイカ(v1)",
+    "yoshidakun_44": "鷹の爪 吉田くん(v1)",
+    "shouta_44": "月読ショウタ(v1)",
+    "ai_44": "月読アイ(v1)",
+}
 
 
 class Voiceroid(MetaVoiceModel):
@@ -51,8 +72,10 @@ class Voiceroid(MetaVoiceModel):
         with open(path, mode="wb") as f:
             f.write(speech)
 
+        return path
+
     @classmethod
-    def voice_list() -> list[str]:
+    def voice_list(cls) -> list[str]:
         """自身が持っているボイス名を返す
 
         Returns
@@ -63,4 +86,6 @@ class Voiceroid(MetaVoiceModel):
         vc = pyvcroid2.VcRoid2()
         voice_list = vc.listVoices()
 
-        pass
+        filtered_dict = {k: v for k, v in voice_dict.items() if k in voice_list}
+
+        return filtered_dict

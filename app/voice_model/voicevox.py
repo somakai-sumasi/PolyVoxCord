@@ -48,7 +48,7 @@ class Voicevox(MetaVoiceModel):
             timeout=(1.0, 10.0),
         )
 
-        path = "./wav/" + cls.create_filename(__class__.__name__)
+        path = os.getcwd() + "\\wav\\" + cls.create_filename(__class__.__name__)
         with open(path, mode="wb") as f:
             f.write(synthesis.content)
 
