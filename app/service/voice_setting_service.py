@@ -16,9 +16,11 @@ class VoiceSettingService:
         speed: float,
         pitch: float,
     ):
+        await interaction.response.defer()
+        
         voice_list = Voiceroid.voice_list()
         if not (voice_name_key in voice_list):
-            await interaction.response.send_message(f"該当の声がありません", ephemeral=False)
+            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
             return False
 
         # 設定を登録
@@ -35,7 +37,7 @@ class VoiceSettingService:
         else:
             VoiceSettingRepository.update(entity)
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
@@ -50,9 +52,11 @@ class VoiceSettingService:
         speed: float,
         pitch: float,
     ) -> bool:
+        await interaction.response.defer()
+
         voice_list = Voicevox.voice_list()
         if not (voice_name_key in voice_list):
-            await interaction.response.send_message(f"該当の声がありません", ephemeral=False)
+            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
             return False
 
         # 設定を登録
@@ -69,7 +73,7 @@ class VoiceSettingService:
         else:
             VoiceSettingRepository.update(entity)
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
@@ -84,9 +88,11 @@ class VoiceSettingService:
         speed: float,
         pitch: float,
     ):
+        await interaction.response.defer()
+
         voice_list = Softalk.voice_list()
         if not (voice_name_key in voice_list):
-            await interaction.response.send_message(f"該当の声がありません", ephemeral=False)
+            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
             return False
 
         # 設定を登録
@@ -103,7 +109,7 @@ class VoiceSettingService:
         else:
             VoiceSettingRepository.update(entity)
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )

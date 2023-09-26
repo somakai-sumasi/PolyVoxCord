@@ -16,25 +16,29 @@ class connection(commands.Cog):
     @app_commands.command(name="read_start", description="読み上げ開始")
     async def read_start(self, interaction: discord.Interaction):
         """読み上げを開始する"""
+        await interaction.response.defer()
+
         user = interaction.user
         if user.voice is None:
-            await interaction.response.send_message("接続してません", ephemeral=True)
+            await interaction.followup.send("接続してません")
             return
 
         await user.voice.channel.connect()
-        await interaction.response.send_message("接続しました", ephemeral=True)
+        await interaction.followup.send("接続しました")
 
     @app_commands.command(name="read_end", description="読み上げ開始")
     async def read_end(self, interaction: discord.Interaction):
         """読み上げを終了する"""
+        await interaction.response.defer()
+
 
         user = interaction.user
         if user.guild.voice_client is None:
-            await interaction.response.send_message("接続してません", ephemeral=True)
+            await interaction.followup.send("接続してません")
             return
 
         await user.guild.voice_client.disconnect()
-        await interaction.response.send_message("切断しました", ephemeral=True)
+        await interaction.followup.send("切断しました")
 
 
 async def setup(bot: commands.Bot):

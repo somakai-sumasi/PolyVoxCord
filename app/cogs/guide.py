@@ -19,35 +19,38 @@ class Guide(commands.Cog):
     @app_commands.command(name="softalk_list", description="Softalkの声の一覧を見る")
     async def softalk_list(self, interaction: discord.Interaction):
         """Softalkの声の一覧を見る"""
+        await interaction.response.defer()
 
         list = Softalk.voice_list()
         text = ""
         for key, val in list.items():
             text += f"`{key}`   {val}\n"
         embed = discord.Embed(title="Softalkの声の一覧", description=text)
-        await interaction.response.send_message(embed=embed, ephemeral=False)
+        await interaction.followup.send(embed=embed, ephemeral=False)
 
     @app_commands.command(name="voiceroid_list", description="VOICEROIDの声の一覧を見る")
     async def voiceroid_list(self, interaction: discord.Interaction):
         """VOICEROIDの声の一覧を見る"""
+        await interaction.response.defer()
 
         list = Voiceroid.voice_list()
         text = ""
         for key, val in list.items():
             text += f"`{key}`   {val}\n"
         embed = discord.Embed(title="VOICEROIDの声の一覧", description=text)
-        await interaction.response.send_message(embed=embed, ephemeral=False)
+        await interaction.followup.send(embed=embed, ephemeral=False)
 
     @app_commands.command(name="voicevox_list", description="VOICEVOXの声の一覧を見る")
     async def voicevox_list(self, interaction: discord.Interaction):
         """VOICEVOXの声の一覧を見る"""
+        await interaction.response.defer()
 
         list = Voicevox.voice_list()
         text = ""
         for key, val in list.items():
             text += f"`{key}`   {val}\n"
         embed = discord.Embed(title="VOICEVOXの声の一覧", description=text)
-        await interaction.response.send_message(embed=embed, ephemeral=False)
+        await interaction.followup.send(embed=embed, ephemeral=False)
 
 
 async def setup(bot: commands.Bot):

@@ -19,8 +19,10 @@ class GuildSetting(commands.Cog):
     @app_commands.rename(upper_limit="読み上げ上限数")
     async def set_limit(self, interaction: discord.Interaction, upper_limit: int):
         """読み上げ上限を設定"""
+        await interaction.response.defer()
+
         ReadLimitService.set_limit(interaction.guild_id, upper_limit)
-        await interaction.response.send_message(
+        await interaction.response.defer(
             f"読み上げ上限を{upper_limit}文字に変更しました", ephemeral=False
         )
 
@@ -30,8 +32,9 @@ class GuildSetting(commands.Cog):
         self, interaction: discord.Interaction, character: str, reading: str
     ):
         """辞書を追加"""
+        await interaction.response.defer()
         ReadingDictService.add_dict(interaction.guild_id, character, reading)
-        await interaction.response.send_message(
+        await interaction.response.defer(
             f"辞書に{character}({reading})を追加しました", ephemeral=False
         )
 
