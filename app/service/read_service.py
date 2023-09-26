@@ -63,6 +63,10 @@ class ReadService:
             while voice_client.is_playing():
                 await asyncio.sleep(0.5)
 
+# ファイルが出来るまで待つ
+            while not(os.access(path, os.W_OK)):
+                await asyncio.sleep(0.5)
+
             # 音声を再生
             voice_client.play(discord.FFmpegPCMAudio(path))
 

@@ -15,7 +15,7 @@ class UserSetting(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("loaded :" + self.__class__.__name__)
-        await self.bot.tree.sync(guild=discord.Object(GUILD))
+        await self.bot.tree.sync(guild=None)
         print("sync:" + self.__class__.__name__)
 
     @app_commands.command(name="set_softalk", description="SofTalkの声を設定する")
@@ -25,7 +25,6 @@ class UserSetting(commands.Cog):
         pitch="デフォルトは100、下限0,上限300",
     )
     @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
-    @app_commands.guilds(GUILD)
     async def set_softalk(
         self,
         interaction: discord.Interaction,
@@ -46,7 +45,6 @@ class UserSetting(commands.Cog):
         pitch="デフォルトは1.00、下限0.50,上限2.00",
     )
     @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
-    @app_commands.guilds(GUILD)
     async def set_voiceroid(
         self,
         interaction: discord.Interaction,
@@ -67,7 +65,6 @@ class UserSetting(commands.Cog):
         pitch="デフォルトは0.00、下限-0.15,上限0.15",
     )
     @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
-    @app_commands.guilds(GUILD)
     async def set_voicevox(
         self,
         interaction: discord.Interaction,

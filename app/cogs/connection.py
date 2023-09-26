@@ -13,11 +13,10 @@ class connection(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("loaded :" + self.__class__.__name__)
-        await self.bot.tree.sync(guild=discord.Object(GUILD))
+        await self.bot.tree.sync(guild=None)
         print("sync:" + self.__class__.__name__)
 
     @app_commands.command(name="read_start", description="読み上げ開始")
-    @app_commands.guilds(GUILD)
     async def read_start(self, interaction: discord.Interaction):
         """読み上げを開始する"""
         user = interaction.user
@@ -29,7 +28,6 @@ class connection(commands.Cog):
         await interaction.response.send_message("接続しました", ephemeral=True)
 
     @app_commands.command(name="read_end", description="読み上げ開始")
-    @app_commands.guilds(GUILD)
     async def read_end(self, interaction: discord.Interaction):
         """読み上げを終了する"""
 
