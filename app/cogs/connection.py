@@ -26,7 +26,7 @@ class connection(commands.Cog):
         await user.voice.channel.connect()
         await interaction.followup.send("接続しました")
 
-    @app_commands.command(name="read_end", description="読み上げ開始")
+    @app_commands.command(name="read_end", description="読み上げ終了")
     async def read_end(self, interaction: discord.Interaction):
         """読み上げを終了する"""
         await interaction.response.defer()
