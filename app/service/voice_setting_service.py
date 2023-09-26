@@ -17,7 +17,7 @@ class VoiceSettingService:
         pitch: float,
     ):
         await interaction.response.defer()
-        
+
         voice_list = Voiceroid.voice_list()
         if not (voice_name_key in voice_list):
             await interaction.followup.send(f"該当の声がありません", ephemeral=False)

@@ -12,7 +12,9 @@ load_dotenv()
 GUILD = int(os.getenv("GUILD"))
 intents = discord.Intents.all()
 activity = discord.Activity(name="MyBot", type=discord.ActivityType.custom)
-bot = commands.Bot(command_prefix="!", intents=intents, activity=activity)
+bot = commands.Bot(
+    command_prefix="!", intents=intents, activity=activity, help_command=None
+)
 queue = asyncio.Queue()
 
 INITIAL_EXTENSIONS = [
@@ -59,22 +61,24 @@ async def on_voice_state_update(
         await before.channel.guild.voice_client.disconnect()
 
 
-@bot.tree.command(name="help", description="help: use walk_commands")
-@app_commands.guilds(GUILD)
+@bot.tree.command(description="ヘルプコマンド")
 async def help(interaction: discord.Interaction):
     await interaction.response.defer()
-    await interaction.followup.send("help")
 
-    for cmd in bot.walk_commands():
-        print(cmd.name)
-        print(cmd.description)
+    commands = {}
+    for cmd in bot.tree.walk_commands():
+        commands[cmd.name] = cmd.description
 
     cogs = bot.cogs
-
     for key, val in cogs.items():
         for cmd in val.walk_app_commands():
-            print(cmd.name)
-            print(cmd.description)
+            commands[cmd.name] = cmd.description
+
+    embed = discord.Embed(title="コマンド一覧")
+    for name, description in commands.items():
+        embed.add_field(name="`" + name + "`", value=description, inline=False)
+
+    await interaction.followup.send(embed=embed, ephemeral=False)
 
 
 utc = datetime.timezone.utc

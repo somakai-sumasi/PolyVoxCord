@@ -31,7 +31,6 @@ class connection(commands.Cog):
         """読み上げを終了する"""
         await interaction.response.defer()
 
-
         user = interaction.user
         if user.guild.voice_client is None:
             await interaction.followup.send("接続してません")
