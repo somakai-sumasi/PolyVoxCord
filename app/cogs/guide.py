@@ -24,7 +24,7 @@ class Guide(commands.Cog):
         list = Softalk.voice_list()
         text = ""
         for key, val in list.items():
-            text += f"`{key}`   {val}\n"
+            text += f"`{key}`		{val}\n"
         embed = discord.Embed(title="Softalkの声の一覧", description=text)
         await interaction.followup.send(embed=embed, ephemeral=False)
 
@@ -36,7 +36,7 @@ class Guide(commands.Cog):
         list = Voiceroid.voice_list()
         text = ""
         for key, val in list.items():
-            text += f"`{key}`   {val}\n"
+            text += f"`{key}`		{val}\n"
         embed = discord.Embed(title="VOICEROIDの声の一覧", description=text)
         await interaction.followup.send(embed=embed, ephemeral=False)
 
@@ -48,7 +48,7 @@ class Guide(commands.Cog):
         list = Voicevox.voice_list()
         text = ""
         for key, val in list.items():
-            text += f"`{key}`   {val}\n"
+            text += f"`{key}`		{val}\n"
         embed = discord.Embed(title="VOICEVOXの声の一覧", description=text)
         await interaction.followup.send(embed=embed, ephemeral=False)
 
