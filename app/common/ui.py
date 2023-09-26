@@ -1,5 +1,6 @@
-import discord
 from typing import List
+
+import discord
 
 
 class SelectView(discord.ui.View):

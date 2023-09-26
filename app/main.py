@@ -1,12 +1,12 @@
-from dotenv import load_dotenv
+import asyncio
 import datetime
 import os
-import asyncio
+
 import discord
 from discord import app_commands
 from discord.ext import commands, tasks
+from dotenv import load_dotenv
 from service.read_service import ReadService
-
 
 load_dotenv()
 GUILD = int(os.getenv("GUILD"))
@@ -62,7 +62,8 @@ async def on_voice_state_update(
 @bot.tree.command(name="help", description="help: use walk_commands")
 @app_commands.guilds(GUILD)
 async def help(interaction: discord.Interaction):
-    await interaction.response.send_message("help")
+    await interaction.response.defer()
+    await interaction.followup.send("help")
 
     for cmd in bot.walk_commands():
         print(cmd.name)

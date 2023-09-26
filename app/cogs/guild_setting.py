@@ -1,11 +1,8 @@
-import os
 import discord
 from discord import app_commands
 from discord.ext import commands
 from service.read_limit_service import ReadLimitService
 from service.reading_dict_service import ReadingDictService
-
-GUILD = int(os.getenv("GUILD"))
 
 
 class GuildSetting(commands.Cog):

@@ -1,7 +1,8 @@
-from voice_model.meta_voice_model import MetaVoiceModel
-from entity.voice_setting_entity import VoiceSettingEntity
-import pyvcroid2
 import wave
+
+import pyvcroid2
+from entity.voice_setting_entity import VoiceSettingEntity
+from voice_model.meta_voice_model import MetaVoiceModel
 
 voice_dict = {
     "yukari_emo_44": "結月ゆかり",

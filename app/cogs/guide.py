@@ -1,12 +1,9 @@
-import os
 import discord
 from discord import app_commands
 from discord.ext import commands
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
-
-GUILD = int(os.getenv("GUILD"))
 
 
 class Guide(commands.Cog):

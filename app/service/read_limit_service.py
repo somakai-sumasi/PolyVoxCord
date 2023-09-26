@@ -1,5 +1,5 @@
-from repository.read_limit_repository import ReadLimitRepository
 from entity.read_limit_entity import ReadLimitEntity
+from repository.read_limit_repository import ReadLimitRepository
 
 
 class ReadLimitService:

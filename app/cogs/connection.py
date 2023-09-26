@@ -1,9 +1,6 @@
-import os
 import discord
 from discord import app_commands
 from discord.ext import commands
-
-GUILD = int(os.getenv("GUILD"))
 
 
 class connection(commands.Cog):

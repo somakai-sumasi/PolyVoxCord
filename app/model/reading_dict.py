@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, Text, Float
 from common.db_setting import Base
+from sqlalchemy import Column, Float, Integer, Text
 
 
 class ReadingDict(Base):

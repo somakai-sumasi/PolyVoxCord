@@ -1,8 +1,9 @@
 from dataclasses import asdict
+
 from common.db_setting import session
-from common.model_entity_converter import model_to_entity, entity_to_model
-from model.voice_setting import VoiceSetting
+from common.model_entity_converter import entity_to_model, model_to_entity
 from entity.voice_setting_entity import VoiceSettingEntity
+from model.voice_setting import VoiceSetting
 
 
 class VoiceSettingRepository:

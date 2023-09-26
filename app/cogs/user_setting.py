@@ -1,11 +1,7 @@
-import os
 import discord
 from discord import app_commands
 from discord.ext import commands
 from service.voice_setting_service import VoiceSettingService
-
-
-GUILD = int(os.getenv("GUILD"))
 
 
 class UserSetting(commands.Cog):

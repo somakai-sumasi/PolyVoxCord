@@ -1,5 +1,5 @@
 from dataclasses import asdict
-from typing import TypeVar, Type, List
+from typing import List, Type, TypeVar
 
 T = TypeVar("T")
 U = TypeVar("U")

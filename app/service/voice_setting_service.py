@@ -1,9 +1,9 @@
 import discord
-from repository.voice_setting_repository import VoiceSettingRepository
 from entity.voice_setting_entity import VoiceSettingEntity
+from repository.voice_setting_repository import VoiceSettingRepository
+from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
-from voice_model.softalk import Softalk
 
 
 class VoiceSettingService:

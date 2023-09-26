@@ -1,16 +1,17 @@
+import asyncio
 import os
 import re
-import asyncio
+
 import discord
+from entity.read_limit_entity import ReadLimitEntity
+from entity.voice_setting_entity import VoiceSettingEntity
+from repository.read_limit_repository import ReadLimitRepository
+from repository.reading_dict_repository import ReadingDictRepository
+from repository.voice_setting_repository import VoiceSettingRepository
 from voice_model.meta_voice_model import MetaVoiceModel
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
-from entity.voice_setting_entity import VoiceSettingEntity
-from entity.read_limit_entity import ReadLimitEntity
-from repository.voice_setting_repository import VoiceSettingRepository
-from repository.read_limit_repository import ReadLimitRepository
-from repository.reading_dict_repository import ReadingDictRepository
 
 
 class ReadService:
@@ -63,8 +64,8 @@ class ReadService:
             while voice_client.is_playing():
                 await asyncio.sleep(0.5)
 
-# ファイルが出来るまで待つ
-            while not(os.access(path, os.W_OK)):
+            # ファイルが出来るまで待つ
+            while not (os.access(path, os.W_OK)):
                 await asyncio.sleep(0.5)
 
             # 音声を再生

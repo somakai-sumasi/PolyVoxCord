@@ -1,7 +1,7 @@
-from __future__ import annotations
-from abc import ABCMeta, abstractmethod
-from entity.voice_setting_entity import VoiceSettingEntity
 import datetime
+from abc import ABCMeta, abstractmethod
+
+from entity.voice_setting_entity import VoiceSettingEntity
 
 
 class MetaVoiceModel(metaclass=ABCMeta):
