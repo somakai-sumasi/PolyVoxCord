@@ -22,7 +22,7 @@ class GuildSetting(commands.Cog):
         await interaction.response.defer()
 
         ReadLimitService.set_limit(interaction.guild_id, upper_limit)
-        await interaction.response.defer(
+        await interaction.followup.send(
             f"読み上げ上限を{upper_limit}文字に変更しました", ephemeral=False
         )
 
@@ -34,7 +34,7 @@ class GuildSetting(commands.Cog):
         """辞書を追加"""
         await interaction.response.defer()
         ReadingDictService.add_dict(interaction.guild_id, character, reading)
-        await interaction.response.defer(
+        await interaction.followup.send(
             f"辞書に{character}({reading})を追加しました", ephemeral=False
         )
 
