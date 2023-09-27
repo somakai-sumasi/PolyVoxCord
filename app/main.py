@@ -97,6 +97,7 @@ async def time_loop():
             continue
 
         mtime = datetime.datetime.fromtimestamp(os.path.getmtime(path + file))
+        # 2日経った音声データを削除する
         if (now - mtime).days > 2:
             os.remove(path + file)
 
