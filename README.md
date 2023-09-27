@@ -16,6 +16,7 @@ VOISEROID2,VOICEVOX,SofTalkを使用し、音声を作成し、読み上げを�
 
 ## 動かない時試す事
 - VOICEROID2を64bitに上げる
+- VOICEVOXを起動する
 
 ## 改修時にする事
 フォーマッターを実行する
