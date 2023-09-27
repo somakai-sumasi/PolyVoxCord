@@ -20,6 +20,13 @@ class ReadService:
 
     @classmethod
     async def read(cls, message: discord.Message):
+        """読み上げイベントを管理
+
+        Parameters
+        ----------
+        message : discord.Message
+            discord.Message
+        """
         # メッセージの送信者がbotだった場合は無視
         if message.author.bot:
             return
@@ -40,7 +47,7 @@ class ReadService:
             if next_message_id == message_id:
                 # メッセージ,添付ファイルの順番に読み上げ
                 await asyncio.gather(
-                    cls.read_text(next_message),
+                    cls.read_message(next_message),
                     cls.read_file(next_message),
                 )
 
@@ -50,13 +57,20 @@ class ReadService:
                 await cls.queue_map[guild_id].put((next_message_id, next_message))
 
     @classmethod
-    async def read_text(cls, message: discord.Message):
+    async def read_message(cls, message: discord.Message):
+        """メッセージを読み上げる
+
+        Parameters
+        ----------
+        message : discord.Message
+           discord.Message
+        """
         try:
             content = message.content
             guild_id = message.guild.id
             content = cls.omit_url(content)
-            content = cls.match_with_dictionary(content, guild_id)
-            content = cls.limit_length(content, guild_id)
+            content = cls.match_with_dictionary(guild_id, content)
+            content = cls.limit_length(guild_id, content)
 
             path = cls.make_voice(message.author.id, content)
             voice_client = message.guild.voice_client
@@ -80,14 +94,35 @@ class ReadService:
 
     @classmethod
     async def read_file(cls, message: discord.Message):
+        """ファイルを読み上げる
+
+        Parameters
+        ----------
+        message : discord.Message
+            discord.Message
+        """
         content = message.content
         guild_id = message.guild.id
         content = cls.omit_url(content)
-        content = cls.match_with_dictionary(content, guild_id)
+        content = cls.match_with_dictionary(guild_id, content)
         ...
 
     @classmethod
     def make_voice(cls, user_id: int, text: str) -> str:
+        """音声を作成する
+
+        Parameters
+        ----------
+        user_id : int
+            user_id
+        text : str
+            読み上げ文字
+
+        Returns
+        -------
+        str
+            ファイルのパス
+        """
         voice_setting = VoiceSettingRepository.get_by_user_id(user_id)
 
         # 登録されていない場合は~で読み上げ
@@ -116,12 +151,38 @@ class ReadService:
 
     @classmethod
     def omit_url(cls, text: str) -> str:
+        """URLがある場合省略する
+
+        Parameters
+        ----------
+        text : str
+            変換する文字
+
+        Returns
+        -------
+        str
+            変換後の文字
+        """
         pattern = "https?://[\w/:%#\$&\?\(\)~\.=\+\-]+"
         replace_text = "\nユーアールエル省略\n"
         return re.sub(pattern, replace_text, text)
 
     @classmethod
-    def limit_length(cls, text: str, guild_id: int) -> str:
+    def limit_length(cls, guild_id: int, text: str) -> str:
+        """最大文字数を超える場合カット
+
+        Parameters
+        ----------
+        guild_id : int
+            guild_id
+        text : str
+            変換する文字
+
+        Returns
+        -------
+        str
+            変換後の文字
+        """
         read_limit = ReadLimitRepository.get_by_guild_id(guild_id)
         if read_limit == None:
             read_limit = ReadLimitEntity(guild_id=guild_id, upper_limit=250)
@@ -132,7 +193,22 @@ class ReadService:
         return text
 
     @classmethod
-    def match_with_dictionary(cls, text: str, guild_id: int) -> str:
+    def match_with_dictionary(cls, guild_id: int, text: str) -> str:
+        """読みを反映した、読み上げ文字にする
+
+        Parameters
+        ----------
+        guild_id : int
+            guild_id
+        text : str
+            変換する文字
+
+        Returns
+        -------
+        str
+            変換後の文字
+        """
+
         reading_dicts = ReadingDictRepository.get_by_guild_id(guild_id)
         result_text = text
 

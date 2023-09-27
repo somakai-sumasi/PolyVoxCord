@@ -34,6 +34,8 @@ class Voiceroid(MetaVoiceModel):
 
         Parameters
         ----------
+        voice_setting : VoiceSettingEntity
+            ボイスの設定
         text : str
             読み上げするテキスト
 
@@ -44,6 +46,7 @@ class Voiceroid(MetaVoiceModel):
         """
         vc = pyvcroid2.VcRoid2()
 
+        # 琴葉茜の場合は関西弁にする
         language = "standard"
         if voice_setting.voice_name_key == "akane_west_emo_44":
             language = "standard_kansai"

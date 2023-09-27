@@ -17,7 +17,9 @@ class Softalk(MetaVoiceModel):
 
         Parameters
         ----------
-        text : str
+        voice_setting : VoiceSettingEntity
+            ボイスの設定
+        text: str
             読み上げするテキスト
 
         Returns
@@ -48,7 +50,7 @@ class Softalk(MetaVoiceModel):
 
         Returns
         -------
-        list[str]
+        dict[str, str]
             ボイス名のリスト
         """
 

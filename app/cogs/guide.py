@@ -18,7 +18,13 @@ class Guide(commands.Cog):
 
     @app_commands.command(name="softalk_list", description="Softalkの声の一覧を見る")
     async def softalk_list(self, interaction: discord.Interaction):
-        """Softalkの声の一覧を見る"""
+        """Softalkの声の一覧を見る
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            discord.Interaction
+        """
         await interaction.response.defer()
 
         list = Softalk.voice_list()
@@ -30,7 +36,13 @@ class Guide(commands.Cog):
 
     @app_commands.command(name="voiceroid_list", description="VOICEROIDの声の一覧を見る")
     async def voiceroid_list(self, interaction: discord.Interaction):
-        """VOICEROIDの声の一覧を見る"""
+        """VOICEROIDの声の一覧を見る
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            discord.Interaction
+        """
         await interaction.response.defer()
 
         list = Voiceroid.voice_list()
@@ -42,7 +54,13 @@ class Guide(commands.Cog):
 
     @app_commands.command(name="voicevox_list", description="VOICEVOXの声の一覧を見る")
     async def voicevox_list(self, interaction: discord.Interaction):
-        """VOICEVOXの声の一覧を見る"""
+        """VOICEVOXの声の一覧を見る
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            discord.Interaction
+        """
         await interaction.response.defer()
 
         list = Voicevox.voice_list()

@@ -20,6 +20,8 @@ class Voicevox(MetaVoiceModel):
 
         Parameters
         ----------
+        voice_setting : VoiceSettingEntity
+            ボイスの設定
         text : str
             読み上げするテキスト
 
@@ -61,7 +63,7 @@ class Voicevox(MetaVoiceModel):
 
         Returns
         -------
-        list[str]
+        dict[str, str]
             ボイス名のリスト
         """
         speakers = requests.get(

@@ -28,8 +28,20 @@ class UserSetting(commands.Cog):
         speed: app_commands.Range[int, 0, 300] = 120,
         pitch: app_commands.Range[int, 0, 300] = 100,
     ):
-        """SofTalkの声を設定する"""
-        user_id = interaction.user.id
+        """SofTalkの声を設定する
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            discord.Interaction
+        voice_name_key : str
+            ボイスキー
+        speed : app_commands.Range[int, 0, 300], optional
+            スピード, by default 120
+        pitch : app_commands.Range[int, 0, 300], optional
+            ピッチ, by default 100
+        """
+
         await VoiceSettingService.set_softalk(
             interaction, interaction.user.id, voice_name_key, speed, pitch
         )
@@ -48,7 +60,19 @@ class UserSetting(commands.Cog):
         speed: app_commands.Range[float, 0.50, 4.00] = 1,
         pitch: app_commands.Range[float, 0.50, 2.00] = 1,
     ):
-        """VOICEROIDの声を設定する"""
+        """VOICEROIDの声を設定する
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            discord.Interaction
+        voice_name_key : str
+            ボイスキー
+        speed : app_commands.Range[float, 0.50, 4.00], optional
+            スピード, by default 1
+        pitch : app_commands.Range[float, 0.50, 2.00], optional
+            ピッチ, by default 1
+        """
 
         await VoiceSettingService.set_voiceroid(
             interaction, interaction.user.id, voice_name_key, speed, pitch
@@ -68,7 +92,19 @@ class UserSetting(commands.Cog):
         speed: app_commands.Range[float, 0.50, 2.00] = 1,
         pitch: app_commands.Range[float, -0.15, 0.15] = 0,
     ):
-        """VOICEVOXの声を設定する"""
+        """VOICEVOXの声を設定する
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            discord.Interaction
+        voice_name_key : str
+            ボイスキー
+        speed : app_commands.Range[float, 0.50, 2.00], optional
+            スピード, by default 1
+        pitch : app_commands.Range[float,, optional
+            ピッチ, by default 0
+        """
 
         await VoiceSettingService.set_voicevox(
             interaction, interaction.user.id, voice_name_key, speed, pitch

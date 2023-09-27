@@ -20,6 +20,8 @@ class MetaVoiceModel(metaclass=ABCMeta):
 
         Parameters
         ----------
+        voice_setting : VoiceSettingEntity
+            ボイスの設定
         text : str
             読み上げするテキスト
 
@@ -36,12 +38,24 @@ class MetaVoiceModel(metaclass=ABCMeta):
 
         Returns
         -------
-        list[str]
+        dict[str, str]
             ボイス名のリスト
         """
         pass
 
-    def create_filename(class_name=None):
+    def create_filename(class_name: str = None) -> str:
+        """_summary_
+
+        Parameters
+        ----------
+        class_name : str, optional
+            クラス名, by default None
+
+        Returns
+        -------
+        str
+            ファイル名
+        """
         now = datetime.datetime.now()
         fileTitle = now.strftime("%Y%m%d-%H%M%S%f") + class_name + ".wav"
         return fileTitle

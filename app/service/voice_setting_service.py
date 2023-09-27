@@ -15,7 +15,27 @@ class VoiceSettingService:
         voice_name_key: str,
         speed: float,
         pitch: float,
-    ):
+    ) -> bool:
+        """VOICEROID2のユーザー設定を入れる
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            Discord interaction
+        user_id : int
+            user_id
+        voice_name_key : str
+            ボイスのキーとなる名前
+        speed : float
+            スピード
+        pitch : float
+            ピッチ
+
+        Returns
+        -------
+        bool
+            可否
+        """
         await interaction.response.defer()
 
         voice_list = Voiceroid.voice_list()
@@ -52,6 +72,27 @@ class VoiceSettingService:
         speed: float,
         pitch: float,
     ) -> bool:
+        """VOICEVOXのユーザー設定を入れる
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            Discord interaction
+        user_id : int
+            user_id
+        voice_name_key : str
+            ボイスのキーとなる名前
+        speed : float
+            スピード
+        pitch : float
+            ピッチ
+
+        Returns
+        -------
+        bool
+            可否
+        """
+
         await interaction.response.defer()
 
         voice_list = Voicevox.voice_list()
@@ -87,7 +128,27 @@ class VoiceSettingService:
         voice_name_key: str,
         speed: float,
         pitch: float,
-    ):
+    ) -> bool:
+        """SofTalkのユーザー設定を入れる
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            Discord interaction
+        user_id : int
+            user_id
+        voice_name_key : str
+            ボイスのキーとなる名前
+        speed : float
+            スピード
+        pitch : float
+            ピッチ
+
+        Returns
+        -------
+        bool
+            可否
+        """
         await interaction.response.defer()
 
         voice_list = Softalk.voice_list()

@@ -44,4 +44,11 @@ class Select(discord.ui.Select):
         super().__init__(placeholder="", min_values=1, max_values=1, options=options)
 
     async def callback(self, interaction: discord.Interaction):
+        """コールバック処理
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            discord.Interaction
+        """
         await self.callback_func(self, interaction)
