@@ -1,8 +1,8 @@
 # PolyVoxCord
 
 ## これはなに
-discrodの読み上げbot
-VOISEROID2,VOICEVOX,SofTalkを使用し、音声を作成し、読み上げをしてくれる
+discordの読み上げbot
+VOICEROID2,VOICEVOX,SofTalkを使用し、音声を作成し、読み上げをしてくれる
 
 ## 初期設定,実行
 1. `poetry install`を行いpoetryで仮想環境を作成
