@@ -1,14 +1,15 @@
 import asyncio
 import datetime
+import logging
 import os
 
 import discord
-from discord import app_commands
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from service.read_service import ReadService
 
 load_dotenv()
+handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 GUILD = int(os.getenv("GUILD"))
 intents = discord.Intents.all()
 activity = discord.Activity(name="MyBot", type=discord.ActivityType.custom)
@@ -31,14 +32,13 @@ async def load_extension():
         await bot.load_extension(cog)
 
 
-# botを起動
-async def main(token):
-    async with bot:
-        await load_extension()
-        await bot.start(token)
+# discord接続時
+@bot.event
+async def on_connect():
+    await load_extension()
 
 
-# 起動時
+# bot起動時
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
@@ -109,4 +109,4 @@ async def on_message(message: discord.Message):
 
 
 TOKEN = os.getenv("TOKEN")
-asyncio.run(main(TOKEN))
+bot.run(TOKEN, log_handler=handler)

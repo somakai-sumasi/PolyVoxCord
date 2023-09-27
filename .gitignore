@@ -5,3 +5,4 @@ __pycache__/
 *.wav
 .DS_Store
 softalk.xml
+*.log
