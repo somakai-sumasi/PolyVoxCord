@@ -7,7 +7,8 @@
 4. `python app/init.py`を実行し、dbフォルダにdbファイルが作成される事を確認する
 
 ## 実行方法
-`python app/main.py`を実行し、dbフォルダにdbファイルが作成される事を確認する
+1. `poetry shell`で仮想環境に入る
+2. `python app/main.py`を実行し、dbフォルダにdbファイルが作成される事を確認する
 
 ## 動かない時試す事
 - VOICEROIDを64bitに上げる
