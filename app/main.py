@@ -44,6 +44,9 @@ async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
     time_loop.start()
 
+    for guild in bot.guilds:
+        print(guild.name)
+
 
 # ボイスチャンネル更新時
 @bot.event
