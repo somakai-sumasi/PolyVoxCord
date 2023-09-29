@@ -1,6 +1,7 @@
 import asyncio
 import os
 import re
+from typing import Dict, List
 
 import discord
 from entity.read_limit_entity import ReadLimitEntity
@@ -17,6 +18,7 @@ from voice_model.voicevox import Voicevox
 class ReadService:
     # 読み上げ管理キュー
     queue_map = {}
+    text_channel_list: Dict[int, List[int]] = {}
 
     @classmethod
     async def read(cls, message: discord.Message):
@@ -32,6 +34,10 @@ class ReadService:
             return
         # メッセージの送信したサーバーのボイスチャンネルに切断していない場合は無視
         if message.guild.voice_client is None:
+            return
+
+        # 読み上げ対象でないチャンネルは無視
+        if not cls.has_channel(message.guild.id, message.channel.id):
             return
 
         guild_id = message.guild.id
@@ -130,7 +136,7 @@ class ReadService:
             voice_setting = VoiceSettingEntity(
                 user_id=user_id,
                 voice_type="Softalk",
-                voice_name_key="",
+                voice_name_key="/T:7/U:0",
                 speed=120,
                 pitch=100,
             )
@@ -148,6 +154,30 @@ class ReadService:
             voice_model = Softalk()
 
         return voice_model.create_voice(voice_setting, text)
+
+    @classmethod
+    def add_text_channel(cls, guild_id, channel_id):
+        """指定されたguild_idにchannel_idを追加する。"""
+
+        if guild_id not in cls.text_channel_list:
+            cls.text_channel_list[guild_id] = []
+
+        if channel_id not in cls.text_channel_list[guild_id]:
+            cls.text_channel_list[guild_id].append(channel_id)
+
+    @classmethod
+    def has_channel(cls, guild_id: int, channel_id: int) -> bool:
+        """指定されたguild_idにchannel_idが存在するかを確認する。"""
+        return (
+            guild_id in cls.text_channel_list
+            and channel_id in cls.text_channel_list[guild_id]
+        )
+
+    @classmethod
+    def remove_guild(cls, guild_id: int) -> None:
+        """指定されたguild_id（と紐ずくchannel_id）を削除する。"""
+        if guild_id in cls.text_channel_list:
+            del cls.text_channel_list[guild_id]
 
     @classmethod
     def omit_url(cls, text: str) -> str:

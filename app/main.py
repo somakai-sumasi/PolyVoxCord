@@ -6,6 +6,7 @@ import os
 import discord
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
+from service.presence_service import PresenceService
 from service.read_service import ReadService
 
 load_dotenv()
@@ -43,10 +44,7 @@ async def on_connect():
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
     time_loop.start()
-
-    for guild in bot.guilds:
-        print(guild.name)
-
+    await PresenceService.set_presence(bot)
 
 # ボイスチャンネル更新時
 @bot.event
@@ -60,8 +58,13 @@ async def on_voice_state_update(
     members = list(
         filter(lambda member: member.id != bot.user.id, before.channel.members)
     )
-    if len(members) == 0:
-        await before.channel.guild.voice_client.disconnect()
+    if len(members) != 0:
+        return
+
+    await before.channel.guild.voice_client.disconnect()
+
+    ReadService.remove_guild(before.channel.guild.id)
+    await PresenceService.set_presence(bot)
 
 
 @bot.tree.command(description="ヘルプコマンド")

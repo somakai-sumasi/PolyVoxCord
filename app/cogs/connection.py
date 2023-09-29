@@ -1,11 +1,13 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
+from service.presence_service import PresenceService
+from service.read_service import ReadService
 
 
 class connection(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot: commands.Bot):
+        self.bot: commands.Bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -29,8 +31,13 @@ class connection(commands.Cog):
             await interaction.followup.send("接続してません")
             return
 
-        await user.voice.channel.connect()
+        if user.guild.voice_client is None:
+            await user.voice.channel.connect()
+
         await interaction.followup.send("接続しました")
+
+        ReadService.add_text_channel(user.guild.id, interaction.channel.id)
+        await PresenceService.set_presence(self.bot)
 
     @app_commands.command(name="read_end", description="読み上げ終了")
     async def read_end(self, interaction: discord.Interaction):
@@ -50,6 +57,9 @@ class connection(commands.Cog):
 
         await user.guild.voice_client.disconnect()
         await interaction.followup.send("切断しました")
+
+        ReadService.remove_guild(user.guild.id)
+        await PresenceService.set_presence(self.bot)
 
 
 async def setup(bot: commands.Bot):

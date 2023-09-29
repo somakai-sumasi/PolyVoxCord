@@ -5,8 +5,8 @@ from service.voice_setting_service import VoiceSettingService
 
 
 class UserSetting(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot: commands.Bot):
+        self.bot: commands.Bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):

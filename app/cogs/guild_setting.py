@@ -6,8 +6,8 @@ from service.reading_dict_service import ReadingDictService
 
 
 class GuildSetting(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot: commands.Bot):
+        self.bot: commands.Bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
