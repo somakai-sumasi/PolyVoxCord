@@ -156,8 +156,16 @@ class ReadService:
         return voice_model.create_voice(voice_setting, text)
 
     @classmethod
-    def add_text_channel(cls, guild_id, channel_id):
-        """指定されたguild_idにchannel_idを追加する。"""
+    def add_text_channel(cls, guild_id: int, channel_id: int):
+        """指定されたguild_idにchannel_idを追加する。
+
+        Parameters
+        ----------
+        guild_id : int
+            ギルドid
+        channel_id : int
+            チャンネルid
+        """
 
         if guild_id not in cls.text_channel_list:
             cls.text_channel_list[guild_id] = []
@@ -167,7 +175,20 @@ class ReadService:
 
     @classmethod
     def has_channel(cls, guild_id: int, channel_id: int) -> bool:
-        """指定されたguild_idにchannel_idが存在するかを確認する。"""
+        """指定されたguild_idにchannel_idが存在するかを確認する。
+
+        Parameters
+        ----------
+        guild_id : int
+            ギルドid
+        channel_id : int
+            チャンネルid
+
+        Returns
+        -------
+        bool
+            存在する場合True
+        """
         return (
             guild_id in cls.text_channel_list
             and channel_id in cls.text_channel_list[guild_id]
@@ -175,7 +196,13 @@ class ReadService:
 
     @classmethod
     def remove_guild(cls, guild_id: int) -> None:
-        """指定されたguild_id（と紐ずくchannel_id）を削除する。"""
+        """指定されたguild_id（と紐づくchannel_id）を削除する。
+
+        Parameters
+        ----------
+        guild_id : int
+            ギルドid
+        """
         if guild_id in cls.text_channel_list:
             del cls.text_channel_list[guild_id]
 

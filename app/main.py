@@ -46,6 +46,7 @@ async def on_ready():
     time_loop.start()
     await PresenceService.set_presence(bot)
 
+
 # ボイスチャンネル更新時
 @bot.event
 async def on_voice_state_update(
