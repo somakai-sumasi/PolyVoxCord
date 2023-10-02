@@ -115,6 +115,10 @@ class ReadService:
 
             attachments = message.attachments
             for attachment in attachments:
+                name, ext = os.path.splitext(attachment.filename)
+                if ext != ".txt":
+                    continue
+
                 byte_content = await attachment.read()
                 content = byte_content.decode("utf-8")
                 content = cls.omit_url(content)
