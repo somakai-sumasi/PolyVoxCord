@@ -11,9 +11,8 @@ bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 # bot起動時
 @bot.event
 async def on_ready():
-    for guild in bot.guilds:
-        bot.tree.clear_commands(guild=guild)
-        await bot.tree.sync(guild=guild)
+    bot.tree.clear_commands(guild=None)
+    await bot.tree.sync(guild=None)
 
 
 load_dotenv()
