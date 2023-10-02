@@ -73,6 +73,9 @@ class ReadService:
         """
         try:
             content = message.content
+            if len(content) < 1:
+                return
+
             guild_id = message.guild.id
             content = cls.omit_url(content)
             content = cls.match_with_dictionary(guild_id, content)
