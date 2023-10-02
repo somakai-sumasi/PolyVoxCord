@@ -107,11 +107,34 @@ class ReadService:
         message : discord.Message
             discord.Message
         """
-        content = message.content
-        guild_id = message.guild.id
-        content = cls.omit_url(content)
-        content = cls.match_with_dictionary(guild_id, content)
-        ...
+        try:
+            guild_id = message.guild.id
+
+            attachments = message.attachments
+            for attachment in attachments:
+                byte_content = await attachment.read()
+                content = byte_content.decode("utf-8")
+                content = cls.omit_url(content)
+                content = cls.match_with_dictionary(guild_id, content)
+
+                path = cls.make_voice(message.author.id, content)
+                voice_client = message.guild.voice_client
+                # 他の音声が再生されていないか確認
+                while voice_client.is_playing():
+                    await asyncio.sleep(0.5)
+
+                # ファイルが出来るまで待つ
+                while not (os.access(path, os.W_OK)):
+                    await asyncio.sleep(0.5)
+                # 音声を再生
+                voice_client.play(discord.FFmpegPCMAudio(path))
+
+        except Exception as e:
+            print("=== エラー内容 ===")
+            print("type:" + str(type(e)))
+            print("args:" + str(e.args))
+            print("message:" + e.message)
+            print("e自身:" + str(e))
 
     @classmethod
     def make_voice(cls, user_id: int, text: str) -> str:
