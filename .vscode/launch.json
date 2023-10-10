@@ -11,6 +11,14 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": false
+        },
+        {
+            "name": "Python: main",
+            "type": "python",
+            "request": "launch",
+            "program": "./app/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
         }
     ]
 }

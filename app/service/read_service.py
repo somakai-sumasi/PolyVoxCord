@@ -1,4 +1,5 @@
 import asyncio
+import emoji
 import os
 import re
 from typing import Dict, List
@@ -77,6 +78,8 @@ class ReadService:
                 return
 
             guild_id = message.guild.id
+            content = cls.remove_emoji(content)
+            content = cls.remove_discord_object(content)
             content = cls.omit_url(content)
             content = cls.match_with_dictionary(guild_id, content)
             content = cls.limit_length(guild_id, content)
@@ -309,3 +312,13 @@ class ReadService:
         result_text = result_text.format(*read_list)  # 読み仮名リストを引数にとる
 
         return result_text
+
+    @classmethod
+    def remove_emoji(cls, text: str) -> str:
+        return emoji.replace_emoji(text, "絵文字")
+
+    @classmethod
+    def remove_discord_object(cls, text: str) -> str:
+        text = re.sub('\<:.+:\d+\>', 'サーバー絵文字', text)
+        text = re.sub('\<#\d+\>', 'チャンネルリンク', text)
+        return text
