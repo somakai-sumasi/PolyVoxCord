@@ -1,10 +1,10 @@
 import asyncio
-import emoji
 import os
 import re
 from typing import Dict, List
 
 import discord
+import emoji
 from entity.read_limit_entity import ReadLimitEntity
 from entity.voice_setting_entity import VoiceSettingEntity
 from repository.read_limit_repository import ReadLimitRepository
@@ -124,6 +124,7 @@ class ReadService:
 
                 byte_content = await attachment.read()
                 content = byte_content.decode("utf-8")
+                content = cls.remove_emoji(content)
                 content = cls.omit_url(content)
                 content = cls.match_with_dictionary(guild_id, content)
 
@@ -319,6 +320,6 @@ class ReadService:
 
     @classmethod
     def remove_discord_object(cls, text: str) -> str:
-        text = re.sub('\<:.+:\d+\>', 'サーバー絵文字', text)
-        text = re.sub('\<#\d+\>', 'チャンネルリンク', text)
+        text = re.sub("\<:.+:\d+\>", "サーバー絵文字", text)
+        text = re.sub("\<#\d+\>", "チャンネルリンク", text)
         return text
