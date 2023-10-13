@@ -60,6 +60,8 @@ async def on_voice_state_update(
         filter(lambda member: member.id != bot.user.id, before.channel.members)
     )
     if len(members) != 0:
+        # 他のユーザに切断されていた場合、表示をリセット
+        await PresenceService.set_presence(bot)
         return
 
     await before.channel.guild.voice_client.disconnect()
