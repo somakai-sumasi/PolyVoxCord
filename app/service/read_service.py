@@ -73,7 +73,7 @@ class ReadService:
            discord.Message
         """
         try:
-            content = message.content
+            content = message.clean_content
             if len(content) < 1:
                 return
 
@@ -321,5 +321,4 @@ class ReadService:
     @classmethod
     def remove_discord_object(cls, text: str) -> str:
         text = re.sub("\<:.+:\d+\>", "サーバー絵文字", text)
-        text = re.sub("\<#\d+\>", "チャンネルリンク", text)
         return text

@@ -35,7 +35,7 @@ async def load_extension():
 
 # discord接続時
 @bot.event
-async def on_connect():
+async def setup_hook():
     await load_extension()
 
 
@@ -52,7 +52,7 @@ async def on_ready():
 async def on_voice_state_update(
     member: discord.Member, before: discord.VoiceState, after: discord.VoiceState
 ):
-    if before == None:
+    if bot.user.id  not in list(map(lambda member: member.id, before.channel.members)):
         return
 
     # 自身以外のメンバーを絞り込み
@@ -61,6 +61,7 @@ async def on_voice_state_update(
     )
     if len(members) != 0:
         # 他のユーザに切断されていた場合、表示をリセット
+        ReadService.remove_guild(before.channel.guild.id)
         await PresenceService.set_presence(bot)
         return
 
