@@ -2,6 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from service.voice_setting_service import VoiceSettingService
+from service.guild_voice_setting_service import GuildVoiceSettingService
 
 
 class UserSetting(commands.Cog):
@@ -43,7 +44,7 @@ class UserSetting(commands.Cog):
         """
 
         await VoiceSettingService.set_softalk(
-            interaction, interaction.user.id, voice_name_key, speed, pitch
+            interaction, interaction.guild_id, interaction.user.id, voice_name_key, speed, pitch
         )
 
     @app_commands.command(name="set_voiceroid", description="VOICEROIDの声を設定する")
@@ -75,7 +76,7 @@ class UserSetting(commands.Cog):
         """
 
         await VoiceSettingService.set_voiceroid(
-            interaction, interaction.user.id, voice_name_key, speed, pitch
+            interaction, interaction.guild_id, interaction.user.id, voice_name_key, speed, pitch
         )
 
     @app_commands.command(name="set_voicevox", description="VOICEVOXの声を設定する")
@@ -107,7 +108,7 @@ class UserSetting(commands.Cog):
         """
 
         await VoiceSettingService.set_voicevox(
-            interaction, interaction.user.id, voice_name_key, speed, pitch
+            interaction, interaction.guild_id, interaction.user.id, voice_name_key, speed, pitch
         )
 
     @app_commands.command(name="set_other_user_softalk", description="他のユーザーのSofTalkの声を設定する(管理者権限が必要です)")
@@ -141,8 +142,8 @@ class UserSetting(commands.Cog):
             ピッチ, by default 100
         """
 
-        await VoiceSettingService.set_softalk(
-            interaction, member.id, voice_name_key, speed, pitch
+        await GuildVoiceSettingService.set_softalk(
+            interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
 
     @app_commands.command(name="set_other_user_voiceroid", description="他のユーザーのVOICEROIDの声を設定する(管理者権限が必要です)")
@@ -176,8 +177,8 @@ class UserSetting(commands.Cog):
             ピッチ, by default 1
         """
 
-        await VoiceSettingService.set_voiceroid(
-            interaction, member.id, voice_name_key, speed, pitch
+        await GuildVoiceSettingService.set_voiceroid(
+            interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
 
     @app_commands.command(name="set_other_user_voicevox", description="他のユーザーのVOICEVOXの声を設定する(管理者権限が必要です)")
@@ -211,8 +212,8 @@ class UserSetting(commands.Cog):
             ピッチ, by default 0
         """
 
-        await VoiceSettingService.set_voicevox(
-            interaction, member.id, voice_name_key, speed, pitch
+        await GuildVoiceSettingService.set_voicevox(
+            interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
 
     @set_other_user_voiceroid.error

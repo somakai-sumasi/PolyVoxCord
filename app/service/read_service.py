@@ -4,12 +4,12 @@ import re
 from typing import Dict, List
 
 import discord
-import emoji
 from entity.read_limit_entity import ReadLimitEntity
 from entity.voice_setting_entity import VoiceSettingEntity
 from repository.read_limit_repository import ReadLimitRepository
 from repository.reading_dict_repository import ReadingDictRepository
 from repository.voice_setting_repository import VoiceSettingRepository
+from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
 from voice_model.meta_voice_model import MetaVoiceModel
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
@@ -85,7 +85,7 @@ class ReadService:
             content = cls.limit_length(guild_id, content)
             content = get_pronunciation(content)
 
-            path = cls.make_voice(message.author.id, content)
+            path = cls.make_voice(message.guild.id, message.author.id, content)
             voice_client = message.guild.voice_client
             # 他の音声が再生されていないか確認
             while voice_client.is_playing():
@@ -129,7 +129,7 @@ class ReadService:
                 content = cls.match_with_dictionary(guild_id, content)
                 content = get_pronunciation(content)
 
-                path = cls.make_voice(message.author.id, content)
+                path = cls.make_voice(message.guild.id, message.author.id, content)
                 voice_client = message.guild.voice_client
                 # 他の音声が再生されていないか確認
                 while voice_client.is_playing():
@@ -149,11 +149,13 @@ class ReadService:
             print("e自身:" + str(e))
 
     @classmethod
-    def make_voice(cls, user_id: int, text: str) -> str:
+    def make_voice(cls, guild_id:int,user_id: int, text: str) -> str:
         """音声を作成する
 
         Parameters
         ----------
+        guild_id : int
+            guild_id
         user_id : int
             user_id
         text : str
@@ -164,7 +166,10 @@ class ReadService:
         str
             ファイルのパス
         """
-        voice_setting = VoiceSettingRepository.get_by_user_id(user_id)
+        voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id, user_id)
+        # サーバー別の設定がない場合はこちらを使う
+        if voice_setting == None:
+            voice_setting = VoiceSettingRepository.get_by_user_id(user_id)
 
         # 登録されていない場合は~で読み上げ
         if voice_setting == None:
