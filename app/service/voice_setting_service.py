@@ -1,7 +1,7 @@
 import discord
 from entity.guild_voice_setting_entity import GuildVoiceSettingEntity
-from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
 from entity.voice_setting_entity import VoiceSettingEntity
+from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
 from repository.voice_setting_repository import VoiceSettingRepository
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
@@ -13,7 +13,7 @@ class VoiceSettingService:
     async def set_voiceroid(
         cls,
         interaction: discord.Interaction,
-        guild_id:int,
+        guild_id: int,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -49,7 +49,9 @@ class VoiceSettingService:
             return False
 
         # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id=guild_id,user_id=user_id)
+        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
+            guild_id=guild_id, user_id=user_id
+        )
         entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
             user_id=user_id,
@@ -91,7 +93,7 @@ class VoiceSettingService:
     async def set_voicevox(
         cls,
         interaction: discord.Interaction,
-        guild_id:int,
+        guild_id: int,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -128,7 +130,9 @@ class VoiceSettingService:
             return False
 
         # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id=guild_id,user_id=user_id)
+        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
+            guild_id=guild_id, user_id=user_id
+        )
         entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
             user_id=user_id,
@@ -141,7 +145,6 @@ class VoiceSettingService:
             GuildVoiceSettingRepository.create(entity)
         else:
             GuildVoiceSettingRepository.update(entity)
-
 
         if not (voice_name_key in voice_list):
             await interaction.followup.send(f"該当の声がありません", ephemeral=False)
@@ -171,7 +174,7 @@ class VoiceSettingService:
     async def set_softalk(
         cls,
         interaction: discord.Interaction,
-        guild_id:int,
+        guild_id: int,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -207,7 +210,9 @@ class VoiceSettingService:
             return False
 
         # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id=guild_id,user_id=user_id)
+        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
+            guild_id=guild_id, user_id=user_id
+        )
         entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
             user_id=user_id,

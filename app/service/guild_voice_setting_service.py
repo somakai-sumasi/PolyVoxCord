@@ -11,7 +11,7 @@ class GuildVoiceSettingService:
     async def set_voiceroid(
         cls,
         interaction: discord.Interaction,
-        guild_id:int,
+        guild_id: int,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -47,7 +47,9 @@ class GuildVoiceSettingService:
             return False
 
         # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id=guild_id,user_id=user_id)
+        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
+            guild_id=guild_id, user_id=user_id
+        )
         entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
             user_id=user_id,
@@ -71,7 +73,7 @@ class GuildVoiceSettingService:
     async def set_voicevox(
         cls,
         interaction: discord.Interaction,
-        guild_id:int,
+        guild_id: int,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -108,7 +110,9 @@ class GuildVoiceSettingService:
             return False
 
         # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id=guild_id,user_id=user_id)
+        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
+            guild_id=guild_id, user_id=user_id
+        )
         entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
             user_id=user_id,
@@ -132,7 +136,7 @@ class GuildVoiceSettingService:
     async def set_softalk(
         cls,
         interaction: discord.Interaction,
-        guild_id:int,
+        guild_id: int,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -168,7 +172,9 @@ class GuildVoiceSettingService:
             return False
 
         # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id=guild_id,user_id=user_id)
+        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
+            guild_id=guild_id, user_id=user_id
+        )
         entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
             user_id=user_id,

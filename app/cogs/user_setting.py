@@ -1,8 +1,8 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from service.voice_setting_service import VoiceSettingService
 from service.guild_voice_setting_service import GuildVoiceSettingService
+from service.voice_setting_service import VoiceSettingService
 
 
 class UserSetting(commands.Cog):
@@ -44,7 +44,12 @@ class UserSetting(commands.Cog):
         """
 
         await VoiceSettingService.set_softalk(
-            interaction, interaction.guild_id, interaction.user.id, voice_name_key, speed, pitch
+            interaction,
+            interaction.guild_id,
+            interaction.user.id,
+            voice_name_key,
+            speed,
+            pitch,
         )
 
     @app_commands.command(name="set_voiceroid", description="VOICEROIDの声を設定する")
@@ -76,7 +81,12 @@ class UserSetting(commands.Cog):
         """
 
         await VoiceSettingService.set_voiceroid(
-            interaction, interaction.guild_id, interaction.user.id, voice_name_key, speed, pitch
+            interaction,
+            interaction.guild_id,
+            interaction.user.id,
+            voice_name_key,
+            speed,
+            pitch,
         )
 
     @app_commands.command(name="set_voicevox", description="VOICEVOXの声を設定する")
@@ -108,22 +118,31 @@ class UserSetting(commands.Cog):
         """
 
         await VoiceSettingService.set_voicevox(
-            interaction, interaction.guild_id, interaction.user.id, voice_name_key, speed, pitch
+            interaction,
+            interaction.guild_id,
+            interaction.user.id,
+            voice_name_key,
+            speed,
+            pitch,
         )
 
-    @app_commands.command(name="set_other_user_softalk", description="他のユーザーのSofTalkの声を設定する(管理者権限が必要です)")
+    @app_commands.command(
+        name="set_other_user_softalk", description="他のユーザーのSofTalkの声を設定する(管理者権限が必要です)"
+    )
     @app_commands.describe(
         member="対象のユーザー",
         voice_name_key="ボイスキー",
         speed="デフォルトは120、下限0,上限300",
         pitch="デフォルトは100、下限0,上限300",
     )
-    @app_commands.rename(member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
+    @app_commands.rename(
+        member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
+    )
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_softalk(
         self,
         interaction: discord.Interaction,
-        member :discord.Member,
+        member: discord.Member,
         voice_name_key: str,
         speed: app_commands.Range[int, 0, 300] = 120,
         pitch: app_commands.Range[int, 0, 300] = 100,
@@ -146,19 +165,24 @@ class UserSetting(commands.Cog):
             interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
 
-    @app_commands.command(name="set_other_user_voiceroid", description="他のユーザーのVOICEROIDの声を設定する(管理者権限が必要です)")
+    @app_commands.command(
+        name="set_other_user_voiceroid",
+        description="他のユーザーのVOICEROIDの声を設定する(管理者権限が必要です)",
+    )
     @app_commands.describe(
         member="対象のユーザー",
         voice_name_key="ボイスキー",
         speed="デフォルトは1.00、下限0.50,上限4.00",
         pitch="デフォルトは1.00、下限0.50,上限2.00",
     )
-    @app_commands.rename(member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
+    @app_commands.rename(
+        member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
+    )
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_voiceroid(
         self,
         interaction: discord.Interaction,
-        member :discord.Member,
+        member: discord.Member,
         voice_name_key: str,
         speed: app_commands.Range[float, 0.50, 4.00] = 1,
         pitch: app_commands.Range[float, 0.50, 2.00] = 1,
@@ -181,19 +205,23 @@ class UserSetting(commands.Cog):
             interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
 
-    @app_commands.command(name="set_other_user_voicevox", description="他のユーザーのVOICEVOXの声を設定する(管理者権限が必要です)")
+    @app_commands.command(
+        name="set_other_user_voicevox", description="他のユーザーのVOICEVOXの声を設定する(管理者権限が必要です)"
+    )
     @app_commands.describe(
         member="対象のユーザー",
         voice_name_key="ボイスキー",
         speed="デフォルトは1.00、下限0.50,上限2.00",
         pitch="デフォルトは0.00、下限-0.15,上限0.15",
     )
-    @app_commands.rename(member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
+    @app_commands.rename(
+        member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
+    )
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_voicevox(
         self,
         interaction: discord.Interaction,
-        member :discord.Member,
+        member: discord.Member,
         voice_name_key: str,
         speed: app_commands.Range[float, 0.50, 2.00] = 1,
         pitch: app_commands.Range[float, -0.15, 0.15] = 0,
@@ -219,7 +247,9 @@ class UserSetting(commands.Cog):
     @set_other_user_voiceroid.error
     @set_other_user_voiceroid.error
     @set_other_user_voicevox.error
-    async def test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
+    async def test_error(
+        self, interaction: discord.Interaction, error: app_commands.AppCommandError
+    ):
         await interaction.response.defer()
         await interaction.followup.send("権限がありません")
 

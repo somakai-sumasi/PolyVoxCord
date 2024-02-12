@@ -8,7 +8,9 @@ from model.guild_voice_setting import GuildVoiceSetting
 
 class GuildVoiceSettingRepository:
     @classmethod
-    def get_by_user_id(cls, guild_id:int, user_id: int) -> GuildVoiceSettingEntity | None:
+    def get_by_user_id(
+        cls, guild_id: int, user_id: int
+    ) -> GuildVoiceSettingEntity | None:
         """ユーザーの読み上げ上限数を検索
 
         Parameters
@@ -24,7 +26,9 @@ class GuildVoiceSettingRepository:
             検索結果
         """
         voice_setting_model: GuildVoiceSetting = (
-            session.query(GuildVoiceSetting).filter_by(guild_id=guild_id,user_id=user_id).first()
+            session.query(GuildVoiceSetting)
+            .filter_by(guild_id=guild_id, user_id=user_id)
+            .first()
         )
 
         if voice_setting_model == None:
@@ -33,7 +37,9 @@ class GuildVoiceSettingRepository:
         return model_to_entity(voice_setting_model, GuildVoiceSettingEntity)
 
     @classmethod
-    def create(cls, voice_setting_entity: GuildVoiceSettingEntity) -> GuildVoiceSettingEntity:
+    def create(
+        cls, voice_setting_entity: GuildVoiceSettingEntity
+    ) -> GuildVoiceSettingEntity:
         """作成
 
         Parameters
@@ -50,10 +56,14 @@ class GuildVoiceSettingRepository:
 
         session.add(voice_setting)
         session.commit()
-        return cls.get_by_user_id(voice_setting_entity.guild_id, voice_setting_entity.user_id)
+        return cls.get_by_user_id(
+            voice_setting_entity.guild_id, voice_setting_entity.user_id
+        )
 
     @classmethod
-    def update(cls, voice_setting_entity: GuildVoiceSettingEntity) -> GuildVoiceSettingEntity:
+    def update(
+        cls, voice_setting_entity: GuildVoiceSettingEntity
+    ) -> GuildVoiceSettingEntity:
         """更新
 
         Parameters
@@ -67,15 +77,16 @@ class GuildVoiceSettingRepository:
             更新後の情報
         """
         session.query(GuildVoiceSetting).filter_by(
-            guild_id=voice_setting_entity.guild_id,
-            user_id=voice_setting_entity.user_id
+            guild_id=voice_setting_entity.guild_id, user_id=voice_setting_entity.user_id
         ).update(asdict(voice_setting_entity))
         session.commit()
 
-        return cls.get_by_user_id(voice_setting_entity.guild_id, voice_setting_entity.user_id)
+        return cls.get_by_user_id(
+            voice_setting_entity.guild_id, voice_setting_entity.user_id
+        )
 
     @classmethod
-    def delete(cls,guild_id:int,  user_id: int) -> GuildVoiceSettingEntity:
+    def delete(cls, guild_id: int, user_id: int) -> GuildVoiceSettingEntity:
         """削除
 
         Parameters
@@ -90,7 +101,9 @@ class GuildVoiceSettingRepository:
         GuildVoiceSettingEntity
             削除後の情報
         """
-        session.query(GuildVoiceSetting).filter_by(guild_id=guild_id,user_id=user_id).delete()
+        session.query(GuildVoiceSetting).filter_by(
+            guild_id=guild_id, user_id=user_id
+        ).delete()
         session.commit()
 
         return cls.get_by_user_id(user_id)

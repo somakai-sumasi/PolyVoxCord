@@ -51,7 +51,7 @@ async def on_ready():
 async def on_voice_state_update(
     member: discord.Member, before: discord.VoiceState, after: discord.VoiceState
 ):
-    if bot.user.id  not in list(map(lambda member: member.id, before.channel.members)):
+    if bot.user.id not in list(map(lambda member: member.id, before.channel.members)):
         return
 
     # 自身以外のメンバーを絞り込み

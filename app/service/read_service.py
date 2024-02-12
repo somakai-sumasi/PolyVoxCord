@@ -4,17 +4,17 @@ import re
 from typing import Dict, List
 
 import discord
+from common.assign_kana import get_pronunciation
 from entity.read_limit_entity import ReadLimitEntity
 from entity.voice_setting_entity import VoiceSettingEntity
+from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
 from repository.read_limit_repository import ReadLimitRepository
 from repository.reading_dict_repository import ReadingDictRepository
 from repository.voice_setting_repository import VoiceSettingRepository
-from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
 from voice_model.meta_voice_model import MetaVoiceModel
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
-from common.assign_kana import get_pronunciation
 
 
 class ReadService:
@@ -149,7 +149,7 @@ class ReadService:
             print("e自身:" + str(e))
 
     @classmethod
-    def make_voice(cls, guild_id:int,user_id: int, text: str) -> str:
+    def make_voice(cls, guild_id: int, user_id: int, text: str) -> str:
         """音声を作成する
 
         Parameters
