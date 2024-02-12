@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+
+load_dotenv()
 import asyncio
 import datetime
 import logging
@@ -5,11 +8,9 @@ import os
 
 import discord
 from discord.ext import commands, tasks
-from dotenv import load_dotenv
 from service.presence_service import PresenceService
 from service.read_service import ReadService
 
-load_dotenv()
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 intents = discord.Intents.all()
 activity = discord.Activity(name="MyBot", type=discord.ActivityType.custom)
