@@ -14,6 +14,7 @@ from voice_model.meta_voice_model import MetaVoiceModel
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
+from common.assign_kana import get_pronunciation
 
 
 class ReadService:
@@ -78,11 +79,11 @@ class ReadService:
                 return
 
             guild_id = message.guild.id
-            content = cls.remove_emoji(content)
-            content = cls.remove_discord_object(content)
+            content = cls.conv_discord_object(content)
             content = cls.omit_url(content)
             content = cls.match_with_dictionary(guild_id, content)
             content = cls.limit_length(guild_id, content)
+            content = get_pronunciation(content)
 
             path = cls.make_voice(message.author.id, content)
             voice_client = message.guild.voice_client
@@ -124,9 +125,9 @@ class ReadService:
 
                 byte_content = await attachment.read()
                 content = byte_content.decode("utf-8")
-                content = cls.remove_emoji(content)
                 content = cls.omit_url(content)
                 content = cls.match_with_dictionary(guild_id, content)
+                content = get_pronunciation(content)
 
                 path = cls.make_voice(message.author.id, content)
                 voice_client = message.guild.voice_client
@@ -315,10 +316,6 @@ class ReadService:
         return result_text
 
     @classmethod
-    def remove_emoji(cls, text: str) -> str:
-        return emoji.replace_emoji(text, "絵文字")
-
-    @classmethod
-    def remove_discord_object(cls, text: str) -> str:
+    def conv_discord_object(cls, text: str) -> str:
         text = re.sub("\<:.+:\d+\>", "サーバー絵文字", text)
         return text

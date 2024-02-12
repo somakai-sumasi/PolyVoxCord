@@ -11,7 +11,6 @@ from service.read_service import ReadService
 
 load_dotenv()
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
-GUILD = int(os.getenv("GUILD"))
 intents = discord.Intents.all()
 activity = discord.Activity(name="MyBot", type=discord.ActivityType.custom)
 bot = commands.Bot(
@@ -118,5 +117,4 @@ async def on_message(message: discord.Message):
     await ReadService.read(message)
 
 
-TOKEN = os.getenv("TOKEN")
-bot.run(TOKEN, log_handler=handler)
+bot.run(os.getenv("TOKEN"), log_handler=handler)
