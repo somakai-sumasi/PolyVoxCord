@@ -118,7 +118,6 @@ async def on_message(message: discord.Message):
     await ReadService.read(message)
 
 
-handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 handler = TimedRotatingFileHandler(
     filename="./logs/discord.log",  # ログファイルのベース名
     when="midnight",                # ログファイルをローテートする単位（'D'は日）
