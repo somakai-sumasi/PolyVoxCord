@@ -1,12 +1,10 @@
-from dotenv import load_dotenv
-
-load_dotenv()
 import asyncio
 import datetime
 import logging
 import os
 
 import discord
+from config.discord import TOKEN
 from discord.ext import commands, tasks
 from service.presence_service import PresenceService
 from service.read_service import ReadService
@@ -118,4 +116,4 @@ async def on_message(message: discord.Message):
     await ReadService.read(message)
 
 
-bot.run(os.getenv("TOKEN"), log_handler=handler)
+bot.run(TOKEN, log_handler=handler)

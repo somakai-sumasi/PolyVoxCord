@@ -1,7 +1,6 @@
 import discord
 from entity.guild_voice_setting_entity import GuildVoiceSettingEntity
-from repository.guild_voice_setting_repository import \
-    GuildVoiceSettingRepository
+from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox

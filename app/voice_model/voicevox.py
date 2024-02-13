@@ -2,16 +2,12 @@ import json
 import os
 
 import requests
-from dotenv import load_dotenv
+from config.voice_model import VOICEVOX_HOST, VOICEVOX_PORT
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.meta_voice_model import MetaVoiceModel
 
-load_dotenv()
-
 
 class Voicevox(MetaVoiceModel):
-    VOICEVOX_HOST = os.getenv("VOICEVOX_HOST")
-    VOICEVOX_PORT = os.getenv("VOICEVOX_PORT")
     PATH = f"http://{VOICEVOX_HOST}:{VOICEVOX_PORT}/"
 
     @classmethod

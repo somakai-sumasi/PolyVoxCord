@@ -2,8 +2,12 @@ from dataclasses import asdict
 from typing import List
 
 from common.db_setting import session
-from common.model_entity_converter import (entities_to_models, entity_to_model,
-                                           model_to_entity, models_to_entities)
+from common.model_entity_converter import (
+    entities_to_models,
+    entity_to_model,
+    model_to_entity,
+    models_to_entities,
+)
 from entity.reading_dict_entity import ReadingDictEntity
 from model.reading_dict import ReadingDict
 

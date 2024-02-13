@@ -1,12 +1,10 @@
 import os
 
-from dotenv import load_dotenv
+from config.db import DB_NAME
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-load_dotenv()
-DB_NAME = os.getenv("DB_NAME")
 DATABASE = "sqlite:///./db/" + DB_NAME
 
 ENGINE = create_engine(DATABASE, echo=False)

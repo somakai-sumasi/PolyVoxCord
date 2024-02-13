@@ -7,8 +7,7 @@ import discord
 from common.assign_kana import get_pronunciation
 from entity.read_limit_entity import ReadLimitEntity
 from entity.voice_setting_entity import VoiceSettingEntity
-from repository.guild_voice_setting_repository import \
-    GuildVoiceSettingRepository
+from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
 from repository.read_limit_repository import ReadLimitRepository
 from repository.reading_dict_repository import ReadingDictRepository
 from repository.voice_setting_repository import VoiceSettingRepository
