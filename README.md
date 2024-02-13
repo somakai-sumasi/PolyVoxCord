@@ -19,11 +19,9 @@ VOICEROID2,VOICEVOX,SofTalkを使用し、音声を作成し、読み上げを�
 1. `poetry install`を行いpoetryで仮想環境を作成
 2. `.env.sample`ファイルを`.env`にリネーム
 3. `.env`ファイルのTOKENなどを埋める
-4. `python app/init.py`を実行し、dbフォルダにdbファイルが作成される事を確認する
-
-## 実行方法
-1. `poetry shell`で仮想環境に入る
-2. `python app/main.py`を実行する
+4. `poetry shell`で仮想環境に入る
+5. `python app/init_db.py`を実行し、dbフォルダにdbファイルが作成される事を確認する
+6. `python app/main.py`を実行する
 
 ## 動かない時試す事
 - VOICEROID2を64bitに上げる
