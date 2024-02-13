@@ -1,13 +1,9 @@
 # PolyVoxCord
-<a href="LICENSE">
-  <img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat">
-</a>
-<img src="https://img.shields.io/static/v1?logo=discord&label=&message=Discord%20bot&labelColor=f5f5f5&color=5865F2&logoColor=5865F2">
-<img src="https://img.shields.io/static/v1?logo=python&label=&message=Python3.11.0&labelColor=f5f5f5&color=3776AB&logoColor=3776AB">
-<img src="https://img.shields.io/static/v1?logo=SQLite&label=&message=SQLite&labelColor=f5f5f5&color=003B57&logoColor=003B57">
-<a href="https://open.vscode.dev/somakai-sumasi/PolyVoxCord">
-  <img src="https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc">
-</a>
+[![LICENSE](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+![Discord bot](https://img.shields.io/static/v1?logo=discord&label=&message=Discord%20bot&labelColor=f5f5f5&color=5865F2&logoColor=5865F2)
+![Python3.11.0](https://img.shields.io/static/v1?logo=python&label=&message=Python3.11.0&labelColor=f5f5f5&color=3776AB&logoColor=3776AB)
+![SQLite](https://img.shields.io/static/v1?logo=SQLite&label=&message=SQLite&labelColor=f5f5f5&color=003B57&logoColor=003B57)
+[![VSCode](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://open.vscode.dev/somakai-sumasi/PolyVoxCord)
 
 ## これはなに
 Discordの読み上げbot
