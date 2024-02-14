@@ -6,10 +6,7 @@ from discord.ext import commands
 from service.presence_service import PresenceService
 
 intents = discord.Intents.all()
-activity = discord.Activity(name="MyBot", type=discord.ActivityType.custom)
-bot = commands.Bot(
-    command_prefix="!", intents=intents, activity=activity, help_command=None
-)
+bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 INITIAL_EXTENSIONS = [
     "cogs.read",
@@ -21,16 +18,11 @@ INITIAL_EXTENSIONS = [
 ]
 
 
-# cogの呼び出し
-async def load_extension():
-    for cog in INITIAL_EXTENSIONS:
-        await bot.load_extension(cog)
-
-
 # discord接続時
 @bot.event
 async def setup_hook():
-    await load_extension()
+    for cog in INITIAL_EXTENSIONS:
+        await bot.load_extension(cog)
 
 
 # bot起動時

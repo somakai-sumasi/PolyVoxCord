@@ -1,10 +1,10 @@
 import asyncio
 import os
-import re
 from typing import Dict, List
 
 import discord
 from common.assign_kana import get_pronunciation
+from common.text_format import conv_discord_object, omit_url
 from entity.read_limit_entity import ReadLimitEntity
 from entity.voice_setting_entity import VoiceSettingEntity
 from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
@@ -79,8 +79,8 @@ class ReadService:
                 return
 
             guild_id = message.guild.id
-            content = cls.conv_discord_object(content)
-            content = cls.omit_url(content)
+            content = conv_discord_object(content)
+            content = omit_url(content)
             content = cls.match_with_dictionary(guild_id, content)
             content = cls.limit_length(guild_id, content)
             content = get_pronunciation(content)
@@ -128,7 +128,7 @@ class ReadService:
 
                 byte_content = await attachment.read()
                 content = byte_content.decode("utf-8")
-                content = cls.omit_url(content)
+                content = omit_url(content)
                 content = cls.match_with_dictionary(guild_id, content)
                 content = get_pronunciation(content)
 
@@ -250,24 +250,6 @@ class ReadService:
             del cls.text_channel_list[guild_id]
 
     @classmethod
-    def omit_url(cls, text: str) -> str:
-        """URLがある場合省略する
-
-        Parameters
-        ----------
-        text : str
-            変換する文字
-
-        Returns
-        -------
-        str
-            変換後の文字
-        """
-        pattern = "https?://[\w/:%#\$&\?\(\)~\.=\+\-]+"
-        replace_text = "\nユーアールエル省略\n"
-        return re.sub(pattern, replace_text, text)
-
-    @classmethod
     def limit_length(cls, guild_id: int, text: str) -> str:
         """最大文字数を超える場合カット
 
@@ -322,8 +304,3 @@ class ReadService:
         result_text = result_text.format(*read_list)  # 読み仮名リストを引数にとる
 
         return result_text
-
-    @classmethod
-    def conv_discord_object(cls, text: str) -> str:
-        text = re.sub("\<:.+:\d+\>", "サーバー絵文字", text)
-        return text
