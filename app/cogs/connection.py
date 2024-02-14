@@ -80,7 +80,6 @@ class connection(commands.Cog):
         )
         if len(members) != 0:
             # 他のユーザに切断されていた場合、表示をリセット
-            ReadService.remove_guild(before.channel.guild.id)
             await PresenceService.set_presence(self.bot)
             return
 

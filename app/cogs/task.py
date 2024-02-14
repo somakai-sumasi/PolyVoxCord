@@ -20,7 +20,7 @@ class Task(commands.Cog):
         print("sync:" + self.__class__.__name__)
 
     @tasks.loop(time=time)
-    async def time_loop():
+    async def time_loop(self):
         path = "./wav/"
         files = os.listdir(path)
         now = datetime.datetime.now()
