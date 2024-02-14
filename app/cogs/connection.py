@@ -61,6 +61,34 @@ class connection(commands.Cog):
         ReadService.remove_guild(user.guild.id)
         await PresenceService.set_presence(self.bot)
 
+    # ボイスチャンネル更新時
+    @commands.Cog.event
+    async def on_voice_state_update(
+        self,
+        member: discord.Member,
+        before: discord.VoiceState,
+        after: discord.VoiceState,
+    ):
+        before_members = before.channel.members if before.channel is not None else []
+
+        if self.bot.user.id not in list(map(lambda member: member.id, before_members)):
+            return
+
+        # 自身以外のメンバーを絞り込み
+        members = list(
+            filter(lambda member: member.id != self.bot.user.id, before_members)
+        )
+        if len(members) != 0:
+            # 他のユーザに切断されていた場合、表示をリセット
+            ReadService.remove_guild(before.channel.guild.id)
+            await PresenceService.set_presence(self.bot)
+            return
+
+        await before.channel.guild.voice_client.disconnect()
+
+        ReadService.remove_guild(before.channel.guild.id)
+        await PresenceService.set_presence(self.bot)
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(connection(bot))

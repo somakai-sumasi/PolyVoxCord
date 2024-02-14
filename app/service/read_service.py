@@ -86,7 +86,7 @@ class ReadService:
             content = get_pronunciation(content)
 
             path = cls.make_voice(message.guild.id, message.author.id, content)
-            voice_client :discord.VoiceClient  = message.guild.voice_client
+            voice_client: discord.VoiceClient = message.guild.voice_client
             # 他の音声が再生されていないか確認
             while voice_client.is_playing():
                 await asyncio.sleep(0.5)

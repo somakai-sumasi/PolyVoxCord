@@ -1,27 +1,23 @@
-import asyncio
-import datetime
 import logging
-from logging.handlers import TimedRotatingFileHandler
-import os
 
 import discord
 from config.discord import TOKEN
-from discord.ext import commands, tasks
+from discord.ext import commands
 from service.presence_service import PresenceService
-from service.read_service import ReadService
 
 intents = discord.Intents.all()
 activity = discord.Activity(name="MyBot", type=discord.ActivityType.custom)
 bot = commands.Bot(
     command_prefix="!", intents=intents, activity=activity, help_command=None
 )
-queue = asyncio.Queue()
 
 INITIAL_EXTENSIONS = [
+    "cogs.read",
     "cogs.connection",
     "cogs.guide",
     "cogs.user_setting",
     "cogs.guild_setting",
+    "cogs.task",
 ]
 
 
@@ -41,33 +37,6 @@ async def setup_hook():
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
-    time_loop.start()
-    await PresenceService.set_presence(bot)
-
-
-# ボイスチャンネル更新時
-@bot.event
-async def on_voice_state_update(
-    member: discord.Member, before: discord.VoiceState, after: discord.VoiceState
-):
-    before_members = before.channel.members if before.channel is not None else []
-
-    if bot.user.id not in list(map(lambda member: member.id, before_members)):
-        return
-
-    # 自身以外のメンバーを絞り込み
-    members = list(
-        filter(lambda member: member.id != bot.user.id, before_members)
-    )
-    if len(members) != 0:
-        # 他のユーザに切断されていた場合、表示をリセット
-        ReadService.remove_guild(before.channel.guild.id)
-        await PresenceService.set_presence(bot)
-        return
-
-    await before.channel.guild.voice_client.disconnect()
-
-    ReadService.remove_guild(before.channel.guild.id)
     await PresenceService.set_presence(bot)
 
 
@@ -90,32 +59,6 @@ async def help(interaction: discord.Interaction):
 
     await interaction.followup.send(embed=embed, ephemeral=False)
 
-
-utc = datetime.timezone.utc
-time = datetime.time(hour=4, minute=00, tzinfo=utc)
-
-
-@tasks.loop(time=time)
-async def time_loop():
-    path = "./wav/"
-    files = os.listdir(path)
-    now = datetime.datetime.now()
-
-    for file in files:
-        name, ext = os.path.splitext(file)
-        if ext != ".wav":
-            continue
-
-        mtime = datetime.datetime.fromtimestamp(os.path.getmtime(path + file))
-        # 2日経った音声データを削除する
-        if (now - mtime).days > 2:
-            os.remove(path + file)
-
-
-# メッセージ受信時のイベント
-@bot.event
-async def on_message(message: discord.Message):
-    await ReadService.read(message)
 
 handler = logging.FileHandler(filename="./logs/discord.log", encoding="utf-8", mode="a")
 bot.run(TOKEN, log_handler=handler)
