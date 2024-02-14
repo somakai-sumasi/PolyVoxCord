@@ -18,8 +18,8 @@ bot = commands.Bot(
 queue = asyncio.Queue()
 
 INITIAL_EXTENSIONS = [
-    "cogs.guide",
     "cogs.connection",
+    "cogs.guide",
     "cogs.user_setting",
     "cogs.guild_setting",
 ]
