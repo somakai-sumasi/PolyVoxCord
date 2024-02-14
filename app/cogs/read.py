@@ -1,5 +1,3 @@
-import datetime
-
 import discord
 from discord.ext import commands
 from service.read_service import ReadService
@@ -16,8 +14,8 @@ class Read(commands.Cog):
         print("sync:" + self.__class__.__name__)
 
     # メッセージ受信時のイベント
-    @commands.Cog.event
-    async def on_message(message: discord.Message):
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.Message):
         await ReadService.read(message)
 
 

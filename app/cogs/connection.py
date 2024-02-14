@@ -62,7 +62,7 @@ class connection(commands.Cog):
         await PresenceService.set_presence(self.bot)
 
     # ボイスチャンネル更新時
-    @commands.Cog.event
+    @commands.Cog.listener()
     async def on_voice_state_update(
         self,
         member: discord.Member,
