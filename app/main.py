@@ -117,13 +117,5 @@ async def time_loop():
 async def on_message(message: discord.Message):
     await ReadService.read(message)
 
-
-handler = TimedRotatingFileHandler(
-    filename="./logs/discord.log",  # ログファイルのベース名
-    when="midnight",                # ログファイルをローテートする単位（'D'は日）
-    interval=1,              # ローテートの間隔（1日ごと）
-    encoding="utf-8",
-    backupCount=7            # 保持するログファイルの数（例えば7とすると、過去7日間分のログを保持）
-)
-
+handler = logging.FileHandler(filename="./logs/discord.log", encoding="utf-8", mode="a")
 bot.run(TOKEN, log_handler=handler)
