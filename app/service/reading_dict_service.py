@@ -33,3 +33,26 @@ class ReadingDictService:
         else:
             reading_dict.reading = reading
             return ReadingDictRepository.update(reading_dict)
+
+    @classmethod
+    def del_dict(cls, guild_id: int, character: str) -> bool:
+        """辞書に書きを削除
+
+        Parameters
+        ----------
+        guild_id : int
+            guild_id
+        character : str
+            書き
+
+        Returns
+        -------
+        ReadingDictEntity
+            ReadingDictEntity
+        """
+
+        reading_dict = ReadingDictRepository.get_by_character(
+            guild_id, character=character
+        )
+        if reading_dict != None:
+            ReadingDictRepository.delete(reading_dict.id)
