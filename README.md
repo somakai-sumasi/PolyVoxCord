@@ -36,6 +36,7 @@ VOICEROID2,VOICEVOX,SofTalkを使用し、音声を作成し、読み上げを�
 | set_other_user_voicevox  | 他のユーザーのVOICEVOXの声を設定する(管理者権限が必要です)  |
 | set_limit                | 読み上げ上限数を設定                          |
 | add_dict                 | 辞書を追加                               |
+| del_dict                 | 辞書を削除                               |
 
 
 ## 環境変数

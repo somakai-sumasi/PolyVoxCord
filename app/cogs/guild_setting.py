@@ -76,7 +76,7 @@ class GuildSetting(commands.Cog):
         await interaction.response.defer()
         ReadingDictService.del_dict(interaction.guild_id, character)
         await interaction.followup.send(
-            f"辞書に{character}を削除しました", ephemeral=False
+            f"辞書から{character}を削除しました", ephemeral=False
         )
 
 async def setup(bot: commands.Bot):
