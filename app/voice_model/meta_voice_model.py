@@ -33,7 +33,7 @@ class MetaVoiceModel(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def voice_list() -> list[str]:
+    def voice_list() -> dict[str, str]:
         """自身が持っているボイス名を返す
 
         Returns

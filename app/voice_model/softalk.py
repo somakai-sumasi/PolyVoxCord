@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 import xml.etree.ElementTree as ET
 
@@ -25,6 +26,10 @@ class Softalk(MetaVoiceModel):
             音声ファイルのパス
         """
 
+        # Windows以外での動作の場合、エラー
+        if platform.system() != "Windows":
+            raise NotImplementedError("Voiceroid is only available on Windows.")
+
         fileTitle = cls.create_filename(__class__.__name__)
         SAVE_PASE = os.getcwd() + "\\wav\\" + fileTitle
 
@@ -42,7 +47,7 @@ class Softalk(MetaVoiceModel):
         return SAVE_PASE
 
     @classmethod
-    def voice_list(cls) -> list[str]:
+    def voice_list(cls) -> dict[str, str]:
         """自身が持っているボイス名を返す
 
         Returns
@@ -50,6 +55,9 @@ class Softalk(MetaVoiceModel):
         dict[str, str]
             ボイス名のリスト
         """
+        # Windows以外での動作の場合、何も返さない
+        if platform.system() != "Windows":
+            return {}
 
         _start = "start " + SOFTALK
         path = os.getcwd() + "\\softalk.xml"

@@ -1,6 +1,10 @@
+import platform
 import wave
 
-import pyvcroid2
+# Windowsでのみ使用可能なモジュールを条件付きでインポート
+if platform.system() == "Windows":
+    import pyvcroid2
+
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.meta_voice_model import MetaVoiceModel
 
@@ -44,6 +48,11 @@ class Voiceroid(MetaVoiceModel):
         str
             音声ファイルのパス
         """
+
+        # Windows以外での動作の場合、エラー
+        if platform.system() != "Windows":
+            raise NotImplementedError("Voiceroid is only available on Windows.")
+
         vc = pyvcroid2.VcRoid2()
 
         # 琴葉茜の場合は関西弁にする
@@ -79,14 +88,19 @@ class Voiceroid(MetaVoiceModel):
         return path
 
     @classmethod
-    def voice_list(cls) -> list[str]:
+    def voice_list(cls) -> dict[str, str]:
         """自身が持っているボイス名を返す
 
         Returns
         -------
-        list[str]
+        dict[str, str]
             ボイス名のリスト
         """
+
+        # Windows以外での動作の場合、何も返さない
+        if platform.system() != "Windows":
+            return {}
+
         vc = pyvcroid2.VcRoid2()
         voice_list = vc.listVoices()
 

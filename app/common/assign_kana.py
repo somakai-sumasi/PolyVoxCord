@@ -1,7 +1,7 @@
 import MeCab
 from config.mecab import MECAB_USER_DICT
 
-USER_DICT = r'-u"' + MECAB_USER_DICT + '"'
+USER_DICT = r'-u"' + str(MECAB_USER_DICT) + '"'
 FORMAT = r' -F"%M\\t%c,%H\\n"'
 
 
@@ -18,6 +18,11 @@ def get_pronunciation(text: str) -> str:
     str
         読み
     """
+
+    # MeCabを使用しない場合は何もしない
+    if MECAB_USER_DICT is None:
+        return text
+
     mecab = MeCab.Tagger(" ".join([USER_DICT, FORMAT]))
     m_result = mecab.parse(text).splitlines()
     m_result = m_result[:-1]  # 最後の1行は不要な行なので除く

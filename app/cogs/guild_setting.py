@@ -56,12 +56,9 @@ class GuildSetting(commands.Cog):
             f"辞書に{character}({reading})を追加しました", ephemeral=False
         )
 
-
     @app_commands.command(name="del_dict", description="辞書を削除")
     @app_commands.rename(character="書き")
-    async def del_dict(
-        self, interaction: discord.Interaction, character: str
-    ):
+    async def del_dict(self, interaction: discord.Interaction, character: str):
         """辞書を削除
 
         Parameters
@@ -75,9 +72,8 @@ class GuildSetting(commands.Cog):
         """
         await interaction.response.defer()
         ReadingDictService.del_dict(interaction.guild_id, character)
-        await interaction.followup.send(
-            f"辞書から{character}を削除しました", ephemeral=False
-        )
+        await interaction.followup.send(f"辞書から{character}を削除しました", ephemeral=False)
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(GuildSetting(bot))
