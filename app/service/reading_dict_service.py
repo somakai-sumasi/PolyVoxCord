@@ -25,7 +25,7 @@ class ReadingDictService:
         reading_dict = ReadingDictRepository.get_by_character(
             guild_id, character=character
         )
-        if reading_dict == None:
+        if reading_dict is None:
             reading_dict = ReadingDictEntity(
                 id=None, guild_id=guild_id, character=character, reading=reading
             )
@@ -54,5 +54,5 @@ class ReadingDictService:
         reading_dict = ReadingDictRepository.get_by_character(
             guild_id, character=character
         )
-        if reading_dict != None:
+        if reading_dict is not None:
             ReadingDictRepository.delete(reading_dict.id)

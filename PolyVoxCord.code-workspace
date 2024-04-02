@@ -1,8 +1,22 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "flake8.importStrategy": "fromEnvironment",
+    "flake8.interpreter": ["${workspaceFolder}/.venv/bin/python"],
+    "black-formatter.importStrategy": "fromEnvironment",
+    "black-formatter.interpreter": ["${workspaceFolder}/.venv/bin/python"],
+    "isort.importStrategy": "fromEnvironment",
+    "isort.interpreter": ["${workspaceFolder}/.venv/bin/python"],
+    "isort.check": true,
+    "flake8.args": ["--max-line-length=88"]
+  }
 }
