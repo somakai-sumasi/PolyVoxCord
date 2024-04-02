@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class VoiceSettingEntity:
-    """読み上げ音声の設定"""
+    """個人読み上げ音声の設定"""
 
     user_id: int
     """ユーザーid

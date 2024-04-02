@@ -13,7 +13,7 @@ class VoiceSettingService:
     async def set_voiceroid(
         cls,
         interaction: discord.Interaction,
-        guild_id: int,
+        guild_id: int | None,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -25,10 +25,10 @@ class VoiceSettingService:
         ----------
         interaction : discord.Interaction
             Discord interaction
-        guild_id : int
+        guild_id : int | None
             guild_id
         user_id : int
-            user_id
+            ユーザーid
         voice_name_key : str
             ボイスのキーとなる名前
         speed : float
@@ -45,43 +45,29 @@ class VoiceSettingService:
 
         voice_list = Voiceroid.voice_list()
         if not (voice_name_key in voice_list):
-            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
+            await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
 
-        # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
-            guild_id=guild_id, user_id=user_id
-        )
-        entity = GuildVoiceSettingEntity(
-            guild_id=guild_id,
+        # DMなどで使用された場合は不要
+        if guild_id is not None:
+            guild_voice_setting_entity = GuildVoiceSettingEntity(
+                guild_id=guild_id,
+                user_id=user_id,
+                voice_type="VOICEROID",
+                voice_name_key=voice_name_key,
+                speed=speed,
+                pitch=pitch,
+            )
+            cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
+
+        voice_setting_entity = VoiceSettingEntity(
             user_id=user_id,
             voice_type="VOICEROID",
             voice_name_key=voice_name_key,
             speed=speed,
             pitch=pitch,
         )
-        if voice_setting == None:
-            GuildVoiceSettingRepository.create(entity)
-        else:
-            GuildVoiceSettingRepository.update(entity)
-
-        if not (voice_name_key in voice_list):
-            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
-            return False
-
-        # 設定を登録
-        voice_setting = VoiceSettingRepository.get_by_user_id(user_id=user_id)
-        entity = VoiceSettingEntity(
-            user_id=user_id,
-            voice_type="VOICEROID",
-            voice_name_key=voice_name_key,
-            speed=speed,
-            pitch=pitch,
-        )
-        if voice_setting == None:
-            VoiceSettingRepository.create(entity)
-        else:
-            VoiceSettingRepository.update(entity)
+        cls.__set_voice_setting(guild_id, user_id, voice_setting_entity)
 
         await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
@@ -93,7 +79,7 @@ class VoiceSettingService:
     async def set_voicevox(
         cls,
         interaction: discord.Interaction,
-        guild_id: int,
+        guild_id: int | None,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -105,10 +91,10 @@ class VoiceSettingService:
         ----------
         interaction : discord.Interaction
             Discord interaction
-        guild_id : int
-            guild_id
+        guild_id : int | None
+            ギルドid
         user_id : int
-            user_id
+            ユーザーid
         voice_name_key : str
             ボイスのキーとなる名前
         speed : float
@@ -126,43 +112,29 @@ class VoiceSettingService:
 
         voice_list = Voicevox.voice_list()
         if not (voice_name_key in voice_list):
-            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
+            await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
 
-        # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
-            guild_id=guild_id, user_id=user_id
-        )
-        entity = GuildVoiceSettingEntity(
-            guild_id=guild_id,
+        # DMなどで使用された場合は不要
+        if guild_id is not None:
+            guild_voice_setting_entity = GuildVoiceSettingEntity(
+                guild_id=guild_id,
+                user_id=user_id,
+                voice_type="VOICEVOX",
+                voice_name_key=voice_name_key,
+                speed=speed,
+                pitch=pitch,
+            )
+            cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
+
+        voice_setting_entity = VoiceSettingEntity(
             user_id=user_id,
             voice_type="VOICEVOX",
             voice_name_key=voice_name_key,
             speed=speed,
             pitch=pitch,
         )
-        if voice_setting == None:
-            GuildVoiceSettingRepository.create(entity)
-        else:
-            GuildVoiceSettingRepository.update(entity)
-
-        if not (voice_name_key in voice_list):
-            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
-            return False
-
-        # 設定を登録
-        voice_setting = VoiceSettingRepository.get_by_user_id(user_id=user_id)
-        entity = VoiceSettingEntity(
-            user_id=user_id,
-            voice_type="VOICEVOX",
-            voice_name_key=voice_name_key,
-            speed=speed,
-            pitch=pitch,
-        )
-        if voice_setting == None:
-            VoiceSettingRepository.create(entity)
-        else:
-            VoiceSettingRepository.update(entity)
+        cls.__set_voice_setting(guild_id, user_id, voice_setting_entity)
 
         await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
@@ -174,7 +146,7 @@ class VoiceSettingService:
     async def set_softalk(
         cls,
         interaction: discord.Interaction,
-        guild_id: int,
+        guild_id: int | None,
         user_id: int,
         voice_name_key: str,
         speed: float,
@@ -186,10 +158,10 @@ class VoiceSettingService:
         ----------
         interaction : discord.Interaction
             Discord interaction
-        guild_id : int
-            guild_id
+        guild_id : int | None
+            ギルドid
         user_id : int
-            user_id
+            ユーザーid
         voice_name_key : str
             ボイスのキーとなる名前
         speed : float
@@ -206,14 +178,187 @@ class VoiceSettingService:
 
         voice_list = Softalk.voice_list()
         if not (voice_name_key in voice_list):
-            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
+            await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
 
-        # 設定を登録
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
-            guild_id=guild_id, user_id=user_id
+        # DMなどで使用された場合は不要
+        if guild_id is not None:
+            guild_voice_setting_entity = GuildVoiceSettingEntity(
+                guild_id=guild_id,
+                user_id=user_id,
+                voice_type="Softalk",
+                voice_name_key=voice_name_key,
+                speed=speed,
+                pitch=pitch,
+            )
+            cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
+
+        voice_setting_entity = VoiceSettingEntity(
+            user_id=user_id,
+            voice_type="Softalk",
+            voice_name_key=voice_name_key,
+            speed=speed,
+            pitch=pitch,
         )
-        entity = GuildVoiceSettingEntity(
+        cls.__set_voice_setting(guild_id, user_id, voice_setting_entity)
+
+        await interaction.followup.send(
+            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            ephemeral=False,
+        )
+        return True
+
+    @classmethod
+    async def set_guild_voiceroid(
+        cls,
+        interaction: discord.Interaction,
+        guild_id: int,
+        user_id: int,
+        voice_name_key: str,
+        speed: float,
+        pitch: float,
+    ) -> bool:
+        """VOICEROID2のサーバーユーザー設定を入れる
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            Discord interaction
+        guild_id : int
+            ギルドid
+        user_id : int
+            ユーザーid
+        voice_name_key : str
+            ボイスのキーとなる名前
+        speed : float
+            スピード
+        pitch : float
+            ピッチ
+
+        Returns
+        -------
+        bool
+            可否
+        """
+        await interaction.response.defer()
+
+        voice_list = Voiceroid.voice_list()
+        if not (voice_name_key in voice_list):
+            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            return False
+
+        guild_voice_setting_entity = GuildVoiceSettingEntity(
+            guild_id=guild_id,
+            user_id=user_id,
+            voice_type="VOICEROID",
+            voice_name_key=voice_name_key,
+            speed=speed,
+            pitch=pitch,
+        )
+        cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
+
+        await interaction.followup.send(
+            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            ephemeral=False,
+        )
+        return True
+
+    @classmethod
+    async def set_guild_voicevox(
+        cls,
+        interaction: discord.Interaction,
+        guild_id: int,
+        user_id: int,
+        voice_name_key: str,
+        speed: float,
+        pitch: float,
+    ) -> bool:
+        """VOICEVOXのサーバーユーザー設定を入れる
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            Discord interaction
+        guild_id : int
+            ギルドid
+        user_id : int
+            ユーザーid
+        voice_name_key : str
+            ボイスのキーとなる名前
+        speed : float
+            スピード
+        pitch : float
+            ピッチ
+
+        Returns
+        -------
+        bool
+            可否
+        """
+
+        await interaction.response.defer()
+
+        voice_list = Voicevox.voice_list()
+        if not (voice_name_key in voice_list):
+            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            return False
+
+        guild_voice_setting_entity = GuildVoiceSettingEntity(
+            guild_id=guild_id,
+            user_id=user_id,
+            voice_type="VOICEVOX",
+            voice_name_key=voice_name_key,
+            speed=speed,
+            pitch=pitch,
+        )
+        cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
+
+        await interaction.followup.send(
+            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            ephemeral=False,
+        )
+        return True
+
+    @classmethod
+    async def set_guild_softalk(
+        cls,
+        interaction: discord.Interaction,
+        guild_id: int,
+        user_id: int,
+        voice_name_key: str,
+        speed: float,
+        pitch: float,
+    ) -> bool:
+        """SofTalkのサーバーユーザー設定を入れる
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            Discord interaction
+        guild_id : int
+            ギルドid
+        user_id : int
+            ユーザーid
+        voice_name_key : str
+            ボイスのキーとなる名前
+        speed : float
+            スピード
+        pitch : float
+            ピッチ
+
+        Returns
+        -------
+        bool
+            可否
+        """
+        await interaction.response.defer()
+
+        voice_list = Softalk.voice_list()
+        if not (voice_name_key in voice_list):
+            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            return False
+
+        guild_voice_setting_entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
             user_id=user_id,
             voice_type="Softalk",
@@ -221,31 +366,62 @@ class VoiceSettingService:
             speed=speed,
             pitch=pitch,
         )
-        if voice_setting == None:
-            GuildVoiceSettingRepository.create(entity)
-        else:
-            GuildVoiceSettingRepository.update(entity)
-
-        if not (voice_name_key in voice_list):
-            await interaction.followup.send(f"該当の声がありません", ephemeral=False)
-            return False
-
-        # 設定を登録
-        voice_setting = VoiceSettingRepository.get_by_user_id(user_id=user_id)
-        entity = VoiceSettingEntity(
-            user_id=user_id,
-            voice_type="Softalk",
-            voice_name_key=voice_name_key,
-            speed=speed,
-            pitch=pitch,
-        )
-        if voice_setting == None:
-            VoiceSettingRepository.create(entity)
-        else:
-            VoiceSettingRepository.update(entity)
+        cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
 
         await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
         return True
+
+    @classmethod
+    def __set_guild_voice_setting(
+        cls,
+        guild_id: int,
+        user_id: int,
+        guild_voice_setting_entity: GuildVoiceSettingEntity,
+    ):
+        """_summary_
+
+        Parameters
+        ----------
+        guild_id : int
+            ギルドid
+        user_id : int
+            ユーザーid
+        guild_voice_setting_entity : GuildVoiceSettingEntity
+            サーバー読み上げ音声の設定
+        """
+        # 設定を登録
+        voice_setting = GuildVoiceSettingRepository.get_by_user_id(
+            guild_id=guild_id, user_id=user_id
+        )
+        if voice_setting is None:
+            GuildVoiceSettingRepository.create(guild_voice_setting_entity)
+        else:
+            GuildVoiceSettingRepository.update(guild_voice_setting_entity)
+
+    @classmethod
+    def __set_voice_setting(
+        cls, guild_id: int, user_id: int, voice_setting_entity: VoiceSettingEntity
+    ):
+        """_summary_
+
+        Parameters
+        ----------
+        guild_id : int
+            ギルドid
+        user_id : int
+            ユーザーid
+        voice_setting_entity : VoiceSettingEntity
+            個人読み上げ音声の設定
+        """
+        # 設定を登録
+        voice_setting = VoiceSettingRepository.get_by_user_id(
+            guild_id=guild_id, user_id=user_id
+        )
+
+        if voice_setting is None:
+            VoiceSettingRepository.create(voice_setting_entity)
+        else:
+            VoiceSettingRepository.update(voice_setting_entity)

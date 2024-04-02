@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class GuildVoiceSettingEntity:
-    """読み上げ音声の設定"""
+    """サーバー読み上げ音声の設定"""
 
     guild_id: int
     """ギルドid
