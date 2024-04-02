@@ -11,11 +11,11 @@
       "editor.defaultFormatter": "ms-python.black-formatter"
     },
     "flake8.importStrategy": "fromEnvironment",
-    "flake8.interpreter": ["${workspaceFolder}/.venv/bin/python"],
+    "flake8.interpreter": ["${workspaceFolder}/.venv/Scripts/python"],
     "black-formatter.importStrategy": "fromEnvironment",
-    "black-formatter.interpreter": ["${workspaceFolder}/.venv/bin/python"],
+    "black-formatter.interpreter": ["${workspaceFolder}/.venv/Scripts/python"],
     "isort.importStrategy": "fromEnvironment",
-    "isort.interpreter": ["${workspaceFolder}/.venv/bin/python"],
+    "isort.interpreter": ["${workspaceFolder}/.venv/Scripts/python"],
     "isort.check": true,
     "flake8.args": ["--max-line-length=88"]
   }
