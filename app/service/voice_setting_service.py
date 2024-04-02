@@ -417,9 +417,7 @@ class VoiceSettingService:
             個人読み上げ音声の設定
         """
         # 設定を登録
-        voice_setting = VoiceSettingRepository.get_by_user_id(
-            guild_id=guild_id, user_id=user_id
-        )
+        voice_setting = VoiceSettingRepository.get_by_user_id(user_id)
 
         if voice_setting is None:
             VoiceSettingRepository.create(voice_setting_entity)

@@ -25,7 +25,7 @@ class VoiceSettingRepository:
             session.query(VoiceSetting).filter_by(user_id=user_id).first()
         )
 
-        if voice_setting_model == None:
+        if voice_setting_model is None:
             return None
 
         return model_to_entity(voice_setting_model, VoiceSettingEntity)
