@@ -171,11 +171,11 @@ class ReadService:
         """
         voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id, user_id)
         # サーバー別の設定がない場合はこちらを使う
-        if voice_setting == None:
+        if voice_setting is None:
             voice_setting = VoiceSettingRepository.get_by_user_id(user_id)
 
         # 登録されていない場合は~で読み上げ
-        if voice_setting == None:
+        if voice_setting is None:
             voice_setting = VoiceSettingEntity(
                 user_id=user_id,
                 voice_type="Softalk",
@@ -266,7 +266,7 @@ class ReadService:
             変換後の文字
         """
         read_limit = ReadLimitRepository.get_by_guild_id(guild_id)
-        if read_limit == None:
+        if read_limit is None:
             read_limit = ReadLimitEntity(guild_id=guild_id, upper_limit=250)
         upper_limit = read_limit.upper_limit
 
