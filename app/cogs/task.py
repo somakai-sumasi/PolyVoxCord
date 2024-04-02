@@ -21,7 +21,7 @@ class Task(commands.Cog):
 
     @tasks.loop(time=time)
     async def time_loop(self):
-        path = "./wav/"
+        path = "./tmp/wav/"
         files = os.listdir(path)
         now = datetime.datetime.now()
 

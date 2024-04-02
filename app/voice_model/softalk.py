@@ -31,7 +31,7 @@ class Softalk(MetaVoiceModel):
             raise NotImplementedError("Voiceroid is only available on Windows.")
 
         fileTitle = cls.create_filename(__class__.__name__)
-        SAVE_PASE = os.getcwd() + "\\wav\\" + fileTitle
+        SAVE_PASE = os.getcwd() + "\\tmp\\wav\\" + fileTitle
 
         _start = "start " + SOFTALK
         _speed = "/S:" + str(int(voice_setting.speed))

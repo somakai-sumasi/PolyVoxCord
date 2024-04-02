@@ -74,7 +74,7 @@ class Voiceroid(MetaVoiceModel):
 
         speech = vc.textToSpeech(text)[0]
 
-        wf = wave.open("./wav/" + cls.create_filename(__class__.__name__), "wb")
+        wf = wave.open("./tmp/wav/" + cls.create_filename(__class__.__name__), "wb")
         wf.setnchannels(1)
         wf.setsampwidth(2)
         wf.setframerate(44100)
