@@ -1,7 +1,6 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from service.guild_voice_setting_service import GuildVoiceSettingService
 from service.voice_setting_service import VoiceSettingService
 
 
@@ -138,6 +137,7 @@ class UserSetting(commands.Cog):
     @app_commands.rename(
         member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
     )
+    @app_commands.guild_only
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_softalk(
         self,
@@ -161,7 +161,7 @@ class UserSetting(commands.Cog):
             ピッチ, by default 100
         """
 
-        await GuildVoiceSettingService.set_softalk(
+        await VoiceSettingService.set_guild_softalk(
             interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
 
@@ -178,6 +178,7 @@ class UserSetting(commands.Cog):
     @app_commands.rename(
         member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
     )
+    @app_commands.guild_only
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_voiceroid(
         self,
@@ -201,7 +202,7 @@ class UserSetting(commands.Cog):
             ピッチ, by default 1
         """
 
-        await GuildVoiceSettingService.set_voiceroid(
+        await VoiceSettingService.set_guild_voiceroid(
             interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
 
@@ -217,6 +218,7 @@ class UserSetting(commands.Cog):
     @app_commands.rename(
         member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
     )
+    @app_commands.guild_only
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_voicevox(
         self,
@@ -240,7 +242,7 @@ class UserSetting(commands.Cog):
             ピッチ, by default 0
         """
 
-        await GuildVoiceSettingService.set_voicevox(
+        await VoiceSettingService.set_guild_voicevox(
             interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
 

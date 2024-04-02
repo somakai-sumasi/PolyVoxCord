@@ -15,6 +15,7 @@ class GuildSetting(commands.Cog):
         await self.bot.tree.sync(guild=None)
         print("sync:" + self.__class__.__name__)
 
+    @app_commands.guild_only
     @app_commands.command(name="set_limit", description="読み上げ上限数を設定")
     @app_commands.rename(upper_limit="読み上げ上限数")
     async def set_limit(self, interaction: discord.Interaction, upper_limit: int):
@@ -34,6 +35,7 @@ class GuildSetting(commands.Cog):
             f"読み上げ上限を{upper_limit}文字に変更しました", ephemeral=False
         )
 
+    @app_commands.guild_only
     @app_commands.command(name="add_dict", description="辞書を追加")
     @app_commands.rename(character="書き", reading="読み方")
     async def add_dict(
@@ -56,6 +58,7 @@ class GuildSetting(commands.Cog):
             f"辞書に{character}({reading})を追加しました", ephemeral=False
         )
 
+    @app_commands.guild_only
     @app_commands.command(name="del_dict", description="辞書を削除")
     @app_commands.rename(character="書き")
     async def del_dict(self, interaction: discord.Interaction, character: str):
