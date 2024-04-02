@@ -20,6 +20,7 @@ mecab-python3 = "^1.0.8"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
+flake8 = "^7.0.0"
 
 [build-system]
 requires = ["poetry-core"]
