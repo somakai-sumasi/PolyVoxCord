@@ -1,0 +1,34 @@
+name: 機能提案
+description: 新機能,仕様変更を提案する
+title: "[提案] <ここにタイトルを入力>"
+labels: [提案]
+body:
+- type: markdown
+  attributes:
+    value: |
+      ## 新しい機能の提案ありがとうございます。
+      赤い印がついているものは必ず答えてください。
+- type: dropdown
+  id: target
+  attributes:
+    label: 新機能,仕様変更かを選んでください
+    options:
+      - 新機能
+      - 仕様変更
+      - わからない
+  validations:
+    required: true
+- type: textarea
+  id: overview
+  attributes:
+    label: 概要
+    description: |
+      新機能,仕様変更についての説明をしてください
+  validations:
+    required: true
+- type: textarea
+  id: why
+  attributes:
+    label: なぜその新機能,仕様変更が必要か教えてください
+  validations:
+    required: true
