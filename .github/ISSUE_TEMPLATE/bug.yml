@@ -1,0 +1,49 @@
+name: バグ報告
+description: 発見したバグを報告するときはこちら
+title: "[バグ] <ここに概要を記入>"
+labels: [バグ]
+body:
+- type: markdown
+  attributes:
+    value: |
+      ## バグの報告をしていただきありがとうございます。
+      赤い印がついているものは必ず答えてください。
+- type: dropdown
+  id: area
+  attributes:
+    label: バグが発生した場所
+    options:
+      - コマンド実行時
+      - それ以外
+  validations:
+    required: true
+- type: input
+  id: prevalence
+  attributes:
+    label: 対象となるコマンド
+    description: |
+      エラーになったコマンドを書いてください、コマンド以外のエラーの場合は不要です
+    placeholder: |
+      read_start
+  validations:
+    required: false
+- type: textarea
+  id: overview
+  attributes:
+    label: 概要
+    description: |
+      バグについての説明を記入してください、画像のアップロードも可能です。
+  validations:
+    required: true
+- type: textarea
+  id: reproduction
+  attributes:
+    label: 再現方法
+    description: バグを確認できるように再現方法が分かる場合は記入してください
+    placeholder: |
+      1.
+      2.
+      3.
+      ...
+  validations:
+    required: false
