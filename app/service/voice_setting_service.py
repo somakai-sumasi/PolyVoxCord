@@ -67,7 +67,7 @@ class VoiceSettingService:
             speed=speed,
             pitch=pitch,
         )
-        cls.__set_voice_setting(guild_id, user_id, voice_setting_entity)
+        cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
@@ -134,7 +134,7 @@ class VoiceSettingService:
             speed=speed,
             pitch=pitch,
         )
-        cls.__set_voice_setting(guild_id, user_id, voice_setting_entity)
+        cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
@@ -200,7 +200,7 @@ class VoiceSettingService:
             speed=speed,
             pitch=pitch,
         )
-        cls.__set_voice_setting(guild_id, user_id, voice_setting_entity)
+        cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
             f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
@@ -403,14 +403,12 @@ class VoiceSettingService:
 
     @classmethod
     def __set_voice_setting(
-        cls, guild_id: int, user_id: int, voice_setting_entity: VoiceSettingEntity
+        cls, user_id: int, voice_setting_entity: VoiceSettingEntity
     ):
         """_summary_
 
         Parameters
         ----------
-        guild_id : int
-            ギルドid
         user_id : int
             ユーザーid
         voice_setting_entity : VoiceSettingEntity

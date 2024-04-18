@@ -160,7 +160,7 @@ class UserSetting(commands.Cog):
         pitch : app_commands.Range[int, 0, 300], optional
             ピッチ, by default 100
         """
-
+        assert interaction.guild_id is not None
         await VoiceSettingService.set_guild_softalk(
             interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
@@ -201,7 +201,7 @@ class UserSetting(commands.Cog):
         pitch : app_commands.Range[float, 0.50, 2.00], optional
             ピッチ, by default 1
         """
-
+        assert interaction.guild_id is not None
         await VoiceSettingService.set_guild_voiceroid(
             interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )
@@ -241,7 +241,7 @@ class UserSetting(commands.Cog):
         pitch : app_commands.Range[float,, optional
             ピッチ, by default 0
         """
-
+        assert interaction.guild_id is not None
         await VoiceSettingService.set_guild_voicevox(
             interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
         )

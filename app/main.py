@@ -41,7 +41,7 @@ async def help(interaction: discord.Interaction):
         commands[cmd.name] = cmd.description
 
     cogs = bot.cogs
-    for key, val in cogs.items():
+    for _, val in cogs.items():
         for cmd in val.walk_app_commands():
             commands[cmd.name] = cmd.description
 

@@ -1,3 +1,3 @@
 import os
 
-TOKEN = os.getenv("TOKEN")
+TOKEN = str(os.getenv("TOKEN"))
