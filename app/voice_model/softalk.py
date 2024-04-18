@@ -37,12 +37,14 @@ class Softalk(MetaVoiceModel):
         _speed = "/S:" + str(int(voice_setting.speed))
         _pitch = "/O:" + str(int(voice_setting.pitch))
         _model = voice_setting.voice_name_key
-        _word = "/W:" + text
+        _word = "/W:" + text.replace('"', "")
         _save = "/R:" + SAVE_PASE
 
-        _command = [_start, _speed, _pitch, _model, _save, _word]
+        argument = " ".join([_speed, _pitch, _model, _save, _word])
 
-        subprocess.run(" ".join(_command), shell=True)
+        command = _start + ' "' + argument + '"'
+
+        subprocess.run(command, shell=True)
 
         return SAVE_PASE
 
