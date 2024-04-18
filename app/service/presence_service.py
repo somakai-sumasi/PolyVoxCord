@@ -7,6 +7,8 @@ class PresenceService:
     async def set_presence(cls, bot: commands.Bot):
         await bot.change_presence(
             activity=discord.Game(
-                name=f"{len(bot.guilds)}サーバー | {len(bot.voice_clients)}ボイスチャンネル | {len(bot.users)}ユーザー"
+                name=f"{len(bot.guilds)}サーバー |"
+                f" {len(bot.voice_clients)}ボイスチャンネル |"
+                f" {len(bot.users)}ユーザー"
             )
         )

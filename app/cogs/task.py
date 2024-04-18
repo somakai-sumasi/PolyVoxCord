@@ -26,7 +26,7 @@ class Task(commands.Cog):
         now = datetime.datetime.now()
 
         for file in files:
-            name, ext = os.path.splitext(file)
+            _, ext = os.path.splitext(file)
             if ext != ".wav":
                 continue
 
