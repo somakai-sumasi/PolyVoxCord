@@ -47,7 +47,7 @@ async def help(interaction: discord.Interaction):
 
     embed = discord.Embed(title="コマンド一覧")
     for name, description in commands.items():
-        embed.add_field(name="`" + name + "`", value=description, inline=False)
+        embed.add_field(name=name, value=description, inline=False)
 
     await interaction.followup.send(embed=embed, ephemeral=False)
 

@@ -18,6 +18,7 @@
     "isort.interpreter": ["${workspaceFolder}/.venv/Scripts/python"],
     "isort.check": true,
     "flake8.args": ["--max-line-length=88"],
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "off",
+    "cSpell.words": ["pyvcroid2", "Voiceroid", "Voicevox"]
   }
 }

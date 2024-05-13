@@ -2,7 +2,6 @@ import os
 import platform
 import subprocess
 import xml.etree.ElementTree as ET
-
 from config.voice_model import SOFTALK
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.meta_voice_model import MetaVoiceModel
@@ -49,7 +48,7 @@ class Softalk(MetaVoiceModel):
         return SAVE_PASE
 
     @classmethod
-    def voice_list(cls) -> dict[str, str]:
+    def voice_list(cls) -> list[dict[str, str]]:
         """自身が持っているボイス名を返す
 
         Returns
@@ -70,13 +69,16 @@ class Softalk(MetaVoiceModel):
         subprocess.run(" ".join(_command), shell=True)
 
         # xml解析
-        voice_list: dict = {}
         tree = ET.parse(path)
         root = tree.getroot()
+
+        voices = []
         for library in root:
             library_id = library.attrib["opt"]
+            # 各ボイスをループ
             for voice in library:
                 voice_id = voice.attrib["opt"]
-                voice_list[library_id + voice_id] = voice.text
+                # ライブラリIDとボイスIDを結合し、ボイステキストと共に辞書に追加
+                voices.append({"id": library_id + voice_id, "name": voice.text})
 
-        return voice_list
+        return voices

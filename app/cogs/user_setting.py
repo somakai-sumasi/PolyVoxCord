@@ -16,15 +16,15 @@ class UserSetting(commands.Cog):
 
     @app_commands.command(name="set_softalk", description="SofTalkの声を設定する")
     @app_commands.describe(
-        voice_name_key="ボイスキー",
+        key="キー",
         speed="デフォルトは120、下限0,上限300",
         pitch="デフォルトは100、下限0,上限300",
     )
-    @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
+    @app_commands.rename(key="キー", speed="スピード", pitch="ピッチ")
     async def set_softalk(
         self,
         interaction: discord.Interaction,
-        voice_name_key: str,
+        key: int,
         speed: app_commands.Range[int, 0, 300] = 120,
         pitch: app_commands.Range[int, 0, 300] = 100,
     ):
@@ -34,8 +34,8 @@ class UserSetting(commands.Cog):
         ----------
         interaction : discord.Interaction
             discord.Interaction
-        voice_name_key : str
-            ボイスキー
+        key : int
+            キー
         speed : app_commands.Range[int, 0, 300], optional
             スピード, by default 120
         pitch : app_commands.Range[int, 0, 300], optional
@@ -46,22 +46,22 @@ class UserSetting(commands.Cog):
             interaction,
             interaction.guild_id,
             interaction.user.id,
-            voice_name_key,
+            key,
             speed,
             pitch,
         )
 
     @app_commands.command(name="set_voiceroid", description="VOICEROIDの声を設定する")
     @app_commands.describe(
-        voice_name_key="ボイスキー",
+        key="キー",
         speed="デフォルトは1.00、下限0.50,上限4.00",
         pitch="デフォルトは1.00、下限0.50,上限2.00",
     )
-    @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
+    @app_commands.rename(key="キー", speed="スピード", pitch="ピッチ")
     async def set_voiceroid(
         self,
         interaction: discord.Interaction,
-        voice_name_key: str,
+        key: int,
         speed: app_commands.Range[float, 0.50, 4.00] = 1,
         pitch: app_commands.Range[float, 0.50, 2.00] = 1,
     ):
@@ -71,8 +71,8 @@ class UserSetting(commands.Cog):
         ----------
         interaction : discord.Interaction
             discord.Interaction
-        voice_name_key : str
-            ボイスキー
+        key : int
+            キー
         speed : app_commands.Range[float, 0.50, 4.00], optional
             スピード, by default 1
         pitch : app_commands.Range[float, 0.50, 2.00], optional
@@ -83,22 +83,22 @@ class UserSetting(commands.Cog):
             interaction,
             interaction.guild_id,
             interaction.user.id,
-            voice_name_key,
+            key,
             speed,
             pitch,
         )
 
     @app_commands.command(name="set_voicevox", description="VOICEVOXの声を設定する")
     @app_commands.describe(
-        voice_name_key="ボイスキー",
+        key="キー",
         speed="デフォルトは1.00、下限0.50,上限2.00",
         pitch="デフォルトは0.00、下限-0.15,上限0.15",
     )
-    @app_commands.rename(voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ")
+    @app_commands.rename(key="キー", speed="スピード", pitch="ピッチ")
     async def set_voicevox(
         self,
         interaction: discord.Interaction,
-        voice_name_key: str,
+        key: int,
         speed: app_commands.Range[float, 0.50, 2.00] = 1,
         pitch: app_commands.Range[float, -0.15, 0.15] = 0,
     ):
@@ -108,8 +108,8 @@ class UserSetting(commands.Cog):
         ----------
         interaction : discord.Interaction
             discord.Interaction
-        voice_name_key : str
-            ボイスキー
+        key : int
+            キー
         speed : app_commands.Range[float, 0.50, 2.00], optional
             スピード, by default 1
         pitch : app_commands.Range[float,, optional
@@ -120,7 +120,7 @@ class UserSetting(commands.Cog):
             interaction,
             interaction.guild_id,
             interaction.user.id,
-            voice_name_key,
+            key,
             speed,
             pitch,
         )
@@ -130,20 +130,18 @@ class UserSetting(commands.Cog):
     )
     @app_commands.describe(
         member="対象のユーザー",
-        voice_name_key="ボイスキー",
+        key="キー",
         speed="デフォルトは120、下限0,上限300",
         pitch="デフォルトは100、下限0,上限300",
     )
-    @app_commands.rename(
-        member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
-    )
+    @app_commands.rename(member="ユーザー", key="キー", speed="スピード", pitch="ピッチ")
     @app_commands.guild_only
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_softalk(
         self,
         interaction: discord.Interaction,
         member: discord.Member,
-        voice_name_key: str,
+        key: int,
         speed: app_commands.Range[int, 0, 300] = 120,
         pitch: app_commands.Range[int, 0, 300] = 100,
     ):
@@ -153,8 +151,8 @@ class UserSetting(commands.Cog):
         ----------
         interaction : discord.Interaction
             discord.Interaction
-        voice_name_key : str
-            ボイスキー
+        key : int
+            キー
         speed : app_commands.Range[int, 0, 300], optional
             スピード, by default 120
         pitch : app_commands.Range[int, 0, 300], optional
@@ -162,7 +160,7 @@ class UserSetting(commands.Cog):
         """
         assert interaction.guild_id is not None
         await VoiceSettingService.set_guild_softalk(
-            interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
+            interaction, interaction.guild_id, member.id, key, speed, pitch
         )
 
     @app_commands.command(
@@ -171,20 +169,18 @@ class UserSetting(commands.Cog):
     )
     @app_commands.describe(
         member="対象のユーザー",
-        voice_name_key="ボイスキー",
+        key="キー",
         speed="デフォルトは1.00、下限0.50,上限4.00",
         pitch="デフォルトは1.00、下限0.50,上限2.00",
     )
-    @app_commands.rename(
-        member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
-    )
+    @app_commands.rename(member="ユーザー", key="キー", speed="スピード", pitch="ピッチ")
     @app_commands.guild_only
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_voiceroid(
         self,
         interaction: discord.Interaction,
         member: discord.Member,
-        voice_name_key: str,
+        key: int,
         speed: app_commands.Range[float, 0.50, 4.00] = 1,
         pitch: app_commands.Range[float, 0.50, 2.00] = 1,
     ):
@@ -194,8 +190,8 @@ class UserSetting(commands.Cog):
         ----------
         interaction : discord.Interaction
             discord.Interaction
-        voice_name_key : str
-            ボイスキー
+        key : int
+            キー
         speed : app_commands.Range[float, 0.50, 4.00], optional
             スピード, by default 1
         pitch : app_commands.Range[float, 0.50, 2.00], optional
@@ -203,7 +199,7 @@ class UserSetting(commands.Cog):
         """
         assert interaction.guild_id is not None
         await VoiceSettingService.set_guild_voiceroid(
-            interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
+            interaction, interaction.guild_id, member.id, key, speed, pitch
         )
 
     @app_commands.command(
@@ -211,20 +207,18 @@ class UserSetting(commands.Cog):
     )
     @app_commands.describe(
         member="対象のユーザー",
-        voice_name_key="ボイスキー",
+        key="キー",
         speed="デフォルトは1.00、下限0.50,上限2.00",
         pitch="デフォルトは0.00、下限-0.15,上限0.15",
     )
-    @app_commands.rename(
-        member="ユーザー", voice_name_key="ボイスキー", speed="スピード", pitch="ピッチ"
-    )
+    @app_commands.rename(member="ユーザー", key="キー", speed="スピード", pitch="ピッチ")
     @app_commands.guild_only
     @app_commands.checks.has_permissions(administrator=True)
     async def set_other_user_voicevox(
         self,
         interaction: discord.Interaction,
         member: discord.Member,
-        voice_name_key: str,
+        key: int,
         speed: app_commands.Range[float, 0.50, 2.00] = 1,
         pitch: app_commands.Range[float, -0.15, 0.15] = 0,
     ):
@@ -234,8 +228,8 @@ class UserSetting(commands.Cog):
         ----------
         interaction : discord.Interaction
             discord.Interaction
-        voice_name_key : str
-            ボイスキー
+        key : int
+            キー
         speed : app_commands.Range[float, 0.50, 2.00], optional
             スピード, by default 1
         pitch : app_commands.Range[float,, optional
@@ -243,7 +237,7 @@ class UserSetting(commands.Cog):
         """
         assert interaction.guild_id is not None
         await VoiceSettingService.set_guild_voicevox(
-            interaction, interaction.guild_id, member.id, voice_name_key, speed, pitch
+            interaction, interaction.guild_id, member.id, key, speed, pitch
         )
 
     @set_other_user_voiceroid.error
