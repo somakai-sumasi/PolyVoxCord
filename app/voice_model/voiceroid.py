@@ -8,27 +8,84 @@ if platform.system() == "Windows":
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.meta_voice_model import MetaVoiceModel
 
-voice_dict = {
-    "yukari_emo_44": "結月ゆかり",
-    "akane_west_emo_44": "琴葉 茜",
-    "aoi_emo_44": "琴葉 葵",
-    "akari_44": "紲星あかり",
-    "sora_44": "桜乃そら",
-    "itako_44": "東北イタコ",
-    "tsuina_44": "ついなちゃん(標準)",
-    "tsuina_west_44": "ついなちゃん(関西)",
-    "yukari_44": "結月ゆかり(v1)",
-    "tamiyasu_44": "民安ともえ(v1)",
-    "zunko_44": "東北ずん子(v1)",
-    "akane_west_44": "琴葉 茜(v1)",
-    "aoi_44": "琴葉 葵(v1)",
-    "kiritan_44": "東北きりたん(v1)",
-    "kou_44": "水奈瀬コウ(v1)",
-    "seika_44": "京町セイカ(v1)",
-    "yoshidakun_44": "鷹の爪 吉田くん(v1)",
-    "shouta_44": "月読ショウタ(v1)",
-    "ai_44": "月読アイ(v1)",
-}
+voice_dicts = [
+    {
+        "id": "yukari_emo_44",
+        "name": "結月ゆかり",
+    },
+    {
+        "id": "akane_west_emo_44",
+        "name": "琴葉 茜",
+    },
+    {
+        "id": "aoi_emo_44",
+        "name": "琴葉 葵",
+    },
+    {
+        "id": "akari_44",
+        "name": "紲星あかり",
+    },
+    {
+        "id": "sora_44",
+        "name": "桜乃そら",
+    },
+    {
+        "id": "itako_44",
+        "name": "東北イタコ",
+    },
+    {
+        "id": "tsuina_44",
+        "name": "ついなちゃん(標準)",
+    },
+    {
+        "id": "tsuina_west_44",
+        "name": "ついなちゃん(関西)",
+    },
+    {
+        "id": "yukari_44",
+        "name": "結月ゆかり(v1)",
+    },
+    {
+        "id": "tamiyasu_44",
+        "name": "民安ともえ(v1)",
+    },
+    {
+        "id": "zunko_44",
+        "name": "東北ずん子(v1)",
+    },
+    {
+        "id": "akane_west_44",
+        "name": "琴葉 茜(v1)",
+    },
+    {
+        "id": "aoi_44",
+        "name": "琴葉 葵(v1)",
+    },
+    {
+        "id": "kiritan_44",
+        "name": "東北きりたん(v1)",
+    },
+    {
+        "id": "kou_44",
+        "name": "水奈瀬コウ(v1)",
+    },
+    {
+        "id": "seika_44",
+        "name": "京町セイカ(v1)",
+    },
+    {
+        "id": "yoshidakun_44",
+        "name": "鷹の爪 吉田くん(v1)",
+    },
+    {
+        "id": "shouta_44",
+        "name": "月読ショウタ(v1)",
+    },
+    {
+        "id": "ai_44",
+        "name": "月読アイ(v1)",
+    },
+]
 
 
 class Voiceroid(MetaVoiceModel):
@@ -73,22 +130,18 @@ class Voiceroid(MetaVoiceModel):
         vc.param.masterVolume = 1
 
         speech = vc.textToSpeech(text)[0]
-
-        wf = wave.open("./tmp/wav/" + cls.create_filename(__class__.__name__), "wb")
+        path = "./tmp/wav/" + cls.create_filename(__class__.__name__)
+        wf = wave.open(path, "wb")
         wf.setnchannels(1)
         wf.setsampwidth(2)
         wf.setframerate(44100)
         wf.writeframes(speech)
         wf.close()
 
-        path = "./tmp/wav/" + cls.create_filename(__class__.__name__)
-        with open(path, mode="wb") as f:
-            f.write(speech)
-
         return path
 
     @classmethod
-    def voice_list(cls) -> dict[str, str]:
+    def voice_list(cls) -> list[dict[str, str]]:
         """自身が持っているボイス名を返す
 
         Returns
@@ -104,6 +157,6 @@ class Voiceroid(MetaVoiceModel):
         vc = pyvcroid2.VcRoid2()
         voice_list = vc.listVoices()
 
-        filtered_dict = {k: v for k, v in voice_dict.items() if k in voice_list}
+        filtered_dicts = [d for d in voice_dicts if d["id"] in voice_list]
 
-        return filtered_dict
+        return filtered_dicts

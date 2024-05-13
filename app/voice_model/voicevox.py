@@ -54,7 +54,7 @@ class Voicevox(MetaVoiceModel):
         return path
 
     @classmethod
-    def voice_list(cls) -> dict[str, str]:
+    def voice_list(cls) -> list[dict[str, str]]:
         """自身が持っているボイス名を返す
 
         Returns
@@ -66,12 +66,10 @@ class Voicevox(MetaVoiceModel):
             cls.PATH + "speakers",
         ).json()
 
-        voice_list: dict = {}
+        voices = [
+            {"id": style["id"], "name": " ".join([speaker["name"], style["name"]])}
+            for speaker in speakers
+            for style in speaker["styles"]
+        ]
 
-        for speaker in speakers:
-            speaker_name = speaker["name"]
-            styles = speaker["styles"]
-            for style in styles:
-                voice_list[str(style["id"])] = " ".join([speaker_name, style["name"]])
-
-        return voice_list
+        return voices

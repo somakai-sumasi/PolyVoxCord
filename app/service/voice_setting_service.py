@@ -15,7 +15,7 @@ class VoiceSettingService:
         interaction: discord.Interaction,
         guild_id: int | None,
         user_id: int,
-        voice_name_key: str,
+        key: int,
         speed: float,
         pitch: float,
     ) -> bool:
@@ -29,8 +29,8 @@ class VoiceSettingService:
             guild_id
         user_id : int
             ユーザーid
-        voice_name_key : str
-            ボイスのキーとなる名前
+        key : int
+            音声配列のキー
         speed : float
             スピード
         pitch : float
@@ -44,9 +44,12 @@ class VoiceSettingService:
         await interaction.response.defer()
 
         voice_list = Voiceroid.voice_list()
-        if not (voice_name_key in voice_list):
+
+        if 0 < len(voice_list) < key:
             await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
+
+        voice_name_key = voice_list[key]["id"]
 
         # DMなどで使用された場合は不要
         if guild_id is not None:
@@ -70,7 +73,7 @@ class VoiceSettingService:
         cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
         return True
@@ -81,7 +84,7 @@ class VoiceSettingService:
         interaction: discord.Interaction,
         guild_id: int | None,
         user_id: int,
-        voice_name_key: str,
+        key: int,
         speed: float,
         pitch: float,
     ) -> bool:
@@ -95,8 +98,8 @@ class VoiceSettingService:
             ギルドid
         user_id : int
             ユーザーid
-        voice_name_key : str
-            ボイスのキーとなる名前
+        key : int
+            音声配列のキー
         speed : float
             スピード
         pitch : float
@@ -111,9 +114,11 @@ class VoiceSettingService:
         await interaction.response.defer()
 
         voice_list = Voicevox.voice_list()
-        if not (voice_name_key in voice_list):
+        if 0 < len(voice_list) < key:
             await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
+
+        voice_name_key = voice_list[key]["id"]
 
         # DMなどで使用された場合は不要
         if guild_id is not None:
@@ -137,7 +142,7 @@ class VoiceSettingService:
         cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
         return True
@@ -148,7 +153,7 @@ class VoiceSettingService:
         interaction: discord.Interaction,
         guild_id: int | None,
         user_id: int,
-        voice_name_key: str,
+        key: int,
         speed: float,
         pitch: float,
     ) -> bool:
@@ -162,8 +167,8 @@ class VoiceSettingService:
             ギルドid
         user_id : int
             ユーザーid
-        voice_name_key : str
-            ボイスのキーとなる名前
+        key : int
+            音声配列のキー
         speed : float
             スピード
         pitch : float
@@ -177,9 +182,11 @@ class VoiceSettingService:
         await interaction.response.defer()
 
         voice_list = Softalk.voice_list()
-        if not (voice_name_key in voice_list):
+        if 0 < len(voice_list) < key:
             await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
+
+        voice_name_key = voice_list[key]["id"]
 
         # DMなどで使用された場合は不要
         if guild_id is not None:
@@ -203,7 +210,7 @@ class VoiceSettingService:
         cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
         return True
@@ -214,7 +221,7 @@ class VoiceSettingService:
         interaction: discord.Interaction,
         guild_id: int,
         user_id: int,
-        voice_name_key: str,
+        key: int,
         speed: float,
         pitch: float,
     ) -> bool:
@@ -228,8 +235,8 @@ class VoiceSettingService:
             ギルドid
         user_id : int
             ユーザーid
-        voice_name_key : str
-            ボイスのキーとなる名前
+        key : int
+            音声配列のキー
         speed : float
             スピード
         pitch : float
@@ -243,9 +250,11 @@ class VoiceSettingService:
         await interaction.response.defer()
 
         voice_list = Voiceroid.voice_list()
-        if not (voice_name_key in voice_list):
+        if 0 < len(voice_list) < key:
             await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
+
+        voice_name_key = voice_list[key]["id"]
 
         guild_voice_setting_entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
@@ -258,7 +267,7 @@ class VoiceSettingService:
         cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
         return True
@@ -269,7 +278,7 @@ class VoiceSettingService:
         interaction: discord.Interaction,
         guild_id: int,
         user_id: int,
-        voice_name_key: str,
+        key: int,
         speed: float,
         pitch: float,
     ) -> bool:
@@ -283,8 +292,8 @@ class VoiceSettingService:
             ギルドid
         user_id : int
             ユーザーid
-        voice_name_key : str
-            ボイスのキーとなる名前
+        key : int
+            音声配列のキー
         speed : float
             スピード
         pitch : float
@@ -299,9 +308,11 @@ class VoiceSettingService:
         await interaction.response.defer()
 
         voice_list = Voicevox.voice_list()
-        if not (voice_name_key in voice_list):
+        if 0 < len(voice_list) < key:
             await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
+
+        voice_name_key = voice_list[key]["id"]
 
         guild_voice_setting_entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
@@ -314,7 +325,7 @@ class VoiceSettingService:
         cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
         return True
@@ -325,7 +336,7 @@ class VoiceSettingService:
         interaction: discord.Interaction,
         guild_id: int,
         user_id: int,
-        voice_name_key: str,
+        key: int,
         speed: float,
         pitch: float,
     ) -> bool:
@@ -339,8 +350,8 @@ class VoiceSettingService:
             ギルドid
         user_id : int
             ユーザーid
-        voice_name_key : str
-            ボイスのキーとなる名前
+        key : int
+            音声配列のキー
         speed : float
             スピード
         pitch : float
@@ -354,9 +365,11 @@ class VoiceSettingService:
         await interaction.response.defer()
 
         voice_list = Softalk.voice_list()
-        if not (voice_name_key in voice_list):
+        if 0 < len(voice_list) < key:
             await interaction.followup.send("該当の声がありません", ephemeral=False)
             return False
+
+        voice_name_key = voice_list[key]["id"]
 
         guild_voice_setting_entity = GuildVoiceSettingEntity(
             guild_id=guild_id,
@@ -369,7 +382,7 @@ class VoiceSettingService:
         cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[voice_name_key]} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
             ephemeral=False,
         )
         return True
