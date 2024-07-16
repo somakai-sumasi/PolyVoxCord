@@ -1,29 +1,39 @@
+import discord
 from entity.read_limit_entity import ReadLimitEntity
 from repository.read_limit_repository import ReadLimitRepository
+from common.user_message import MessageType
 
 
 class ReadLimitService:
     @classmethod
-    def set_limit(cls, guild_id: int, upper_limit: int) -> ReadLimitEntity:
-        """読上げ上限文字数を設定
+    async def set_limit(
+        cls, interaction: discord.Interaction, guild_id: int, upper_limit: int
+    ) -> None:
+        """_summary_
 
         Parameters
         ----------
+        interaction : discord.Interaction
+           discord.Interaction
         guild_id : int
             guild_id
         upper_limit : int
             読上げ上限文字数
-
-        Returns
-        -------
-        ReadLimitEntity
-            ReadLimitEntity
         """
 
+        await interaction.response.defer()
+
         read_limit = ReadLimitRepository.get_by_guild_id(guild_id)
-        if read_limit == None:
+        if read_limit is None:
             read_limit = ReadLimitEntity(guild_id=guild_id, upper_limit=upper_limit)
-            return ReadLimitRepository.create(read_limit)
+            ReadLimitRepository.create(read_limit)
         else:
             read_limit.upper_limit = upper_limit
-            return ReadLimitRepository.update(read_limit)
+            ReadLimitRepository.update(read_limit)
+
+        await interaction.followup.send(
+            embed=discord.Embed(
+                title=f"読み上げ上限を{upper_limit}文字に変更しました", color=MessageType.SUCCESS
+            ),
+            ephemeral=False,
+        )

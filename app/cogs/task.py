@@ -1,7 +1,7 @@
 import datetime
-import os
 
 from discord.ext import commands, tasks
+from service.task_service import TaskDictService
 
 utc = datetime.timezone.utc
 time = datetime.time(hour=4, minute=00, tzinfo=utc)
@@ -21,19 +21,7 @@ class Task(commands.Cog):
 
     @tasks.loop(time=time)
     async def time_loop(self):
-        path = "./tmp/wav/"
-        files = os.listdir(path)
-        now = datetime.datetime.now()
-
-        for file in files:
-            _, ext = os.path.splitext(file)
-            if ext != ".wav":
-                continue
-
-            mtime = datetime.datetime.fromtimestamp(os.path.getmtime(path + file))
-            # 2日経った音声データを削除する
-            if (now - mtime).days > 2:
-                os.remove(path + file)
+        TaskDictService.remove_wav_files()
 
 
 async def setup(bot: commands.Bot):
