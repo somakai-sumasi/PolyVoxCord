@@ -22,10 +22,13 @@ class GuideService:
 
         for index, voice in enumerate(list):
             text += f"`{index}`   {voice['name']}\n"
-        embed = discord.Embed(
-            title="Softalkの声の一覧", description=text, color=MessageType.INFO
+
+        await interaction.followup.send(
+            embed=discord.Embed(
+                title="Softalkの声の一覧", description=text, color=MessageType.INFO
+            ),
+            ephemeral=False,
         )
-        await interaction.followup.send(embed=embed, ephemeral=False)
 
     @classmethod
     async def voiceroid_list(cls, interaction: discord.Interaction):
@@ -43,10 +46,13 @@ class GuideService:
 
         for index, voice in enumerate(list):
             text += f"`{index}`   {voice['name']}\n"
-        embed = discord.Embed(
-            title="VOICEROIDの声の一覧", description=text, color=MessageType.INFO
+
+        await interaction.followup.send(
+            embed=discord.Embed(
+                title="VOICEROIDの声の一覧", description=text, color=MessageType.INFO
+            ),
+            ephemeral=False,
         )
-        await interaction.followup.send(embed=embed, ephemeral=False)
 
     @classmethod
     async def voicevox_list(cls, interaction: discord.Interaction):
@@ -64,7 +70,10 @@ class GuideService:
 
         for index, voice in enumerate(list):
             text += f"`{index}`   {voice['name']}\n"
-        embed = discord.Embed(
-            title="VOICEVOXの声の一覧", description=text, color=MessageType.INFO
+
+        await interaction.followup.send(
+            embed=discord.Embed(
+                title="VOICEVOXの声の一覧", description=text, color=MessageType.INFO
+            ),
+            ephemeral=False,
         )
-        await interaction.followup.send(embed=embed, ephemeral=False)

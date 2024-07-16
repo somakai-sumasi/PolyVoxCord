@@ -6,6 +6,7 @@ from repository.voice_setting_repository import VoiceSettingRepository
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
+from common.user_message import MessageType
 
 
 class VoiceSettingService:
@@ -46,7 +47,10 @@ class VoiceSettingService:
         voice_list = Voiceroid.voice_list()
 
         if 0 < len(voice_list) < key:
-            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            await interaction.followup.send(
+                embed=discord.Embed(title="該当の声がありません", color=MessageType.WARNING),
+                ephemeral=False,
+            )
             return False
 
         voice_name_key = voice_list[key]["id"]
@@ -73,7 +77,11 @@ class VoiceSettingService:
         cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            embed=discord.Embed(
+                title=f"声を{voice_list[key]['name']}に変更しました",
+                description=f"スピード:{speed} ピッチ:{pitch}",
+                color=MessageType.SUCCESS,
+            ),
             ephemeral=False,
         )
         return True
@@ -115,7 +123,10 @@ class VoiceSettingService:
 
         voice_list = Voicevox.voice_list()
         if 0 < len(voice_list) < key:
-            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            await interaction.followup.send(
+                embed=discord.Embed(title="該当の声がありません", color=MessageType.WARNING),
+                ephemeral=False,
+            )
             return False
 
         voice_name_key = voice_list[key]["id"]
@@ -142,7 +153,11 @@ class VoiceSettingService:
         cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            embed=discord.Embed(
+                title=f"声を{voice_list[key]['name']}に変更しました",
+                description=f"スピード:{speed} ピッチ:{pitch}",
+                color=MessageType.SUCCESS,
+            ),
             ephemeral=False,
         )
         return True
@@ -183,7 +198,10 @@ class VoiceSettingService:
 
         voice_list = Softalk.voice_list()
         if 0 < len(voice_list) < key:
-            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            await interaction.followup.send(
+                embed=discord.Embed(title="該当の声がありません", color=MessageType.WARNING),
+                ephemeral=False,
+            )
             return False
 
         voice_name_key = voice_list[key]["id"]
@@ -210,7 +228,11 @@ class VoiceSettingService:
         cls.__set_voice_setting(user_id, voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            embed=discord.Embed(
+                title=f"声を{voice_list[key]['name']}に変更しました",
+                description=f"スピード:{speed} ピッチ:{pitch}",
+                color=MessageType.SUCCESS,
+            ),
             ephemeral=False,
         )
         return True
@@ -251,7 +273,10 @@ class VoiceSettingService:
 
         voice_list = Voiceroid.voice_list()
         if 0 < len(voice_list) < key:
-            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            await interaction.followup.send(
+                embed=discord.Embed(title="該当の声がありません", color=MessageType.WARNING),
+                ephemeral=False,
+            )
             return False
 
         voice_name_key = voice_list[key]["id"]
@@ -267,7 +292,11 @@ class VoiceSettingService:
         cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            embed=discord.Embed(
+                title=f"声を{voice_list[key]['name']}に変更しました",
+                description=f"スピード:{speed} ピッチ:{pitch}",
+                color=MessageType.SUCCESS,
+            ),
             ephemeral=False,
         )
         return True
@@ -309,7 +338,10 @@ class VoiceSettingService:
 
         voice_list = Voicevox.voice_list()
         if 0 < len(voice_list) < key:
-            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            await interaction.followup.send(
+                embed=discord.Embed(title="該当の声がありません", color=MessageType.WARNING),
+                ephemeral=False,
+            )
             return False
 
         voice_name_key = voice_list[key]["id"]
@@ -325,7 +357,11 @@ class VoiceSettingService:
         cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            embed=discord.Embed(
+                title=f"声を{voice_list[key]['name']}に変更しました",
+                description=f"スピード:{speed} ピッチ:{pitch}",
+                color=MessageType.SUCCESS,
+            ),
             ephemeral=False,
         )
         return True
@@ -366,7 +402,10 @@ class VoiceSettingService:
 
         voice_list = Softalk.voice_list()
         if 0 < len(voice_list) < key:
-            await interaction.followup.send("該当の声がありません", ephemeral=False)
+            await interaction.followup.send(
+                embed=discord.Embed(title="該当の声がありません", color=MessageType.WARNING),
+                ephemeral=False,
+            )
             return False
 
         voice_name_key = voice_list[key]["id"]
@@ -382,7 +421,11 @@ class VoiceSettingService:
         cls.__set_guild_voice_setting(guild_id, user_id, guild_voice_setting_entity)
 
         await interaction.followup.send(
-            f"声を{voice_list[key]['name']} スピード:{speed} ピッチ:{pitch}で設定でしました",
+            embed=discord.Embed(
+                title=f"声を{voice_list[key]['name']}に変更しました",
+                description=f"スピード:{speed} ピッチ:{pitch}",
+                color=MessageType.SUCCESS,
+            ),
             ephemeral=False,
         )
         return True
