@@ -1,8 +1,8 @@
 import discord
+from common.user_message import MessageType
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
-from common.user_message import MessageType
 
 
 class GuideService:

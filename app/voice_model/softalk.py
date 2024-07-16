@@ -2,6 +2,7 @@ import os
 import platform
 import subprocess
 import xml.etree.ElementTree as ET
+
 from config.voice_model import SOFTALK
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.meta_voice_model import MetaVoiceModel

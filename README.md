@@ -20,36 +20,36 @@ VOICEROID2,VOICEVOX,SofTalkを使用し、音声を作成し、読み上げを�
 
 ## コマンド
 
-| コマンド名                    | 説明                                  |
-| ------------------------ | ----------------------------------- |
-| help                     | ヘルプコマンド                             |
-| read_start               | 読み上げ開始                              |
-| read_end                 | 読み上げ終了                              |
-| softalk_list             | Softalkの声の一覧を見る                     |
-| voiceroid_list           | VOICEROIDの声の一覧を見る                   |
-| voicevox_list            | VOICEVOXの声の一覧を見る                    |
-| set_softalk              | SofTalkの声を設定する                      |
-| set_voiceroid            | VOICEROIDの声を設定する                    |
-| set_voicevox             | VOICEVOXの声を設定する                     |
+| コマンド名               | 説明                                                        |
+| ------------------------ | ----------------------------------------------------------- |
+| help                     | ヘルプコマンド                                              |
+| read_start               | 読み上げ開始                                                |
+| read_end                 | 読み上げ終了                                                |
+| softalk_list             | Softalkの声の一覧を見る                                     |
+| voiceroid_list           | VOICEROIDの声の一覧を見る                                   |
+| voicevox_list            | VOICEVOXの声の一覧を見る                                    |
+| set_softalk              | SofTalkの声を設定する                                       |
+| set_voiceroid            | VOICEROIDの声を設定する                                     |
+| set_voicevox             | VOICEVOXの声を設定する                                      |
 | set_other_user_softalk   | 他のユーザーのSofTalkの声を設定する(管理者権限が必要です)   |
 | set_other_user_voiceroid | 他のユーザーのVOICEROIDの声を設定する(管理者権限が必要です) |
 | set_other_user_voicevox  | 他のユーザーのVOICEVOXの声を設定する(管理者権限が必要です)  |
-| set_limit                | 読み上げ上限数を設定                          |
-| add_dict                 | 辞書を追加                               |
-| del_dict                 | 辞書を削除                               |
+| set_limit                | 読み上げ上限数を設定                                        |
+| add_dict                 | 辞書を追加                                                  |
+| del_dict                 | 辞書を削除                                                  |
 
 
 ## 環境変数
 envファイルについて
 
-| 変数名             | 役割                     | デフォルト値         |
-| --------------- | ---------------------- | -------------- |
-| TOKEN           | Discordのトークン           |                |
-| DB_NAME         | SQLiteデータベース名          | PolyVoxCord.db |
-| SOFTALK         | SofTalkのインストールパス       |                |
-| VOICEVOX_HOST   | VOICEVOXを動かしているホスト     | localhost      |
+| 変数名          | 役割                                 | デフォルト値   |
+| --------------- | ------------------------------------ | -------------- |
+| TOKEN           | Discordのトークン                    |                |
+| DB_NAME         | SQLiteデータベース名                 | PolyVoxCord.db |
+| SOFTALK         | SofTalkのインストールパス            |                |
+| VOICEVOX_HOST   | VOICEVOXを動かしているホスト         | localhost      |
 | VOICEVOX_PORT   | VOICEVOXを動かしているホストのポート | 50021          |
-| MECAB_USER_DICT | MeCabのコーパスのパス          |                |
+| MECAB_USER_DICT | MeCabのコーパスのパス                |                |
 
 ## 初期設定,実行
 1. VOICEVOXを起動する
@@ -66,5 +66,7 @@ envファイルについて
 
 ## 改修時にする事
 フォーマッターを実行する
-1. `isort .`
-2. `black .`
+```
+isort .
+black .
+```

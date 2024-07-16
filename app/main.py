@@ -1,6 +1,7 @@
 import logging
 
 import discord
+from common.user_message import MessageType
 from config.discord import TOKEN
 from discord.ext import commands
 from service.presence_service import PresenceService
@@ -49,7 +50,11 @@ async def help(interaction: discord.Interaction):
     for name, description in commands.items():
         embed.add_field(name=name, value=description, inline=False)
 
-    await interaction.followup.send(embed=embed, ephemeral=False)
+    await interaction.followup.send(
+        embed=embed,
+        color=MessageType.INFO,
+        ephemeral=False,
+    )
 
 
 handler = logging.FileHandler(filename="./logs/discord.log", encoding="utf-8", mode="a")
