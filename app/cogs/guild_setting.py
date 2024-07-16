@@ -48,7 +48,9 @@ class GuildSetting(commands.Cog):
             書き
         """
 
-        await ReadingDictService.add_dict(interaction.guild_id, character, reading)
+        await ReadingDictService.add_dict(
+            interaction, interaction.guild_id, character, reading
+        )
 
     @app_commands.guild_only
     @app_commands.command(name="del_dict", description="辞書を削除")
@@ -66,7 +68,7 @@ class GuildSetting(commands.Cog):
             書き
         """
 
-        await ReadingDictService.del_dict(interaction.guild_id, character)
+        await ReadingDictService.del_dict(interaction, interaction.guild_id, character)
 
 
 async def setup(bot: commands.Bot):
