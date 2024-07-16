@@ -21,14 +21,14 @@ class ReadLimitRepository:
         ReadLimitEntity | None
             検索結果
         """
-        voice_setting_model: ReadLimit = (
+        read_limit: ReadLimit = (
             session.query(ReadLimit).filter_by(guild_id=guild_id).first()
         )
 
-        if voice_setting_model == None:
+        if read_limit is None:
             return None
 
-        return model_to_entity(voice_setting_model, ReadLimitEntity)
+        return model_to_entity(read_limit, ReadLimitEntity)
 
     @classmethod
     def create(cls, read_limit_entity: ReadLimitEntity) -> ReadLimitEntity:
@@ -44,9 +44,9 @@ class ReadLimitRepository:
         ReadLimitEntity
             作成後の情報
         """
-        voice_setting = entity_to_model(read_limit_entity, ReadLimit)
+        read_limit = entity_to_model(read_limit_entity, ReadLimit)
 
-        session.add(voice_setting)
+        session.add(read_limit)
         session.commit()
 
         return cls.get_by_guild_id(read_limit_entity.guild_id)
@@ -73,20 +73,15 @@ class ReadLimitRepository:
         return cls.get_by_guild_id(read_limit_entity.guild_id)
 
     @classmethod
-    def delete(cls, guild_id: int) -> ReadLimitEntity:
+    def delete(cls, guild_id: int) -> None:
         """削除
 
         Parameters
         ----------
         guild_id : int
             guild_id
-
-        Returns
-        -------
-        ReadLimitEntity
-            削除後の情報
         """
         session.query(ReadLimit).filter_by(user_id=guild_id).delete()
         session.commit()
 
-        return cls.get_by_guild_id(guild_id)
+        return

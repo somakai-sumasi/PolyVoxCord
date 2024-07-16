@@ -1,5 +1,5 @@
 from common.db_setting import Base
-from sqlalchemy import Column, Float, Integer, Text
+from sqlalchemy import Column, Integer
 
 
 class ReadLimit(Base):
