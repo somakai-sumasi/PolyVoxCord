@@ -3,7 +3,6 @@ from typing import List
 
 from common.db_setting import session
 from common.model_entity_converter import (
-    entities_to_models,
     entity_to_model,
     model_to_entity,
     models_to_entities,
@@ -27,14 +26,12 @@ class ReadingDictRepository:
         ReadingDict | None
             検索結果
         """
-        voice_setting_model: ReadingDict = (
-            session.query(ReadingDict).filter_by(id=id).first()
-        )
+        reading_dict: ReadingDict = session.query(ReadingDict).filter_by(id=id).first()
 
-        if voice_setting_model == None:
+        if reading_dict is None:
             return None
 
-        return model_to_entity(voice_setting_model, ReadingDictEntity)
+        return model_to_entity(reading_dict, ReadingDictEntity)
 
     @classmethod
     def get_by_character(cls, guild_id: int, character: str) -> ReadingDict | None:
@@ -52,16 +49,16 @@ class ReadingDictRepository:
         ReadingDict | None
             検索結果
         """
-        voice_setting_model: ReadingDict = (
+        reading_dict: ReadingDict = (
             session.query(ReadingDict)
             .filter_by(guild_id=guild_id, character=character)
             .first()
         )
 
-        if voice_setting_model == None:
+        if reading_dict is None:
             return None
 
-        return model_to_entity(voice_setting_model, ReadingDictEntity)
+        return model_to_entity(reading_dict, ReadingDictEntity)
 
     @classmethod
     def get_by_guild_id(cls, guild_id: int) -> List[ReadingDictEntity]:
@@ -77,11 +74,11 @@ class ReadingDictRepository:
         List[ReadingDictEntity]
             検索結果
         """
-        voice_setting_models: List[ReadingDictEntity] = session.query(
-            ReadingDict
-        ).filter_by(guild_id=guild_id)
+        reading_dicts: List[ReadingDictEntity] = session.query(ReadingDict).filter_by(
+            guild_id=guild_id
+        )
 
-        return models_to_entities(voice_setting_models, ReadingDictEntity)
+        return models_to_entities(reading_dicts, ReadingDictEntity)
 
     @classmethod
     def create(cls, reading_dict_entity: ReadingDictEntity) -> ReadingDictEntity:
@@ -97,12 +94,12 @@ class ReadingDictRepository:
         ReadingDictEntity
             作成後の情報
         """
-        voice_setting = entity_to_model(reading_dict_entity, ReadingDict)
+        reading_dict = entity_to_model(reading_dict_entity, ReadingDict)
 
-        session.add(voice_setting)
+        session.add(reading_dict)
         session.commit()
 
-        return cls.get_by_guild_id(reading_dict_entity.guild_id)
+        return cls.get_by_id(reading_dict.id)
 
     @classmethod
     def update(cls, reading_dict_entity: ReadingDictEntity) -> ReadingDictEntity:
@@ -125,20 +122,15 @@ class ReadingDictRepository:
         return cls.get_by_id(reading_dict_entity.id)
 
     @classmethod
-    def delete(cls, id: int) -> ReadingDictEntity:
+    def delete(cls, id: int) -> None:
         """削除
 
         Parameters
         ----------
         id : int
             id
-
-        Returns
-        -------
-        ReadingDictEntity
-            削除後の情報
         """
         session.query(ReadingDict).filter_by(id=id).delete()
         session.commit()
 
-        return cls.get_by_id(id)
+        return

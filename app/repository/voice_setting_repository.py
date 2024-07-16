@@ -72,20 +72,15 @@ class VoiceSettingRepository:
         return cls.get_by_user_id(voice_setting_entity.user_id)
 
     @classmethod
-    def delete(cls, user_id: int) -> VoiceSettingEntity:
+    def delete(cls, user_id: int) -> None:
         """削除
 
         Parameters
         ----------
         user_id : int
             user_id
-
-        Returns
-        -------
-        VoiceSettingEntity
-            削除後の情報
         """
         session.query(VoiceSetting).filter_by(user_id=user_id).delete()
         session.commit()
 
-        return cls.get_by_user_id(user_id)
+        return

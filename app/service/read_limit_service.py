@@ -21,7 +21,7 @@ class ReadLimitService:
         """
 
         read_limit = ReadLimitRepository.get_by_guild_id(guild_id)
-        if read_limit == None:
+        if read_limit is None:
             read_limit = ReadLimitEntity(guild_id=guild_id, upper_limit=upper_limit)
             return ReadLimitRepository.create(read_limit)
         else:
