@@ -28,12 +28,7 @@ class GuildSetting(commands.Cog):
         upper_limit : int
             読み上げ上限数
         """
-        await interaction.response.defer()
-
-        ReadLimitService.set_limit(interaction.guild_id, upper_limit)
-        await interaction.followup.send(
-            f"読み上げ上限を{upper_limit}文字に変更しました", ephemeral=False
-        )
+        await ReadLimitService.set_limit(interaction, interaction.guild_id, upper_limit)
 
     @app_commands.guild_only
     @app_commands.command(name="add_dict", description="辞書を追加")
@@ -52,10 +47,9 @@ class GuildSetting(commands.Cog):
         reading : str
             書き
         """
-        await interaction.response.defer()
-        ReadingDictService.add_dict(interaction.guild_id, character, reading)
-        await interaction.followup.send(
-            f"辞書に{character}({reading})を追加しました", ephemeral=False
+
+        await ReadingDictService.add_dict(
+            interaction, interaction.guild_id, character, reading
         )
 
     @app_commands.guild_only
@@ -73,9 +67,8 @@ class GuildSetting(commands.Cog):
         reading : str
             書き
         """
-        await interaction.response.defer()
-        ReadingDictService.del_dict(interaction.guild_id, character)
-        await interaction.followup.send(f"辞書から{character}を削除しました", ephemeral=False)
+
+        await ReadingDictService.del_dict(interaction, interaction.guild_id, character)
 
 
 async def setup(bot: commands.Bot):

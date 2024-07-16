@@ -1,9 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from voice_model.softalk import Softalk
-from voice_model.voiceroid import Voiceroid
-from voice_model.voicevox import Voicevox
+from service.guide_service import GuideService
 
 
 class Guide(commands.Cog):
@@ -25,15 +23,7 @@ class Guide(commands.Cog):
         interaction : discord.Interaction
             discord.Interaction
         """
-        await interaction.response.defer()
-
-        list = Softalk.voice_list()
-        text = ""
-
-        for index, voice in enumerate(list):
-            text += f"`{index}`   {voice['name']}\n"
-        embed = discord.Embed(title="Softalkの声の一覧", description=text)
-        await interaction.followup.send(embed=embed, ephemeral=False)
+        await GuideService.softalk_list(interaction)
 
     @app_commands.command(name="voiceroid_list", description="VOICEROIDの声の一覧を見る")
     async def voiceroid_list(self, interaction: discord.Interaction):
@@ -44,15 +34,7 @@ class Guide(commands.Cog):
         interaction : discord.Interaction
             discord.Interaction
         """
-        await interaction.response.defer()
-
-        list = Voiceroid.voice_list()
-        text = ""
-
-        for index, voice in enumerate(list):
-            text += f"`{index}`   {voice['name']}\n"
-        embed = discord.Embed(title="VOICEROIDの声の一覧", description=text)
-        await interaction.followup.send(embed=embed, ephemeral=False)
+        await GuideService.voiceroid_list(interaction)
 
     @app_commands.command(name="voicevox_list", description="VOICEVOXの声の一覧を見る")
     async def voicevox_list(self, interaction: discord.Interaction):
@@ -63,15 +45,7 @@ class Guide(commands.Cog):
         interaction : discord.Interaction
             discord.Interaction
         """
-        await interaction.response.defer()
-
-        list = Voicevox.voice_list()
-        text = ""
-
-        for index, voice in enumerate(list):
-            text += f"`{index}`   {voice['name']}\n"
-        embed = discord.Embed(title="VOICEVOXの声の一覧", description=text)
-        await interaction.followup.send(embed=embed, ephemeral=False)
+        await GuideService.voicevox_list(interaction)
 
 
 async def setup(bot: commands.Bot):
