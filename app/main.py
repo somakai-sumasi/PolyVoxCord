@@ -52,7 +52,6 @@ async def help(interaction: discord.Interaction):
 
     await interaction.followup.send(
         embed=embed,
-        color=MessageType.INFO,
         ephemeral=False,
     )
 
