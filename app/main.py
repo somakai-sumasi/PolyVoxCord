@@ -1,7 +1,6 @@
 import logging
 
 import discord
-from common.user_message import MessageType
 from config.discord import TOKEN
 from discord.ext import commands
 from service.presence_service import PresenceService
