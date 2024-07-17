@@ -1,6 +1,7 @@
 import logging
 
 import discord
+from common.user_message import MessageType
 from config.discord import TOKEN
 from discord.ext import commands
 from service.presence_service import PresenceService
@@ -45,7 +46,10 @@ async def help(interaction: discord.Interaction):
         for cmd in val.walk_app_commands():
             commands[cmd.name] = cmd.description
 
-    embed = discord.Embed(title="コマンド一覧")
+    embed = discord.Embed(
+        title="コマンド一覧",
+        color=MessageType.INFO,
+    )
     for name, description in commands.items():
         embed.add_field(name=name, value=description, inline=False)
 
