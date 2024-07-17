@@ -46,13 +46,15 @@ async def help(interaction: discord.Interaction):
         for cmd in val.walk_app_commands():
             commands[cmd.name] = cmd.description
 
-    embed = discord.Embed(title="コマンド一覧")
+    embed = discord.Embed(
+        title="コマンド一覧",
+        color=MessageType.INFO,
+    )
     for name, description in commands.items():
         embed.add_field(name=name, value=description, inline=False)
 
     await interaction.followup.send(
         embed=embed,
-        color=MessageType.INFO,
         ephemeral=False,
     )
 
