@@ -1,17 +1,12 @@
 import discord
 from discord.ext import commands
 from service.read_service import ReadService
+from cogs.base_cog import BaseCog
 
 
-class Read(commands.Cog):
+class Read(BaseCog):
     def __init__(self, bot: commands.Bot):
-        self.bot: commands.Bot = bot
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print("loaded :" + self.__class__.__name__)
-        await self.bot.tree.sync(guild=None)
-        print("sync:" + self.__class__.__name__)
+        super().__init__(bot)
 
     # メッセージ受信時のイベント
     @commands.Cog.listener()

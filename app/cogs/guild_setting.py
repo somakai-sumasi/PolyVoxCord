@@ -3,17 +3,12 @@ from discord import app_commands
 from discord.ext import commands
 from service.read_limit_service import ReadLimitService
 from service.reading_dict_service import ReadingDictService
+from cogs.base_cog import BaseCog
 
 
-class GuildSetting(commands.Cog):
+class GuildSetting(BaseCog):
     def __init__(self, bot: commands.Bot):
-        self.bot: commands.Bot = bot
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print("loaded :" + self.__class__.__name__)
-        await self.bot.tree.sync(guild=None)
-        print("sync:" + self.__class__.__name__)
+        super().__init__(bot)
 
     @app_commands.guild_only
     @app_commands.command(name="set_limit", description="読み上げ上限数を設定")

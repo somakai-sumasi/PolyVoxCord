@@ -19,6 +19,14 @@
       "program": "./app/main.py",
       "console": "integratedTerminal",
       "justMyCode": false
+    },
+    {
+      "name": "Python: test",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "./app/test.py",
+      "console": "integratedTerminal",
+      "justMyCode": false
     }
   ]
 }
