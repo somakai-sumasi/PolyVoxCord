@@ -37,7 +37,7 @@ class ConnectionService:
         await PresenceService.set_presence(bot)
 
     @classmethod
-    async def ead_end(cls, interaction: discord.Interaction, bot: commands.Bot):
+    async def read_end(cls, interaction: discord.Interaction, bot: commands.Bot):
         """読み上げを終了する
 
         Parameters
