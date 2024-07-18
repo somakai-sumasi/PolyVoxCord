@@ -4,17 +4,12 @@ from discord import app_commands
 from discord.ext import commands
 from service.presence_service import PresenceService
 from service.read_service import ReadService
+from cogs.base_cog import BaseCog
 
 
-class connection(commands.Cog):
+class connection(BaseCog):
     def __init__(self, bot: commands.Bot):
-        self.bot: commands.Bot = bot
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print("loaded :" + self.__class__.__name__)
-        await self.bot.tree.sync(guild=None)
-        print("sync:" + self.__class__.__name__)
+        super().__init__(bot)
 
     @app_commands.guild_only
     @app_commands.command(name="read_start", description="読み上げ開始")

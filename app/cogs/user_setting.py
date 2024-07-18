@@ -2,17 +2,12 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from service.voice_setting_service import VoiceSettingService
+from cogs.base_cog import BaseCog
 
 
-class UserSetting(commands.Cog):
+class UserSetting(BaseCog):
     def __init__(self, bot: commands.Bot):
-        self.bot: commands.Bot = bot
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print("loaded :" + self.__class__.__name__)
-        await self.bot.tree.sync(guild=None)
-        print("sync:" + self.__class__.__name__)
+        super().__init__(bot)
 
     @app_commands.command(name="set_softalk", description="SofTalkの声を設定する")
     @app_commands.describe(
