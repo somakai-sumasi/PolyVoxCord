@@ -2,10 +2,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from service.voice_setting_service import VoiceSettingService
-from cogs.base_cog import BaseCog
+from cogs.base_cog import BaseUserCog
 
 
-class UserSetting(BaseCog):
+class UserSetting(BaseUserCog):
     def __init__(self, bot: commands.Bot):
         super().__init__(bot)
 
