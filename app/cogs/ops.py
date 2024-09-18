@@ -56,6 +56,10 @@ class Ops(BaseOpsCog):
             embed.add_field(name="管理者", value=owner.global_name)
             embed.set_image(url=owner.display_avatar.url)
             embed.add_field(name="参加人数", value=f"{len(guild.members)}人")
+            members_names = ", ".join(
+                obj["global_name"] for obj in guild.members if "global_name" in obj
+            )
+            embed.add_field(name="参加者", value=members_names)
 
             await interaction.followup.send(
                 embed=embed,
