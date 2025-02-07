@@ -1,8 +1,8 @@
 import datetime
 
+from cogs.base_cog import BaseUserCog
 from discord.ext import commands, tasks
 from service.task_service import TaskDictService
-from cogs.base_cog import BaseUserCog
 
 utc = datetime.timezone.utc
 time = datetime.time(hour=4, minute=00, tzinfo=utc)

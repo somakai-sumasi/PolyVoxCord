@@ -1,8 +1,8 @@
 import discord
+from cogs.base_cog import BaseUserCog
 from discord import app_commands
 from discord.ext import commands
 from service.connection_service import ConnectionService
-from cogs.base_cog import BaseUserCog
 
 
 class connection(BaseUserCog):

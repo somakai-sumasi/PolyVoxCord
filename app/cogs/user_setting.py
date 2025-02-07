@@ -1,8 +1,8 @@
 import discord
+from cogs.base_cog import BaseUserCog
 from discord import app_commands
 from discord.ext import commands
 from service.voice_setting_service import VoiceSettingService
-from cogs.base_cog import BaseUserCog
 
 
 class UserSetting(BaseUserCog):
