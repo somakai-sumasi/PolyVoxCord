@@ -9,6 +9,10 @@ class Guide(BaseUserCog):
     def __init__(self, bot: commands.Bot):
         super().__init__(bot)
 
+    @app_commands.command(description="ヘルプコマンド")
+    async def help(self, interaction: discord.Interaction):
+        await GuideService.help(self.bot, interaction)
+
     @app_commands.command(name="softalk_list", description="Softalkの声の一覧を見る")
     async def softalk_list(self, interaction: discord.Interaction):
         """Softalkの声の一覧を見る
