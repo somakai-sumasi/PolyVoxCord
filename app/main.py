@@ -1,7 +1,6 @@
 import logging
 
 import discord
-from common.user_message import MessageType
 from config.discord import TOKEN
 from discord.ext import commands
 from service.presence_service import PresenceService
@@ -10,10 +9,10 @@ intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 INITIAL_EXTENSIONS = [
+    "cogs.guide",
     "cogs.ops",
     "cogs.read",
     "cogs.connection",
-    "cogs.guide",
     "cogs.user_setting",
     "cogs.guild_setting",
     "cogs.task",
@@ -32,32 +31,6 @@ async def setup_hook():
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
     await PresenceService.set_presence(bot)
-
-
-@bot.tree.command(description="ヘルプコマンド")
-async def help(interaction: discord.Interaction):
-    await interaction.response.defer()
-
-    commands = {}
-    for cmd in bot.tree.walk_commands():
-        commands[cmd.name] = cmd.description
-
-    cogs = bot.cogs
-    for _, val in cogs.items():
-        for cmd in val.walk_app_commands():
-            commands[cmd.name] = cmd.description
-
-    embed = discord.Embed(
-        title="コマンド一覧",
-        color=MessageType.INFO,
-    )
-    for name, description in commands.items():
-        embed.add_field(name=name, value=description, inline=False)
-
-    await interaction.followup.send(
-        embed=embed,
-        ephemeral=False,
-    )
 
 
 handler = logging.FileHandler(filename="./logs/discord.log", encoding="utf-8", mode="a")

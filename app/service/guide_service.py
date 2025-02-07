@@ -3,9 +3,53 @@ from common.user_message import MessageType
 from voice_model.softalk import Softalk
 from voice_model.voiceroid import Voiceroid
 from voice_model.voicevox import Voicevox
+from discord.ext import commands
+from cogs.base_cog import BaseCog
+from config.discord import MANAGEMENT_GUILD_ID
 
 
 class GuideService:
+    @classmethod
+    async def help(cls, bot: commands.Bot, interaction: discord.Interaction):
+        """_summary_
+
+        Parameters
+        ----------
+        bot : commands.Bot
+            discord.ext.commands.Bot
+        interaction : discord.Interaction
+            discord.Interaction
+        """
+
+        await interaction.response.defer()
+
+        is_management_guild = interaction.guild_id == MANAGEMENT_GUILD_ID
+
+        commands = {}
+        for cmd in bot.tree.walk_commands():
+            commands[cmd.name] = cmd.description
+
+        cogs = bot.cogs
+        for _, cog in cogs.items():
+            cog: BaseCog
+            if cog.is_ops and not is_management_guild:
+                continue
+
+            for cmd in cog.walk_app_commands():
+                commands[cmd.name] = cmd.description
+
+        embed = discord.Embed(
+            title="コマンド一覧",
+            color=MessageType.INFO,
+        )
+        for name, description in commands.items():
+            embed.add_field(name=name, value=description, inline=False)
+
+        await interaction.followup.send(
+            embed=embed,
+            ephemeral=False,
+        )
+
     @classmethod
     async def softalk_list(cls, interaction: discord.Interaction):
         """Softalkの声の一覧を見る
