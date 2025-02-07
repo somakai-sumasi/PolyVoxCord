@@ -10,6 +10,7 @@ intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 INITIAL_EXTENSIONS = [
+    "cogs.ops",
     "cogs.read",
     "cogs.connection",
     "cogs.guide",

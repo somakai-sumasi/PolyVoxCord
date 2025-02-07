@@ -3,10 +3,10 @@ from discord import app_commands
 from discord.ext import commands
 from service.read_limit_service import ReadLimitService
 from service.reading_dict_service import ReadingDictService
-from cogs.base_cog import BaseCog
+from cogs.base_cog import BaseUserCog
 
 
-class GuildSetting(BaseCog):
+class GuildSetting(BaseUserCog):
     def __init__(self, bot: commands.Bot):
         super().__init__(bot)
 

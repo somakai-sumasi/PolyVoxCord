@@ -2,10 +2,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from service.connection_service import ConnectionService
-from cogs.base_cog import BaseCog
+from cogs.base_cog import BaseUserCog
 
 
-class connection(BaseCog):
+class connection(BaseUserCog):
     def __init__(self, bot: commands.Bot):
         super().__init__(bot)
 

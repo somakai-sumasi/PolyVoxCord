@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
 from service.read_service import ReadService
-from cogs.base_cog import BaseCog
+from cogs.base_cog import BaseUserCog
 
 
-class Read(BaseCog):
+class Read(BaseUserCog):
     def __init__(self, bot: commands.Bot):
         super().__init__(bot)
 
