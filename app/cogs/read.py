@@ -1,7 +1,7 @@
 import discord
+from cogs.base_cog import BaseUserCog
 from discord.ext import commands
 from service.read_service import ReadService
-from cogs.base_cog import BaseUserCog
 
 
 class Read(BaseUserCog):

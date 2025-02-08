@@ -1,14 +1,27 @@
 import discord
-from discord import app_commands
-from discord.ext import commands
 from cogs.base_cog import BaseOpsCog
 from common.user_message import MessageType
 from config.discord import MANAGEMENT_GUILD_ID
+from discord import app_commands
+from discord.ext import commands
+from base.bot import BaseBot
 
 
 class Ops(BaseOpsCog):
     def __init__(self, bot: commands.Bot):
         super().__init__(bot)
+
+    @app_commands.command(description="ホットリロード")
+    async def reload_extensions(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+
+        bot: BaseBot = self.bot
+        cogs = bot.get_cogs()
+
+        for cog in cogs:
+            await bot.reload_extension(cog)
+
+        await interaction.followup.send("リロードしました")
 
     @app_commands.command(name="guilds_list", description="参加しているサーバーの一覧を返す")
     async def guilds_list(self, interaction: discord.Interaction):
