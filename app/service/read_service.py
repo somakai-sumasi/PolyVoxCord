@@ -103,7 +103,7 @@ class ReadService:
         try:
             attachments = message.attachments
             for attachment in attachments:
-                name, ext = os.path.splitext(attachment.filename)
+                _, ext = os.path.splitext(attachment.filename)
                 if ext != ".txt":
                     continue
 
