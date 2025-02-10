@@ -1,6 +1,5 @@
 import asyncio
 import os
-from typing import Dict, List
 
 import discord
 from service.make_voice_service import MakeVoiceService
@@ -8,8 +7,8 @@ from service.make_voice_service import MakeVoiceService
 
 class ReadService:
     # 読み上げ管理キュー
-    queue_map = {}
-    text_channel_list: Dict[int, List[int]] = {}
+    queue_map: dict[int, asyncio.Queue] = {}
+    text_channel_list: dict[int, list[int]] = {}
 
     @classmethod
     async def read(cls, message: discord.Message):
@@ -52,6 +51,28 @@ class ReadService:
             else:
                 # 自分の番でない場合、キューを戻す
                 await cls.queue_map[guild_id].put((next_message_id, next_message))
+
+    @classmethod
+    def fetch_message_content(cls, message: discord.Message) -> str:
+        return message.clean_content
+
+    @classmethod
+    async def fetch_file_content(cls, message: discord.Message) -> str:
+        contents: list = []
+        attachments = message.attachments
+        for attachment in attachments:
+            _, ext = os.path.splitext(attachment.filename)
+            if ext != ".txt":
+                continue
+
+            byte_content = await attachment.read()
+            content = byte_content.decode("utf-8")
+            if len(content) < 1:
+                return
+
+            contents.append(content)
+
+        return contents
 
     @classmethod
     async def read_message(cls, message: discord.Message):
