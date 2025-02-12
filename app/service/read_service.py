@@ -1,26 +1,14 @@
 import asyncio
 import os
-from typing import Dict, List
 
 import discord
-from common.assign_kana import get_pronunciation
-from common.text_format import conv_discord_object, omit_url
-from entity.read_limit_entity import ReadLimitEntity
-from entity.voice_setting_entity import VoiceSettingEntity
-from repository.guild_voice_setting_repository import GuildVoiceSettingRepository
-from repository.read_limit_repository import ReadLimitRepository
-from repository.reading_dict_repository import ReadingDictRepository
-from repository.voice_setting_repository import VoiceSettingRepository
-from voice_model.meta_voice_model import MetaVoiceModel
-from voice_model.softalk import Softalk
-from voice_model.voiceroid import Voiceroid
-from voice_model.voicevox import Voicevox
+from service.make_voice_service import MakeVoiceService
 
 
 class ReadService:
     # 読み上げ管理キュー
-    queue_map = {}
-    text_channel_list: Dict[int, List[int]] = {}
+    queue_map: dict[int, asyncio.Queue] = {}
+    text_channel_list: dict[int, list[int]] = {}
 
     @classmethod
     async def read(cls, message: discord.Message):
@@ -42,161 +30,46 @@ class ReadService:
         if not cls.has_channel(message.guild.id, message.channel.id):
             return
 
+        paths = await cls.create_voice_files(message)
+        if len(paths) < 1:
+            return
+
         guild_id = message.guild.id
         message_id = message.id
+
         # ギルドごとのキューが存在しない場合は作成
         if guild_id not in cls.queue_map:
             cls.queue_map[guild_id] = asyncio.Queue()
-        # メッセージとメッセージIDをキューに追加
-        await cls.queue_map[guild_id].put((message_id, message))
+
+        # 生成した音声ファイルをキューに追加
+        await cls.queue_map[guild_id].put((message_id, paths))
 
         while True:
-            next_message_id, next_message = await cls.queue_map[guild_id].get()
+            next_message_id, paths = await cls.queue_map[guild_id].get()
             if next_message_id == message_id:
                 # メッセージ,添付ファイルの順番に読み上げ
                 await asyncio.gather(
-                    cls.read_message(next_message),
-                    cls.read_file(next_message),
+                    *[
+                        cls.play_audio(message.guild.voice_client, path)
+                        for path in paths
+                    ]
                 )
-
                 break
             else:
                 # 自分の番でない場合、キューを戻す
-                await cls.queue_map[guild_id].put((next_message_id, next_message))
+                await cls.queue_map[guild_id].put((next_message_id, paths))
 
     @classmethod
-    async def read_message(cls, message: discord.Message):
-        """メッセージを読み上げる
-
-        Parameters
-        ----------
-        message : discord.Message
-           discord.Message
-        """
+    async def play_audio(cls, voice_client: discord.VoiceClient, path: str):
+        """音声を再生する"""
         try:
-            content = message.clean_content
-            if len(content) < 1:
-                return
-
-            guild_id = message.guild.id
-            content = conv_discord_object(content)
-            content = omit_url(content)
-            content = cls.match_with_dictionary(guild_id, content)
-            content = cls.limit_length(guild_id, content)
-            content = get_pronunciation(content)
-
-            path = cls.make_voice(message.guild.id, message.author.id, content)
-            voice_client: discord.VoiceClient = message.guild.voice_client
-            # 他の音声が再生されていないか確認
             while voice_client.is_playing():
                 await asyncio.sleep(0.5)
 
-            # 明示的に再生をストップ
             voice_client.stop()
-
-            # ファイルが出来るまで待つ
-            while not (os.access(path, os.W_OK)):
-                await asyncio.sleep(0.5)
-
-            # 音声を再生
             voice_client.play(discord.FFmpegPCMAudio(path))
-
-        except Exception as e:
-            print("=== エラー内容 ===")
-            print("type:" + str(type(e)))
-            print("args:" + str(e.args))
-            print("message:" + e.message)
-            print("e自身:" + str(e))
-
-    @classmethod
-    async def read_file(cls, message: discord.Message):
-        """ファイルを読み上げる
-
-        Parameters
-        ----------
-        message : discord.Message
-            discord.Message
-        """
-        try:
-            guild_id = message.guild.id
-
-            attachments = message.attachments
-            for attachment in attachments:
-                name, ext = os.path.splitext(attachment.filename)
-                if ext != ".txt":
-                    continue
-
-                byte_content = await attachment.read()
-                content = byte_content.decode("utf-8")
-                content = omit_url(content)
-                content = cls.match_with_dictionary(guild_id, content)
-                content = get_pronunciation(content)
-
-                path = cls.make_voice(message.guild.id, message.author.id, content)
-                voice_client = message.guild.voice_client
-                # 他の音声が再生されていないか確認
-                while voice_client.is_playing():
-                    await asyncio.sleep(0.5)
-
-                # ファイルが出来るまで待つ
-                while not (os.access(path, os.W_OK)):
-                    await asyncio.sleep(0.5)
-                # 音声を再生
-                voice_client.play(discord.FFmpegPCMAudio(path))
-
-        except Exception as e:
-            print("=== エラー内容 ===")
-            print("type:" + str(type(e)))
-            print("args:" + str(e.args))
-            print("message:" + e.message)
-            print("e自身:" + str(e))
-
-    @classmethod
-    def make_voice(cls, guild_id: int, user_id: int, text: str) -> str:
-        """音声を作成する
-
-        Parameters
-        ----------
-        guild_id : int
-            guild_id
-        user_id : int
-            user_id
-        text : str
-            読み上げ文字
-
-        Returns
-        -------
-        str
-            ファイルのパス
-        """
-        voice_setting = GuildVoiceSettingRepository.get_by_user_id(guild_id, user_id)
-        # サーバー別の設定がない場合はこちらを使う
-        if voice_setting is None:
-            voice_setting = VoiceSettingRepository.get_by_user_id(user_id)
-
-        # 登録されていない場合は~で読み上げ
-        if voice_setting is None:
-            voice_setting = VoiceSettingEntity(
-                user_id=user_id,
-                voice_type="Softalk",
-                voice_name_key="/T:7/U:0",
-                speed=120,
-                pitch=100,
-            )
-
-        voice_type = voice_setting.voice_type
-
-        voice_model: MetaVoiceModel = None
-        if voice_type == "VOICEROID":
-            voice_model = Voiceroid()
-
-        if voice_type == "VOICEVOX":
-            voice_model = Voicevox()
-
-        if voice_type == "Softalk":
-            voice_model = Softalk()
-
-        return voice_model.create_voice(voice_setting, text)
+        except Exception:
+            print("Error in play_audio", exc_info=True)
 
     @classmethod
     def add_text_channel(cls, guild_id: int, channel_id: int):
@@ -250,57 +123,78 @@ class ReadService:
             del cls.text_channel_list[guild_id]
 
     @classmethod
-    def limit_length(cls, guild_id: int, text: str) -> str:
-        """最大文字数を超える場合カット
+    async def create_voice_files(cls, message: discord.Message) -> list[str]:
+        """音声ファイルを作成
 
         Parameters
         ----------
-        guild_id : int
-            guild_id
-        text : str
-            変換する文字
-
-        Returns
-        -------
-        str
-            変換後の文字
+        message : discord.Message
+           discord.Message
         """
-        read_limit = ReadLimitRepository.get_by_guild_id(guild_id)
-        if read_limit is None:
-            read_limit = ReadLimitEntity(guild_id=guild_id, upper_limit=250)
-        upper_limit = read_limit.upper_limit
 
-        if len(text) > upper_limit:
-            text = text[:upper_limit] + "\n以下略\n"
-        return text
+        make_voice_service = MakeVoiceService(message.guild.id, message.author.id)
+        paths = []
+
+        content = cls.__fetch_message_content(message)
+        if len(content) > 0:
+            paths.append(
+                await make_voice_service.make_voice(
+                    content, is_omit_url=True, is_read_limit=True
+                )
+            )
+
+        for file_content in await cls.__fetch_file_content(message):
+            if len(file_content) > 0:
+                paths.append(
+                    await make_voice_service.make_voice(
+                        file_content, is_omit_url=True, is_read_limit=True
+                    )
+                )
+
+        return paths
 
     @classmethod
-    def match_with_dictionary(cls, guild_id: int, text: str) -> str:
-        """読みを反映した、読み上げ文字にする
+    def __fetch_message_content(cls, message: discord.Message) -> str:
+        """メッセージの内容を取得
 
         Parameters
         ----------
-        guild_id : int
-            guild_id
-        text : str
-            変換する文字
+        message : discord.Message
+            discord.Message
 
         Returns
         -------
         str
-            変換後の文字
+            読み上げ文字列
         """
+        return message.clean_content
 
-        reading_dicts = ReadingDictRepository.get_by_guild_id(guild_id)
-        result_text = text
+    @classmethod
+    async def __fetch_file_content(cls, message: discord.Message) -> list[str]:
+        """ファイルの内容を取得
 
-        read_list = []  # あとでまとめて変換するときの読み仮名リスト
-        for i, reading_dict in enumerate(reading_dicts):
-            result_text = result_text.replace(
-                reading_dict.character, "{" + str(i) + "}"
-            )
-            read_list.append(reading_dict.reading)  # 変換が発生した順に読みがなリストに追加
+        Parameters
+        ----------
+        message : discord.Message
+            discord.Message
 
-        result_text = result_text.format(*read_list)  # 読み仮名リストを引数にとる
+        Returns
+        -------
+        list[str]
+            読み上げ文字列
+        """
+        contents: list = []
+        attachments = message.attachments
+        for attachment in attachments:
+            _, ext = os.path.splitext(attachment.filename)
+            if ext != ".txt":
+                continue
 
-        return result_text
+            byte_content = await attachment.read()
+            content = byte_content.decode("utf-8")
+            if len(content) < 1:
+                return
+
+            contents.append(content)
+
+        return contents
