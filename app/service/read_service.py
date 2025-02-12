@@ -30,132 +30,46 @@ class ReadService:
         if not cls.has_channel(message.guild.id, message.channel.id):
             return
 
+        paths = await cls.create_voice_files(message)
+        if len(paths) < 1:
+            return
+
         guild_id = message.guild.id
         message_id = message.id
+
         # ギルドごとのキューが存在しない場合は作成
         if guild_id not in cls.queue_map:
             cls.queue_map[guild_id] = asyncio.Queue()
-        # メッセージとメッセージIDをキューに追加
-        await cls.queue_map[guild_id].put((message_id, message))
+
+        # 生成した音声ファイルをキューに追加
+        await cls.queue_map[guild_id].put((message_id, paths))
 
         while True:
-            next_message_id, next_message = await cls.queue_map[guild_id].get()
+            next_message_id, paths = await cls.queue_map[guild_id].get()
             if next_message_id == message_id:
                 # メッセージ,添付ファイルの順番に読み上げ
                 await asyncio.gather(
-                    cls.read_message(next_message),
-                    cls.read_file(next_message),
+                    *[
+                        cls.play_audio(message.guild.voice_client, path)
+                        for path in paths
+                    ]
                 )
-
                 break
             else:
                 # 自分の番でない場合、キューを戻す
-                await cls.queue_map[guild_id].put((next_message_id, next_message))
+                await cls.queue_map[guild_id].put((next_message_id, paths))
 
     @classmethod
-    def fetch_message_content(cls, message: discord.Message) -> str:
-        return message.clean_content
-
-    @classmethod
-    async def fetch_file_content(cls, message: discord.Message) -> str:
-        contents: list = []
-        attachments = message.attachments
-        for attachment in attachments:
-            _, ext = os.path.splitext(attachment.filename)
-            if ext != ".txt":
-                continue
-
-            byte_content = await attachment.read()
-            content = byte_content.decode("utf-8")
-            if len(content) < 1:
-                return
-
-            contents.append(content)
-
-        return contents
-
-    @classmethod
-    async def read_message(cls, message: discord.Message):
-        """メッセージを読み上げる
-
-        Parameters
-        ----------
-        message : discord.Message
-           discord.Message
-        """
+    async def play_audio(cls, voice_client: discord.VoiceClient, path: str):
+        """音声を再生する"""
         try:
-            content = message.clean_content
-            if len(content) < 1:
-                return
-
-            make_voice_service = MakeVoiceService(message.guild.id, message.author.id)
-            path = await make_voice_service.make_voice(
-                content, is_omit_url=True, is_read_limit=True
-            )
-
-            voice_client: discord.VoiceClient = message.guild.voice_client
-
-            # 他の音声が再生されていないか確認
             while voice_client.is_playing():
                 await asyncio.sleep(0.5)
 
-            # 明示的に再生をストップ
             voice_client.stop()
-
-            # 音声を再生
             voice_client.play(discord.FFmpegPCMAudio(path))
-
-        except Exception as e:
-            print("=== エラー内容 ===")
-            print("type:" + str(type(e)))
-            print("args:" + str(e.args))
-            print("message:" + e.message)
-            print("e自身:" + str(e))
-
-    @classmethod
-    async def read_file(cls, message: discord.Message):
-        """ファイルを読み上げる
-
-        Parameters
-        ----------
-        message : discord.Message
-            discord.Message
-        """
-        try:
-            attachments = message.attachments
-            for attachment in attachments:
-                _, ext = os.path.splitext(attachment.filename)
-                if ext != ".txt":
-                    continue
-
-                byte_content = await attachment.read()
-                content = byte_content.decode("utf-8")
-                if len(content) < 1:
-                    return
-
-                make_voice_service = MakeVoiceService(
-                    message.guild.id, message.author.id
-                )
-
-                path = await make_voice_service.make_voice(
-                    content, is_omit_url=True, is_read_limit=True
-                )
-
-                voice_client: discord.VoiceClient = message.guild.voice_client
-
-                # 他の音声が再生されていないか確認
-                while voice_client.is_playing():
-                    await asyncio.sleep(0.5)
-
-                # 音声を再生
-                voice_client.play(discord.FFmpegPCMAudio(path))
-
-        except Exception as e:
-            print("=== エラー内容 ===")
-            print("type:" + str(type(e)))
-            print("args:" + str(e.args))
-            print("message:" + e.message)
-            print("e自身:" + str(e))
+        except Exception:
+            print("Error in play_audio", exc_info=True)
 
     @classmethod
     def add_text_channel(cls, guild_id: int, channel_id: int):
@@ -207,3 +121,80 @@ class ReadService:
         """
         if guild_id in cls.text_channel_list:
             del cls.text_channel_list[guild_id]
+
+    @classmethod
+    async def create_voice_files(cls, message: discord.Message) -> list[str]:
+        """音声ファイルを作成
+
+        Parameters
+        ----------
+        message : discord.Message
+           discord.Message
+        """
+
+        make_voice_service = MakeVoiceService(message.guild.id, message.author.id)
+        paths = []
+
+        content = cls.__fetch_message_content(message)
+        if len(content) > 0:
+            paths.append(
+                await make_voice_service.make_voice(
+                    content, is_omit_url=True, is_read_limit=True
+                )
+            )
+
+        for file_content in await cls.__fetch_file_content(message):
+            if len(file_content) > 0:
+                paths.append(
+                    await make_voice_service.make_voice(
+                        file_content, is_omit_url=True, is_read_limit=True
+                    )
+                )
+
+        return paths
+
+    @classmethod
+    def __fetch_message_content(cls, message: discord.Message) -> str:
+        """メッセージの内容を取得
+
+        Parameters
+        ----------
+        message : discord.Message
+            discord.Message
+
+        Returns
+        -------
+        str
+            読み上げ文字列
+        """
+        return message.clean_content
+
+    @classmethod
+    async def __fetch_file_content(cls, message: discord.Message) -> list[str]:
+        """ファイルの内容を取得
+
+        Parameters
+        ----------
+        message : discord.Message
+            discord.Message
+
+        Returns
+        -------
+        list[str]
+            読み上げ文字列
+        """
+        contents: list = []
+        attachments = message.attachments
+        for attachment in attachments:
+            _, ext = os.path.splitext(attachment.filename)
+            if ext != ".txt":
+                continue
+
+            byte_content = await attachment.read()
+            content = byte_content.decode("utf-8")
+            if len(content) < 1:
+                return
+
+            contents.append(content)
+
+        return contents
