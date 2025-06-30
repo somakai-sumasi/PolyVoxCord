@@ -11,7 +11,7 @@ class Read(BaseUserCog):
     # メッセージ受信時のイベント
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        await ReadService.read(message)
+        await ReadService.read(self.bot, message)
 
 
 async def setup(bot: commands.Bot):

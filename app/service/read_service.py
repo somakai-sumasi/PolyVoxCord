@@ -2,16 +2,13 @@ import asyncio
 import os
 
 import discord
+from base.bot import BaseBot
 from service.make_voice_service import MakeVoiceService
 
 
 class ReadService:
-    # 読み上げ管理キュー
-    queue_map: dict[int, asyncio.Queue] = {}
-    text_channel_list: dict[int, list[int]] = {}
-
     @classmethod
-    async def read(cls, message: discord.Message):
+    async def read(cls, bot: BaseBot, message: discord.Message):
         """読み上げイベントを管理
 
         Parameters
@@ -19,111 +16,87 @@ class ReadService:
         message : discord.Message
             discord.Message
         """
-        # メッセージの送信者がbotだった場合は無視
-        if message.author.bot:
-            return
-        # メッセージの送信したサーバーのボイスチャンネルに切断していない場合は無視
-        if message.guild.voice_client is None:
-            return
 
-        # 読み上げ対象でないチャンネルは無視
-        if not cls.has_channel(message.guild.id, message.channel.id):
-            return
-
-        paths = await cls.create_voice_files(message)
-        if len(paths) < 1:
+        # 読み上げ対象チェック
+        if not cls.__is_read_target_message(bot, message):
             return
 
         guild_id = message.guild.id
         message_id = message.id
 
-        # ギルドごとのキューが存在しない場合は作成
-        if guild_id not in cls.queue_map:
-            cls.queue_map[guild_id] = asyncio.Queue()
+        # 音声ファイル作成用のFutureを作成
+        voice_future: asyncio.Future[list[str]] = asyncio.Future()
 
-        # 生成した音声ファイルをキューに追加
-        await cls.queue_map[guild_id].put((message_id, paths))
+        # 非同期で音声ファイルを作成するタスクを開始
+        task = asyncio.create_task(
+            cls.__create_voice_files_async(message, voice_future)
+        )
 
-        while True:
-            next_message_id, paths = await cls.queue_map[guild_id].get()
-            if next_message_id == message_id:
-                # メッセージ,添付ファイルの順番に読み上げ
-                await asyncio.gather(
-                    *[
-                        cls.play_audio(message.guild.voice_client, path)
-                        for path in paths
-                    ]
-                )
-                break
-            else:
-                # 自分の番でない場合、キューを戻す
-                await cls.queue_map[guild_id].put((next_message_id, paths))
+        # キューに追加（メッセージ順序を保証）
+        await bot.add_to_read_queue(guild_id, message_id, voice_future)
+
+        # タスクが完了していない場合は例外をログに記録
+        def log_exception(t: asyncio.Task) -> None:
+            if not t.cancelled() and t.exception():
+                print(f"Voice creation task error: {t.exception()}")
+
+        task.add_done_callback(log_exception)
 
     @classmethod
-    async def play_audio(cls, voice_client: discord.VoiceClient, path: str):
-        """音声を再生する"""
-        try:
-            while voice_client.is_playing():
-                await asyncio.sleep(0.5)
-
-            voice_client.stop()
-            voice_client.play(discord.FFmpegPCMAudio(path))
-        except Exception:
-            print("Error in play_audio", exc_info=True)
-
-    @classmethod
-    def add_text_channel(cls, guild_id: int, channel_id: int):
-        """指定されたguild_idにchannel_idを追加する。
+    def __is_read_target_message(cls, bot: BaseBot, message: discord.Message) -> bool:
+        """読み上げ対象のメッセージかをチェック
+        読み上げる内容があるかどうかなど具体的な内容までは見ない
 
         Parameters
         ----------
-        guild_id : int
-            ギルドid
-        channel_id : int
-            チャンネルid
-        """
-
-        if guild_id not in cls.text_channel_list:
-            cls.text_channel_list[guild_id] = []
-
-        if channel_id not in cls.text_channel_list[guild_id]:
-            cls.text_channel_list[guild_id].append(channel_id)
-
-    @classmethod
-    def has_channel(cls, guild_id: int, channel_id: int) -> bool:
-        """指定されたguild_idにchannel_idが存在するかを確認する。
-
-        Parameters
-        ----------
-        guild_id : int
-            ギルドid
-        channel_id : int
-            チャンネルid
+        bot : BaseBot
+            Botインスタンス
+        message : discord.Message
+            discord.Message
 
         Returns
         -------
         bool
-            存在する場合True
+            読み上げるべきかどうかの真理値
         """
-        return (
-            guild_id in cls.text_channel_list
-            and channel_id in cls.text_channel_list[guild_id]
-        )
+        # メッセージの送信したサーバーのボイスチャンネルに切断していない場合は無視
+        if message.guild.voice_client is None:
+            return False
+
+        # メッセージの送信者がbotだった場合は無視
+        if message.author.bot:
+            return False
+
+        # 読み上げ対象でないチャンネルは無視
+        if not bot.has_channel(message.guild.id, message.channel.id):
+            return False
+
+        return True
 
     @classmethod
-    def remove_guild(cls, guild_id: int) -> None:
-        """指定されたguild_id（と紐づくchannel_id）を削除する。
+    async def __create_voice_files_async(
+        cls, message: discord.Message, future: asyncio.Future[list[str]]
+    ):
+        """非同期で音声ファイルを作成してFutureに結果をセット
 
         Parameters
         ----------
-        guild_id : int
-            ギルドid
+        message : discord.Message
+            discord.Message
+        future : asyncio.Future
+            結果を格納するFuture
         """
-        if guild_id in cls.text_channel_list:
-            del cls.text_channel_list[guild_id]
+        try:
+            paths = await cls.__create_voice_files(message)
+            if not future.done():
+                future.set_result(paths)
+        except Exception as e:
+            if not future.done():
+                future.set_exception(e)
+            print(f"Error creating voice files for message {message.id}: {e}")
 
     @classmethod
-    async def create_voice_files(cls, message: discord.Message) -> list[str]:
+    async def __create_voice_files(cls, message: discord.Message) -> list[str]:
         """音声ファイルを作成
 
         Parameters
@@ -193,7 +166,7 @@ class ReadService:
             byte_content = await attachment.read()
             content = byte_content.decode("utf-8")
             if len(content) < 1:
-                return
+                continue
 
             contents.append(content)
 
