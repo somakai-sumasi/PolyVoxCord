@@ -42,6 +42,7 @@ flake8
    - ギルドごとの読み上げキューを管理（メッセージ順序を保証）
    - ボイスチャンネル接続と音声再生を制御
    - 切断時のリソースクリーンアップを実装
+   - 起動時にOpusライブラリを読み込み（Windows以外）
 2. **Cogs** (`app/cogs/`): Discordスラッシュコマンドを実装するコマンドグループ
    - 各cogは機能ドメインを表現（read、connection、settingsなど）
 3. **サービスレイヤー** (`app/service/`): ビジネスロジックとオーケストレーション
@@ -91,6 +92,7 @@ flake8
 - `VOICEVOX_HOST`: VOICEVOX APIホスト
 - `VOICEVOX_PORT`: VOICEVOX APIポート
 - `USER_DICT_CSV_PATH`: MeCabユーザー辞書へのパス
+- `OPUS_PATH`: Opusライブラリへのパス（Unix系OSで必要、例: `/opt/homebrew/opt/opus/lib/libopus.0.dylib`）
 
 ## 重要な考慮事項
 - すべてのテキスト処理は日本語入力を前提

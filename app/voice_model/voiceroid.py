@@ -130,7 +130,7 @@ class Voiceroid(MetaVoiceModel):
         vc.param.masterVolume = 1
 
         speech = vc.textToSpeech(text)[0]
-        path = "./tmp/wav/" + cls.create_filename(__class__.__name__)
+        path = cls.file_path(__class__.__name__)
         wf = wave.open(path, "wb")
         wf.setnchannels(1)
         wf.setsampwidth(2)

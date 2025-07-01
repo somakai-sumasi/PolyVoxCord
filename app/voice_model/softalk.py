@@ -3,7 +3,7 @@ import platform
 import subprocess
 import xml.etree.ElementTree as ET
 
-from config.voice_model import SOFTALK
+from config.voice import SOFTALK
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.meta_voice_model import MetaVoiceModel
 
@@ -30,15 +30,14 @@ class Softalk(MetaVoiceModel):
         if platform.system() != "Windows":
             raise NotImplementedError("Voiceroid is only available on Windows.")
 
-        fileTitle = cls.create_filename(__class__.__name__)
-        SAVE_PASE = os.getcwd() + "\\tmp\\wav\\" + fileTitle
+        path = cls.file_path(__class__.__name__)
 
         _start = "start " + SOFTALK
         _speed = "/S:" + str(int(voice_setting.speed))
         _pitch = "/O:" + str(int(voice_setting.pitch))
         _model = voice_setting.voice_name_key
         _word = "/W:" + text.replace('"', "")
-        _save = "/R:" + SAVE_PASE
+        _save = "/R:" + path
 
         argument = " ".join([_speed, _pitch, _model, _save, _word])
 
@@ -46,7 +45,7 @@ class Softalk(MetaVoiceModel):
 
         subprocess.run(command, shell=True)
 
-        return SAVE_PASE
+        return path
 
     @classmethod
     def voice_list(cls) -> list[dict[str, str]]:

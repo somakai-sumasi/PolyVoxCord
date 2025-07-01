@@ -1,8 +1,7 @@
 import json
-import os
 
 import requests
-from config.voice_model import VOICEVOX_HOST, VOICEVOX_PORT
+from config.voice import VOICEVOX_HOST, VOICEVOX_PORT
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.meta_voice_model import MetaVoiceModel
 
@@ -47,7 +46,7 @@ class Voicevox(MetaVoiceModel):
             timeout=(1.0, 10.0),
         )
 
-        path = os.getcwd() + "/tmp/wav/" + cls.create_filename(__class__.__name__)
+        path = cls.file_path(__class__.__name__)
         with open(path, mode="wb") as f:
             f.write(synthesis.content)
 

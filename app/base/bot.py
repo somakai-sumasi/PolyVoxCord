@@ -1,6 +1,8 @@
 import asyncio
+import platform
 
 import discord
+from config.voice import OPUS_PATH
 from discord.ext import commands
 from service.presence_service import PresenceService
 
@@ -40,6 +42,11 @@ class BaseBot(commands.Bot):
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
+
+        # Windows以外のプラットフォームでは、Opusライブラリをロード
+        if platform.system() != "Windows":
+            discord.opus.load_opus(OPUS_PATH)
+
         await PresenceService.set_presence(self)
 
     def add_text_channel(self, guild_id: int, channel_id: int):
@@ -165,8 +172,8 @@ class BaseBot(commands.Bot):
 
             voice_client.stop()
             voice_client.play(discord.FFmpegPCMAudio(path))
-        except Exception:
-            print("Error in play_audio", exc_info=True)
+        except Exception as e:
+            print(f"Error in play_audio: {e}")
 
 
 bot = BaseBot()
