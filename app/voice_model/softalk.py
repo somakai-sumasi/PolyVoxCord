@@ -3,7 +3,7 @@ import platform
 import subprocess
 import xml.etree.ElementTree as ET
 
-from config.voice import SOFTALK
+from config.voice import BASE_DIR, SOFTALK
 from entity.voice_setting_entity import VoiceSettingEntity
 from voice_model.meta_voice_model import MetaVoiceModel
 
@@ -61,7 +61,7 @@ class Softalk(MetaVoiceModel):
             return {}
 
         _start = "start " + SOFTALK
-        path = os.getcwd() + "\\softalk.xml"
+        path = os.path.join(BASE_DIR, "softalk.xml")
         _xml = "/zz:" + path
         _command = [_start, _xml]
 
