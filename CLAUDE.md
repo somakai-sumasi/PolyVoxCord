@@ -2,101 +2,101 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
-PolyVoxCord is a Discord bot for text-to-speech functionality with support for multiple Japanese TTS engines (VOICEROID2, VOICEVOX, SofTalk).
+## プロジェクト概要
+PolyVoxCordは、複数の日本語TTS（テキスト読み上げ）エンジン（VOICEROID2、VOICEVOX、SofTalk）をサポートするDiscordボットです。
 
-## Development Commands
+## 開発コマンド
 
-### Setup
+### セットアップ
 ```bash
-# Install dependencies
+# 依存関係のインストール
 poetry install
 
-# Activate virtual environment
+# 仮想環境の有効化
 poetry shell
 
-# Initialize database
+# データベースの初期化
 python app/init_db.py
 
-# Run the bot
+# ボットの実行
 python app/main.py
 ```
 
-### Code Quality
+### コード品質管理
 ```bash
-# Format imports
+# インポートの整形
 isort .
 
-# Format code
+# コードの整形
 black .
 
-# Lint code
+# Lintの実行
 flake8
 ```
 
-## Architecture Overview
+## アーキテクチャ概要
 
-The codebase follows a layered architecture:
+レイヤードアーキテクチャを採用：
 
-1. **Bot Layer** (`app/base/bot.py`): Core bot class extending discord.py's commands.Bot
-   - Manages per-guild read queues with message ordering guarantee
-   - Handles voice channel connections and audio playback
-   - Implements resource cleanup on disconnect
-2. **Cogs** (`app/cogs/`): Command groups implementing Discord slash commands
-   - Each cog represents a feature domain (read, connection, settings, etc.)
-3. **Service Layer** (`app/service/`): Business logic and orchestration
-   - Services handle complex operations and coordinate between repositories
-   - `read_service.py`: Manages async voice file creation with Future-based coordination
-4. **Repository Layer** (`app/repository/`): Database access using SQLAlchemy
-   - Each repository handles CRUD operations for specific entities
-5. **Voice Models** (`app/voice_model/`): TTS engine integrations
-   - Each voice model implements the base interface for different TTS engines
+1. **Botレイヤー** (`app/base/bot.py`): discord.pyのcommands.Botを拡張したコアクラス
+   - ギルドごとの読み上げキューを管理（メッセージ順序を保証）
+   - ボイスチャンネル接続と音声再生を制御
+   - 切断時のリソースクリーンアップを実装
+2. **Cogs** (`app/cogs/`): Discordスラッシュコマンドを実装するコマンドグループ
+   - 各cogは機能ドメインを表現（read、connection、settingsなど）
+3. **サービスレイヤー** (`app/service/`): ビジネスロジックとオーケストレーション
+   - 複雑な処理を実行し、リポジトリ間を調整
+   - `read_service.py`: Future基盤の非同期音声ファイル作成を管理
+4. **リポジトリレイヤー** (`app/repository/`): SQLAlchemyを使用したデータベースアクセス
+   - 各リポジトリは特定エンティティのCRUD操作を担当
+5. **音声モデル** (`app/voice_model/`): TTSエンジンの統合
+   - 各音声モデルは異なるTTSエンジン用の基本インターフェースを実装
 
-## Key Implementation Patterns
+## 主要な実装パターン
 
-### Adding New Commands
-New commands should be added as methods in the appropriate cog class using the `@discord.app_commands.command()` decorator.
+### 新規コマンドの追加
+新しいコマンドは適切なcogクラスに`@discord.app_commands.command()`デコレータを使用してメソッドとして追加します。
 
-### Database Operations
-- Use repository classes for all database operations
-- Sessions are managed via context managers in service layer
-- Models are defined in `app/model/` using SQLAlchemy declarative base
+### データベース操作
+- すべてのデータベース操作にはリポジトリクラスを使用
+- セッションはサービスレイヤーでコンテキストマネージャーを通じて管理
+- モデルは`app/model/`でSQLAlchemy declarative baseを使用して定義
 
-### Voice Processing Flow
-1. Message received → Queue immediately with Future (`read_service.py`)
-2. Async voice creation:
-   - Text input → Dictionary replacement (`reading_dict_service.py`)
-   - Text processing → MeCab parsing if needed
-   - Voice generation → Selected TTS engine (`voice_model/`)
-3. Queue processing → Wait for turn based on message ID
-4. Audio output → Discord voice channel with proper ordering
+### 音声処理フロー
+1. メッセージ受信 → Futureと共に即座にキューイング（`read_service.py`）
+2. 非同期音声作成:
+   - テキスト入力 → 辞書置換（`reading_dict_service.py`）
+   - テキスト処理 → 必要に応じてMeCab解析
+   - 音声生成 → 選択されたTTSエンジン（`voice_model/`）
+3. キュー処理 → メッセージIDに基づいて順番待ち
+4. 音声出力 → 適切な順序でDiscordボイスチャンネルに出力
 
-### Queue Management Pattern
-- Per-guild queues using `asyncio.Queue[tuple[int, asyncio.Future[list[str]]]]`
-- Message ordering guaranteed by checking message ID before processing
-- Non-matching messages are re-queued to maintain order
-- Proper cleanup on guild disconnect with Future cancellation
+### キュー管理パターン
+- `asyncio.Queue[tuple[int, asyncio.Future[list[str]]]]`を使用したギルドごとのキュー
+- メッセージIDチェックによるメッセージ順序の保証
+- 順番外のメッセージは再キューイングして順序を維持
+- ギルド切断時のFutureキャンセルを含む適切なクリーンアップ
 
-### Error Handling
-- Service layer methods return Result objects or raise specific exceptions
-- Cogs handle exceptions and send appropriate Discord embed responses
-- Use `ErrorContext` for consistent error formatting
-- Voice generation has 30-second timeout with proper Future handling
+### エラーハンドリング
+- サービスレイヤーのメソッドはResultオブジェクトを返すか特定の例外を発生
+- Cogsは例外を処理し、適切なDiscord埋め込みレスポンスを送信
+- 一貫したエラーフォーマットのために`ErrorContext`を使用
+- 音声生成は適切なFuture処理を伴う30秒のタイムアウト
 
-## Environment Configuration
-Required environment variables (.env file):
-- `TOKEN`: Discord bot token
-- `DB_NAME`: Database file name (default: PolyVoxCord.db)
-- `SOFTALK_PATH`: Path to SofTalk executable
-- `VOICEVOX_HOST`: VOICEVOX API host
-- `VOICEVOX_PORT`: VOICEVOX API port
-- `USER_DICT_CSV_PATH`: Path to MeCab user dictionary
+## 環境設定
+必要な環境変数（.envファイル）:
+- `TOKEN`: Discordボットトークン
+- `DB_NAME`: データベースファイル名（デフォルト: PolyVoxCord.db）
+- `SOFTALK_PATH`: SofTalk実行ファイルへのパス
+- `VOICEVOX_HOST`: VOICEVOX APIホスト
+- `VOICEVOX_PORT`: VOICEVOX APIポート
+- `USER_DICT_CSV_PATH`: MeCabユーザー辞書へのパス
 
-## Important Considerations
-- All text processing assumes Japanese input
-- Voice models have different availability and requirements
-- Connection management tracks per-guild voice connections
-- User settings persist across servers
-- Guild settings are server-specific
-- Voice file creation is non-blocking using Future-based async pattern
-- Message order is strictly preserved even with async voice generation
+## 重要な考慮事項
+- すべてのテキスト処理は日本語入力を前提
+- 音声モデルには異なる利用可能性と要件がある
+- 接続管理はギルドごとの音声接続を追跡
+- ユーザー設定はサーバー間で永続化
+- ギルド設定はサーバー固有
+- 音声ファイル作成はFutureベースの非同期パターンでノンブロッキング
+- 非同期音声生成でもメッセージ順序は厳密に保持
