@@ -1,6 +1,8 @@
 import datetime
+import os
 from abc import ABCMeta, abstractmethod
 
+from config.voice import VOICE_OUTPUT_DIR
 from entity.voice_setting_entity import VoiceSettingEntity
 
 
@@ -43,8 +45,9 @@ class MetaVoiceModel(metaclass=ABCMeta):
         """
         pass
 
-    def create_filename(class_name: str = None) -> str:
-        """_summary_
+    @classmethod
+    def file_path(cls, class_name: str) -> str:
+        """ファイルのパスを作成する
 
         Parameters
         ----------
@@ -54,8 +57,10 @@ class MetaVoiceModel(metaclass=ABCMeta):
         Returns
         -------
         str
-            ファイル名
+            ファイルのパス
         """
+
         now = datetime.datetime.now()
         fileTitle = now.strftime("%Y%m%d-%H%M%S%f") + class_name + ".wav"
-        return fileTitle
+
+        return os.path.join(VOICE_OUTPUT_DIR, fileTitle)

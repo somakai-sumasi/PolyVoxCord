@@ -1,13 +1,14 @@
+import asyncio
+
 import discord
+from base.bot import BaseBot
 from common.user_message import MessageType
-from discord.ext import commands
 from service.presence_service import PresenceService
-from service.read_service import ReadService
 
 
 class ConnectionService:
     @classmethod
-    async def read_start(cls, interaction: discord.Interaction, bot: commands.Bot):
+    async def read_start(cls, interaction: discord.Interaction, bot: BaseBot):
         """読み上げを開始する
 
         Parameters
@@ -33,11 +34,11 @@ class ConnectionService:
             embed=discord.Embed(title="接続しました", color=MessageType.SUCCESS)
         )
 
-        ReadService.add_text_channel(user.guild.id, interaction.channel.id)
+        bot.add_text_channel(user.guild.id, interaction.channel.id)
         await PresenceService.set_presence(bot)
 
     @classmethod
-    async def read_end(cls, interaction: discord.Interaction, bot: commands.Bot):
+    async def read_end(cls, interaction: discord.Interaction, bot: BaseBot):
         """読み上げを終了する
 
         Parameters
@@ -62,14 +63,14 @@ class ConnectionService:
             embed=discord.Embed(title="切断しました", color=MessageType.SUCCESS)
         )
 
-        ReadService.remove_guild(user.guild.id)
+        bot.remove_guild(user.guild.id)
         await PresenceService.set_presence(bot)
 
     @classmethod
     async def auto_disconnect(
         cls,
         before: discord.VoiceState,
-        bot: commands.Bot,
+        bot: BaseBot,
     ):
         """自動切断を行う
 
@@ -77,7 +78,7 @@ class ConnectionService:
         ----------
         before : discord.VoiceState
             イベント前のVoiceState
-        bot : commands.Bot
+        bot : BaseBot
             Discord bot
         """
         before_members = before.channel.members if before.channel is not None else []
@@ -94,5 +95,8 @@ class ConnectionService:
 
         await before.channel.guild.voice_client.disconnect()
 
-        ReadService.remove_guild(before.channel.guild.id)
+        bot.remove_guild(before.channel.guild.id)
+
+        # 正確な表示の為、1秒待機
+        await asyncio.sleep(1)
         await PresenceService.set_presence(bot)
