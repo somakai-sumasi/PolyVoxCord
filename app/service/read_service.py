@@ -124,6 +124,14 @@ class ReadService:
                     )
                 )
 
+        for sticker_content in cls.__fetch_sticker_content(message):
+            if len(sticker_content) > 0:
+                paths.append(
+                    await make_voice_service.make_voice(
+                        sticker_content, is_omit_url=True, is_read_limit=True
+                    )
+                )
+
         return paths
 
     @classmethod
@@ -171,3 +179,19 @@ class ReadService:
             contents.append(content)
 
         return contents
+
+    @classmethod
+    def __fetch_sticker_content(cls, message: discord.Message) -> list[str]:
+        """ステッカーの内容を取得
+
+        Parameters
+        ----------
+        message : discord.Message
+            discord.Message
+
+        Returns
+        -------
+        list[str]
+            ステッカー名のリスト
+        """
+        return [sticker.name for sticker in message.stickers]
